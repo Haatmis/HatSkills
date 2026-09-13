@@ -124,16 +124,9 @@ est, avec le remplaçant exact et ce qui change dans l'usage.
 
 ## Apprendre de la session
 
-Trois signaux, et rien d'autre, valent une entrée au journal :
-
-| Signal | `--type` |
-|---|---|
-| L'utilisateur te corrige, ou réécrit ce que tu as produit | `correction` |
-| La vérification Studio révèle une erreur que tu avais commise | `studio-error` |
-| L'utilisateur re-précise un contexte que ce skill aurait dû porter | `re-precision` |
-
-Enregistre la leçon sur le moment, formulée comme une règle et pas comme un
-récit — « Toujours X » plutôt que « j'ai oublié X » :
+Trois signaux valent une entrée au journal, et trois seulement : l'utilisateur
+t'a corrigé, la vérification Studio a révélé une erreur de ta part, ou un
+contexte a dû t'être re-précisé. Formule une **règle**, pas un récit :
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
@@ -141,10 +134,11 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
   --lesson "Toujours …" --context "ce qui se passait, une ligne"
 ```
 
-Rien à signaler : ne lance pas la commande. Si elle répond que le seuil est
-atteint, ajoute une ligne en fin de réponse pour dire que `/roblox:affiner`
-est disponible — puis reprends. N'affine jamais de toi-même : modifier un
-skill est une décision de l'utilisateur.
+Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
+lance rien. Si la commande annonce que le seuil est atteint, signale en une
+ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+
 
 ## Format de sortie
 

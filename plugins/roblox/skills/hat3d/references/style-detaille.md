@@ -11,6 +11,21 @@ Ce n'est pas « le même travail en plus long » que le low-poly. Ce sont deux
 méthodes différentes, et confondre les deux donne le pire des cas : un modèle
 lourd qui lit quand même comme un tas de rectangles.
 
+## Sommaire
+
+- [Lire l'image en formes — le Block en dernier](#lire-limage-en-formes-le-block-en-dernier)
+  - [L'inventaire de formes (avant d'écrire le générateur)](#linventaire-de-formes-avant-décrire-le-générateur)
+- [La bascule : on n'écrit plus le JSON à la main](#la-bascule-on-nécrit-plus-le-json-à-la-main)
+- [Les primitives de volume](#les-primitives-de-volume)
+  - [Ce qui casse la lecture « boîte »](#ce-qui-casse-la-lecture-boîte)
+  - [Les ailes](#les-ailes)
+- [Casser le « cubique » — le lissage sans mesh](#casser-le-cubique-le-lissage-sans-mesh)
+- [Trois pièges qui ne pardonnent pas](#trois-pièges-qui-ne-pardonnent-pas)
+- [Budget](#budget)
+- [Contrôle](#contrôle)
+
+---
+
 ## Lire l'image en formes — le Block en dernier
 
 Le réflexe qui fait les modèles « en studs », c'est de lire l'image en boîtes.

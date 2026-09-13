@@ -369,6 +369,44 @@ Logique de décision :
 - Échec API (clé invalide, quota, réseau) → le signaler et retomber sur la
   modélisation directe depuis le texte.
 
+## Format de sortie
+
+Ce que tu rends à l'utilisateur après une génération, en plus des trois
+artefacts posés sur le disque :
+
+```markdown
+## <Nom du modèle>
+<Ce qui a été modélisé, en 2 lignes : silhouette, masses principales.>
+
+| | |
+|---|---|
+| Parts | <nombre> · mode <détaillé\|low-poly> |
+| Taille | <L × H × P en studs> |
+| Source | <image fournie \| description \| image générée> |
+
+## Fichiers
+| Chemin | Rôle |
+|---|---|
+| `hat3d/<slug>/model.json` | Source de vérité — c'est lui qu'on édite |
+| `hat3d/<slug>/preview.html` | Maquette à valider (orbite, clic sur une part) |
+| `hat3d/<slug>/build.lua` | À exécuter dans Studio, après validation |
+
+## Ce que j'ai vérifié
+<Les captures comparées à la source : silhouette, proportions mesurées,
+palette. Et les écarts que je vois encore.>
+
+## À regarder
+1. <Point précis, ex. « la courbe du couvercle lit-elle comme un arc ou
+   comme un polygone ? »>
+
+## Ensuite
+<« Dis-moi ce qui ne va pas et je regénère » — ou, si validé, la proposition
+d'exécuter build.lua dans Studio.>
+```
+
+Nommer les parts de façon lisible sert directement ici : l'utilisateur peut
+cliquer une pièce dans la préview et te la désigner par son nom.
+
 ## Rappels
 
 - Répondre en français, noms de parts lisibles (français ou anglais, cohérents).
@@ -381,3 +419,20 @@ Logique de décision :
 - Formes de base uniquement (pas de MeshPart, pas d'union) : c'est le choix de
   ce pipeline. Quand il devient le mauvais choix, `hat3d-blender` prend le
   relais — voir § Un troisième mode.
+
+## Apprendre de la session
+
+Trois signaux valent une entrée au journal, et trois seulement : l'utilisateur
+t'a corrigé, la vérification Studio a révélé une erreur de ta part, ou un
+contexte a dû t'être re-précisé. Formule une **règle**, pas un récit :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
+  --skill hat3d --type correction \
+  --lesson "Toujours …" --context "ce qui se passait, une ligne"
+```
+
+Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
+lance rien. Si la commande annonce que le seuil est atteint, signale en une
+ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.

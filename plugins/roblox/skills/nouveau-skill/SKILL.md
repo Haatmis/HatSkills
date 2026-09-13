@@ -52,7 +52,10 @@ compte autant que la rédaction.
    servir (phrases réelles, ton un peu insistant) → quand ne pas s'en servir
    (en nommant le skill voisin).
 5. **Écris le corps** au gabarit ci-dessous. Tout ce que l'utilisateur a
-   répondu à la question 3 de l'interview va dans `Contexte figé`.
+   répondu à la question 3 de l'interview va dans `Contexte figé`. Recopie la
+   section `Apprendre de la session` depuis
+   `templates/SKILL.template.md` en remplaçant `--skill` par le nom du
+   nouveau skill : sans elle, il ne remontera jamais rien à `/roblox:affiner`.
 6. **Ajoute l'exclusion croisée** dans la description du ou des skills voisins
    identifiés à l'étape 3.
 7. **Lance `python3 scripts/validate.py`** et corrige jusqu'à zéro erreur.
@@ -97,8 +100,30 @@ Sortie : <complète>
 ## Pièges
 - <erreur fréquente> — <pourquoi c'est faux ici>
 
+## Apprendre de la session
+
+Trois signaux valent une entrée au journal, et trois seulement : l'utilisateur
+t'a corrigé, la vérification Studio a révélé une erreur de ta part, ou un
+contexte a dû t'être re-précisé. Formule une **règle**, pas un récit :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
+  --skill nouveau-skill --type correction \
+  --lesson "Toujours …" --context "ce qui se passait, une ligne"
+```
+
+Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
+lance rien. Si la commande annonce que le seuil est atteint, signale en une
+ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+
+## Apprendre de la session
+<Section obligatoire — recopier depuis templates/SKILL.template.md. C'est
+elle qui alimente /roblox:affiner ; un skill qui ne l'a pas n'apprend rien.>
+
 ## Avant de rendre
 - [ ] <vérification concrète>
+- [ ] Leçon enregistrée au journal si tu as été corrigé.
 ```
 
 Puis affiche à l'utilisateur : le chemin créé, la description en entier, et le
@@ -151,4 +176,8 @@ format JJ/MM, aucune action n'est listée sans porteur.
 - [ ] `Contexte figé` contient tout ce qu'il a dit re-préciser à chaque fois.
 - [ ] Il y a un gabarit de sortie exact et un exemple entrée → sortie réel.
 - [ ] L'exclusion croisée est posée **dans les deux sens**.
+- [ ] La section `Apprendre de la session` est présente, avec le bon
+      `--skill`.
 - [ ] `python3 scripts/validate.py` ne renvoie aucune erreur.
+- [ ] Leçon enregistrée au journal si tu as été corrigé, si Studio a révélé
+      une erreur de ta part, ou si un contexte a dû t'être re-précisé.
