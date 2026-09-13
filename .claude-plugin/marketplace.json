@@ -1,0 +1,17 @@
+{
+  "name": "hatskills",
+  "owner": {
+    "name": "haatmis",
+    "url": "https://github.com/haatmis/HatSkills"
+  },
+  "description": "Mes skills pour Claude.",
+  "plugins": [
+    {
+      "name": "roblox",
+      "source": "./plugins/roblox",
+      "description": "Développement de jeux Roblox : code Luau vanilla, vérifié dans Studio avant livraison.",
+      "author": { "name": "haatmis" },
+      "license": "Apache-2.0"
+    }
+  ]
+}

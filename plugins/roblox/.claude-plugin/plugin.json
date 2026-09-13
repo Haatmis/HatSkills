@@ -1,0 +1,8 @@
+{
+  "name": "roblox",
+  "description": "Développement de jeux Roblox : code Luau vanilla, vérifié dans Studio avant livraison.",
+  "version": "0.1.0",
+  "author": { "name": "haatmis" },
+  "repository": "https://github.com/haatmis/HatSkills",
+  "license": "Apache-2.0"
+}
