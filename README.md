@@ -71,6 +71,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 | Skill | Ce qu'il fait |
 |---|---|
 | `code` | Écrit du code Luau vanilla pour un jeu Roblox, et le vérifie dans Studio via le MCP avant de le rendre |
+| `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
 | `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |
 | `nouveau-skill` | Crée un skill conforme aux conventions de ce repo, après interview |
 
