@@ -1,17 +1,19 @@
 ---
 name: code
 description: >
-  Écrit du code Luau pour un jeu Roblox — feature, module, système, outil ou
-  squelette de projet — en vanilla strict, puis le vérifie dans Studio via le
-  MCP avant de le rendre. Utilise ce skill dès que l'utilisateur demande du
-  code Roblox ou Luau : « fais-moi un système de… », « ajoute un
-  RemoteEvent », « comment je fais pour que le joueur… », « crée un
-  ModuleScript », « un script qui… », un leaderstats, une sauvegarde
-  DataStore, un inventaire, une boucle de jeu, une UI — même s'il ne dit ni
-  « Luau » ni « Roblox », et même si la demande ressemble à une simple
-  question. N'utilise pas ce skill quand il colle une erreur, un stack trace
-  ou du code qui ne marche pas et demande pourquoi : c'est un diagnostic, pas
-  de l'écriture (voir debug).
+  Écrit un morceau de code Luau précis et délimité pour un jeu Roblox — un
+  module, un script, un RemoteEvent, une fonction, un câblage — en vanilla
+  strict, puis le vérifie dans Studio via le MCP avant de le rendre. Utilise
+  ce skill quand la demande porte sur un élément technique identifié :
+  « ajoute un RemoteEvent », « crée un ModuleScript qui… », « un script
+  qui… », « comment je fais pour que le joueur… », un leaderstats, une
+  sauvegarde DataStore — même s'il ne dit ni « Luau » ni « Roblox », et même
+  si la demande ressemble à une simple question. Utilise-le aussi quand
+  game-design ou feature te confie une étape à implémenter. N'utilise pas ce
+  skill quand l'utilisateur réclame un système entier pas encore cadré (voir
+  game-design), quand il faut dérouler un plan en plusieurs étapes (voir
+  feature), ni quand il colle une erreur ou signale que quelque chose ne
+  marche pas (voir debug).
 ---
 
 # Écrire du code Roblox

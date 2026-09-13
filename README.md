@@ -70,7 +70,10 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 
 | Skill | Ce qu'il fait |
 |---|---|
-| `code` | Écrit du code Luau vanilla pour un jeu Roblox, et le vérifie dans Studio via le MCP avant de le rendre |
+| `game-design` | Cadre une feature avant tout code : règles, chiffres jouables, cas limites, risques — et écrit la spec dans `docs/design/` |
+| `feature` | Exécute une spec : découpe en étapes, appelle le skill compétent à chacune, vérifie dans Studio, livre avec placeholders |
+| `vfx` | Crée des effets visuels (particules, faisceaux, traînées) en presets réutilisables, dérivés de la charte du projet |
+| `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
 | `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |
 | `nouveau-skill` | Crée un skill conforme aux conventions de ce repo, après interview |
@@ -80,6 +83,45 @@ nommage Roblox officiel, `--!strict` sur les ModuleScripts, arborescence Rojo
 `src/{server,client,shared}`, logique de jeu côté serveur uniquement, et zéro
 API dépréciée (table complète dans
 [`references/api-obsolete.md`](plugins/roblox/skills/code/references/api-obsolete.md)).
+
+## La chaîne d'une feature
+
+Une demande comme « ajoute un système qui permet de taper les autres joueurs »
+traverse plusieurs métiers : code serveur, code client, animation, VFX, son.
+Aucun skill ne couvre tout, et rien ne les coordonne spontanément — d'où une
+chaîne explicite, où chaque maillon appelle le suivant par son nom plutôt que
+d'espérer un déclenchement automatique.
+
+```
+demande floue
+     │
+     ▼
+game-design ──► docs/design/<feature>.md        règles, chiffres, cas limites
+     │
+     ▼
+feature ──────► découpe en étapes ordonnées     serveur avant client, toujours
+     │              │
+     │              ├─► code    (étapes 1-5, vérifiées dans Studio)
+     │              ├─► vfx     (étape 6, vérifiée dans Studio)
+     │              └─► debug   (si une étape casse)
+     ▼
+système qui tourne + src/shared/Config/Assets.luau
+                          │
+                          └─► tu colles tes IDs, tu dis « reprends »
+```
+
+**Le point de rendez-vous des assets.** Claude ne peut pas publier une
+animation ni créer un son : ces identifiants viennent de toi. Plutôt que de
+bloquer, `feature` livre un système complet où chaque ID manquant vaut `0`
+dans `src/shared/Config/Assets.luau` — le code teste cette valeur et saute le
+son ou l'animation au lieu de planter. Tu remplis le fichier quand tu veux, tu
+demandes à reprendre, et seuls les branchements concernés sont revérifiés.
+
+**Deux règles portées par `feature`.** Le serveur avant le client, parce qu'une
+feature construite dans l'autre sens est un aimant à exploiteurs et coûte plus
+cher à reprendre qu'à écrire correctement. Et une vérification dans Studio
+après *chaque* étape : une erreur d'étape 1 trouvée à l'étape 1 coûte une
+correction, trouvée à l'étape 8 il faut d'abord démêler ce qui vient de quoi.
 
 ## La boucle d'amélioration
 
