@@ -124,10 +124,20 @@ def check(path, report):
     if "exemple" not in low_body and "example" not in low_body:
         warn("aucun exemple entrée → sortie")
 
-    # Renvois vers des fichiers absents (résolus depuis le skill ou la racine).
-    for ref in sorted(set(re.findall(r"(?:references|scripts|assets)/[\w./-]+",
-                                     body))):
-        if not any((base / ref).exists() for base in (path.parent, ROOT)):
+    # Renvois vers des fichiers absents. Un chemin peut être relatif au skill
+    # (references/), au plugin (${CLAUDE_PLUGIN_ROOT}/scripts/) ou au repo.
+    bases = [path.parent, ROOT]
+    for parent in path.parents:
+        if (parent / ".claude-plugin").is_dir():
+            bases.append(parent)
+            break
+    # Le motif prend le chemin entier (pas juste sa fin) pour ne pas confondre
+    # « references/x.md » avec « skills/code/references/x.md ».
+    motif = (r"(?<![\w/])(?:\$\{[A-Z_]+\}/)?(?:[\w.-]+/)*"
+             r"(?:references|scripts|assets)/[\w./-]+")
+    for ref in sorted(set(re.findall(motif, body))):
+        rel = re.sub(r"^\$\{[A-Z_]+\}/", "", ref)
+        if not any((base / rel).exists() for base in bases):
             err(f"renvoi vers un fichier absent : {ref}")
 
     for ref in (path.parent / "references").glob("*.md"):

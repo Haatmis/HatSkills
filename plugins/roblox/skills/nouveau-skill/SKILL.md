@@ -7,9 +7,9 @@ description: >
   veut créer, ajouter, écrire ou scaffolder un skill, dit « transforme ça en
   skill », « j'en ai marre de retaper ça », « fais-en un skill », ou décrit un
   workflow qu'il répète — même sans prononcer le mot « skill ». N'utilise pas
-  ce skill pour corriger un skill existant qui se déclenche mal ou dérive
-  (c'est un travail de réécriture de la description ou du corps, pas de
-  création), ni pour créer un hook, un subagent ou un serveur MCP.
+  ce skill pour améliorer un skill qui existe déjà, à partir du journal
+  d'apprentissage ou d'une correction (voir affiner), ni pour créer un hook,
+  un subagent ou un serveur MCP.
 disable-model-invocation: false
 ---
 

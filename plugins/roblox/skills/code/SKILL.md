@@ -120,6 +120,30 @@ est, avec le remplaçant exact et ce qui change dans l'usage.
    n'existe pas encore ? Si deux appels arrivent en même temps ?
 7. **Rends** au format ci-dessous.
 
+## Apprendre de la session
+
+Trois signaux, et rien d'autre, valent une entrée au journal :
+
+| Signal | `--type` |
+|---|---|
+| L'utilisateur te corrige, ou réécrit ce que tu as produit | `correction` |
+| La vérification Studio révèle une erreur que tu avais commise | `studio-error` |
+| L'utilisateur re-précise un contexte que ce skill aurait dû porter | `re-precision` |
+
+Enregistre la leçon sur le moment, formulée comme une règle et pas comme un
+récit — « Toujours X » plutôt que « j'ai oublié X » :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
+  --skill code --type correction \
+  --lesson "Toujours …" --context "ce qui se passait, une ligne"
+```
+
+Rien à signaler : ne lance pas la commande. Si elle répond que le seuil est
+atteint, ajoute une ligne en fin de réponse pour dire que `/roblox:affiner`
+est disponible — puis reprends. N'affine jamais de toi-même : modifier un
+skill est une décision de l'utilisateur.
+
 ## Format de sortie
 
 En mode Rojo, modifie les fichiers puis rends **seulement** le compte rendu.
@@ -214,3 +238,5 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 - [ ] Chemins d'instance complets donnés pour chaque fichier.
 - [ ] Section Sécurité remplie, même quand la réponse est « rien de sensible ».
 - [ ] Étapes de test dans Studio concrètes, pas « teste que ça marche ».
+- [ ] Leçon enregistrée au journal si tu as été corrigé, si Studio a révélé
+      une erreur de ta part, ou si un contexte a dû t'être re-précisé.

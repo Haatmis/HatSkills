@@ -71,6 +71,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 | Skill | Ce qu'il fait |
 |---|---|
 | `code` | Écrit du code Luau vanilla pour un jeu Roblox, et le vérifie dans Studio via le MCP avant de le rendre |
+| `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |
 | `nouveau-skill` | Crée un skill conforme aux conventions de ce repo, après interview |
 
 Conventions communes portées par `code` : vanilla strict (aucune lib externe),
@@ -78,3 +79,31 @@ nommage Roblox officiel, `--!strict` sur les ModuleScripts, arborescence Rojo
 `src/{server,client,shared}`, logique de jeu côté serveur uniquement, et zéro
 API dépréciée (table complète dans
 [`references/api-obsolete.md`](plugins/roblox/skills/code/references/api-obsolete.md)).
+
+## La boucle d'amélioration
+
+Un SKILL.md est un fichier statique : il ne se réécrit pas tout seul. Ce repo
+remplace l'auto-amélioration magique par une boucle en deux temps.
+
+**1. Capture, au fil de l'eau.** Chaque skill enregistre une leçon quand l'un
+de trois signaux se produit — tu l'as corrigé, la vérification Studio a révélé
+une erreur de sa part, ou tu as dû re-préciser un contexte qu'il aurait dû
+porter. Rien d'autre ne vaut une entrée.
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" status
+```
+
+Le journal vit dans `${CLAUDE_PLUGIN_DATA}/journal.jsonl` : il survit aux mises
+à jour du plugin et il est partagé entre tous tes projets. Les leçons
+identiques fusionnent et incrémentent un compteur — c'est ce compteur qui
+distingue une vraie règle d'un incident isolé.
+
+**2. Consolidation, quand tu le décides.** À partir de 8 leçons en attente, le
+skill actif te signale qu'il y a de la matière. Tu lances `/roblox:affiner`,
+qui trie, propose un diff et n'écrit qu'après ton accord.
+
+La contrainte qui gouverne tout : **chaque ligne d'un SKILL.md est rechargée à
+chaque déclenchement.** Un skill qui grossit à chaque passage se dilue et rend
+de moins bons résultats. C'est pourquoi `affiner` cherche systématiquement ce
+qui peut *sortir*, et pourquoi une leçon vue une seule fois n'entre pas.
