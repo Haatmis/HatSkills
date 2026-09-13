@@ -1,0 +1,184 @@
+---
+name: vfx
+description: >
+  Crée des effets visuels pour un jeu Roblox — particules, faisceaux,
+  traînées, surbrillances, flashs — sous forme de presets réutilisables dans
+  src/shared/VFX/, cohérents avec la charte visuelle du projet, puis les
+  vérifie dans Studio. Utilise ce skill dès qu'un rendu visuel est demandé :
+  « ajoute un effet », « des particules », « une explosion », « un impact »,
+  « une traînée sur l'épée », « un halo », « ça doit briller », « un effet de
+  soin », « faire clignoter », ou quand feature confie une étape VFX — même si
+  la demande est formulée comme du code. N'utilise pas ce skill pour la
+  logique de jeu qui déclenche l'effet (voir code), pour un rendu qui ne
+  marche pas alors qu'il devrait (voir debug), ni pour modéliser une
+  géométrie ou un mesh.
+---
+
+# Effets visuels Roblox
+
+## Situation
+
+Le VFX Roblox est entièrement scriptable : chaque propriété d'un
+`ParticleEmitter` se pose en code, et le MCP permet de créer et vérifier
+l'effet dans Studio. C'est le domaine le plus autonome de tout le plugin.
+
+Avec une limite dure, qu'il faut assumer au lieu de la contourner : **tu ne
+vois pas le rendu.** Tu peux garantir que l'effet existe, qu'il n'erre pas,
+que ses propriétés sont celles voulues et qu'il se nettoie. Tu ne peux pas
+garantir qu'il est beau. Ne prétends jamais le contraire — livre plutôt ce
+qu'il faut regarder et les boutons à tourner.
+
+## Contexte figé
+
+**La charte visuelle d'abord.** `src/shared/VFX/Style.luau` porte l'identité
+visuelle du projet : palette, durées, densité, budget mobile. Tous les presets
+en dérivent — c'est ce qui empêche le jeu de devenir un patchwork. Lis-la avant
+d'écrire quoi que ce soit. Si elle n'existe pas, pose **trois** questions
+(registre visuel, couleurs dominantes, mobile important ou non), crée le
+fichier, et dis à l'utilisateur qu'il pourra le retoucher une fois pour tout
+le jeu.
+
+**N'invente jamais un identifiant d'asset.** Un `rbxassetid://` inventé donne
+un effet invisible, et personne ne comprend pourquoi. Deux options seulement :
+laisser `Texture` vide (la texture par défaut, qui fait un travail honnête), ou
+décrire ce qu'il faut chercher dans la bibliothèque — « une texture de fumée
+douce, carrée, fond transparent » — et poser l'entrée à `0` dans
+`src/shared/VFX/Assets.luau`. L'effet doit tourner sans.
+
+**Un preset, pas un effet jetable.** Tout va dans `src/shared/VFX/`, appelable
+par son nom. Un effet écrit en dur dans un système est un effet qu'on ne
+retrouvera pas et qui divergera du reste.
+
+**Le côté se choisit et se justifie.** Par défaut le client : le serveur
+déclenche via un Remote, chaque client joue l'effet chez lui — réponse
+immédiate, aucune instance répliquée, qualité adaptable. Le serveur seulement
+pour ce qui doit persister dans le monde et être vu pareil par tous : une
+torche qui brûle, une zone active, un portail. Dis lequel et pourquoi, en une
+ligne.
+
+**Une salve n'est pas un robinet.** Un impact ponctuel se fait avec
+`Rate = 0` et `:Emit(n)`. Activer puis désactiver `Enabled` produit un flux mou
+et mal cadré. `Rate` est réservé aux effets continus.
+
+**Détruire un emitter tue ses particules vivantes.** Le nettoyage attend
+`Lifetime.Max` plus une marge, sinon l'effet s'évapore d'un coup au lieu de
+s'éteindre. Un emitter jamais détruit est une fuite : chaque coup d'épée
+laisse un `Attachment` derrière lui.
+
+**Budget mobile.** Une bonne part des joueurs Roblox est sur téléphone. Le
+coût dominant n'est pas le nombre de particules mais la surface transparente
+empilée : dix grosses particules translucides coûtent plus cher que cent
+petites. Vise la lisibilité, pas la quantité.
+
+`references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
+propriétés qui comptent vraiment, des recettes de base et les pièges de
+performance. Lis-le avant de choisir ton instance.
+
+## Procédure
+
+1. **Lis `src/shared/VFX/Style.luau`.** Absente → trois questions, puis
+   crée-la.
+2. **Identifie la nature de l'effet** : ponctuel, continu, lien entre deux
+   points, traînée sur un objet en mouvement, ou mise en évidence d'un objet.
+   Ça détermine l'instance — voir la boîte à outils.
+3. **Choisis le côté**, client ou serveur, et note la raison.
+4. **Écris le preset** dans `src/shared/VFX/`, en dérivant couleurs, durées et
+   densité de la charte plutôt qu'en posant des valeurs en dur.
+5. **Crée l'effet dans Studio via le MCP** et vérifie : l'instance existe au
+   bon endroit, ses propriétés sont bien celles écrites, aucune erreur dans
+   l'Output, et le nettoyage se produit — plus aucun `Attachment` résiduel
+   après la durée prévue.
+6. **Livre** au format ci-dessous, avec ce qu'il faut regarder et les réglages
+   à tourner.
+
+## Format de sortie
+
+```markdown
+## L'effet
+<Ce qui se passe visuellement, en 2 lignes. Décris, ne vends pas.>
+
+## Fichiers
+| Chemin | Rôle |
+|---|---|
+| `src/shared/VFX/Impact.luau` | Preset, appelé par `VFX.Play("Impact", cframe)` |
+
+## Côté
+<Client ou serveur, et pourquoi en une ligne.>
+
+## Vérifié dans Studio
+<L'instance créée, ses propriétés relues, l'Output, et le nettoyage constaté.
+Dis explicitement : « le rendu visuel, je ne peux pas le juger ».>
+
+## À regarder
+1. <Point précis à observer, ex. « l'impact doit se lire même à 30 studs ».>
+2. <…>
+
+## Réglages à tourner
+| Si tu trouves que… | Change | Sens |
+|---|---|---|
+| C'est trop discret | `Size` | Monter la valeur du milieu de la séquence |
+| Ça traîne trop | `Lifetime` | Descendre le maximum |
+| Ça rame sur mobile | `Rate` ou `:Emit(n)` | Diviser par deux avant de toucher au reste |
+
+## Textures
+<Ce qui tourne avec la texture par défaut, et ce qui gagnerait à une vraie
+texture — avec la description de ce qu'il faut chercher. Ou : « rien à
+fournir ».>
+```
+
+## Exemple
+
+Entrée : `un effet quand on tape quelqu'un`
+
+Nature : ponctuel, au point d'impact → `ParticleEmitter` en salve, sur un
+`Attachment` temporaire placé au point de contact.
+
+Le preset dérive de la charte : couleur d'accent, durée courte, densité
+multipliée par le facteur global. `Rate = 0`, puis `:Emit(12)`. `Speed` en
+`NumberRange.new(8, 14)` avec `SpreadAngle` large pour une gerbe, et une
+`Acceleration` vers le bas pour que les éclats retombent au lieu de flotter —
+c'est ce détail qui fait la différence entre « des particules » et « un
+impact ».
+
+Côté client : le serveur valide le coup et diffuse un Remote, chaque client
+joue l'effet chez lui. Aucune instance ne traverse le réseau.
+
+Nettoyage : l'`Attachment` est détruit après `Lifetime.Max + 0,2 s`. Détruit
+plus tôt, les éclats disparaîtraient en plein vol.
+
+Ce qui est livré en plus : « à regarder — est-ce que l'impact se lit quand
+deux joueurs se tapent dessus en même temps ? », et les trois réglages pour
+corriger sans repasser par moi.
+
+## Pièges
+
+- **Prétendre juger le rendu.** Tu ne le vois pas. Dis-le, et donne les
+  boutons.
+- **Inventer un ID de texture.** Effet invisible, cause introuvable.
+- **`Enabled = true` puis `false` pour une salve.** Utilise `:Emit(n)`.
+- **Détruire l'emitter trop tôt.** Les particules vivantes disparaissent d'un
+  coup.
+- **Ne jamais détruire l'Attachment.** Chaque effet laisse un déchet ; au bout
+  d'une partie, le personnage en traîne des centaines.
+- **Empiler de grosses particules translucides.** C'est la surface
+  transparente qui coûte, pas le nombre. Le téléphone décroche là.
+- **Poser des couleurs en dur.** Elles dérivent de la charte, sinon le jeu
+  devient un patchwork et rien ne se change globalement.
+- **Un `Beam` ou un `Trail` sans ses deux `Attachment`.** Ils ne rendent rien,
+  sans erreur ni avertissement.
+- **`Explosion` pour un effet purement visuel.** Par défaut, elle casse les
+  assemblages et tue les joueurs alentour.
+
+## Avant de rendre
+
+- [ ] `Style.luau` lu, ou créé après trois questions.
+- [ ] Couleurs, durées et densité dérivées de la charte, pas en dur.
+- [ ] Aucun identifiant d'asset inventé ; l'effet tourne sans texture fournie.
+- [ ] Le preset vit dans `src/shared/VFX/` et s'appelle par son nom.
+- [ ] Côté choisi et justifié en une ligne.
+- [ ] Salve avec `:Emit(n)`, pas avec `Enabled`.
+- [ ] Nettoyage après `Lifetime.Max` + marge, vérifié dans Studio.
+- [ ] Aucune instance résiduelle après l'effet.
+- [ ] Section « À regarder » remplie, et l'incapacité à juger le rendu dite
+      explicitement.
+- [ ] Au moins trois réglages donnés avec leur sens.

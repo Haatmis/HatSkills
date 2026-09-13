@@ -72,6 +72,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 |---|---|
 | `game-design` | Cadre une feature avant tout code : règles, chiffres jouables, cas limites, risques — et écrit la spec dans `docs/design/` |
 | `feature` | Exécute une spec : découpe en étapes, appelle le skill compétent à chacune, vérifie dans Studio, livre avec placeholders |
+| `vfx` | Crée des effets visuels (particules, faisceaux, traînées) en presets réutilisables, dérivés de la charte du projet |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
 | `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |
@@ -100,8 +101,8 @@ game-design ──► docs/design/<feature>.md        règles, chiffres, cas lim
      ▼
 feature ──────► découpe en étapes ordonnées     serveur avant client, toujours
      │              │
-     │              ├─► code    (étape 1, vérifiée dans Studio)
-     │              ├─► code    (étape 2, vérifiée dans Studio)
+     │              ├─► code    (étapes 1-5, vérifiées dans Studio)
+     │              ├─► vfx     (étape 6, vérifiée dans Studio)
      │              └─► debug   (si une étape casse)
      ▼
 système qui tourne + src/shared/Config/Assets.luau

@@ -39,6 +39,7 @@ fiable, le déclenchement automatique ne l'est pas.
 | Domaine | Skill |
 |---|---|
 | Code serveur, client, configuration, câblage son | `/roblox:code` |
+| Particules, faisceaux, traînées, surbrillances, flashs | `/roblox:vfx` |
 | Diagnostic quand une étape casse | `/roblox:debug` |
 | Cadrage manquant ou spec à trancher | `/roblox:game-design` |
 
@@ -100,7 +101,7 @@ réparer.
    | 3 | Remotes : intentions du client, validées serveur | `code` |
    | 4 | Client : entrée, retour immédiat | `code` |
    | 5 | Animation : lecture, priorité, rig | `code` |
-   | 6 | VFX | `code` (ou le skill dédié s'il existe) |
+   | 6 | VFX | `vfx` |
    | 7 | Son : câblage | `code` |
    | 8 | Vérification d'ensemble à deux joueurs | `code` |
 
@@ -175,7 +176,8 @@ proprement en attendant.
 ## Pièges
 
 - **Écrire soi-même le domaine d'un autre skill.** Des VFX écrits par
-  l'orchestrateur sont des VFX écrits sans savoir-faire VFX.
+  l'orchestrateur sont des VFX écrits sans savoir-faire VFX — et sans la
+  charte visuelle du projet, donc incohérents avec le reste du jeu.
 - **Client avant serveur.** L'ordre le plus coûteux à rattraper : il faut
   reprendre toute la logique une fois qu'on réalise que le client décidait.
 - **Passer un skill sans contexte.** Il réinventera ce que l'étape précédente
