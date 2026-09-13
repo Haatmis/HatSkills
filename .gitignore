@@ -1,0 +1,6 @@
+# Caches Python du validateur
+__pycache__/
+*.pyc
+
+# Clé API du skill hat3d — ne jamais committer (config.example.json suffit)
+plugins/roblox/skills/hat3d/config.json

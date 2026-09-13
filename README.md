@@ -72,6 +72,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 |---|---|
 | `game-design` | Cadre une feature avant tout code : règles, chiffres jouables, cas limites, risques — et écrit la spec dans `docs/design/` |
 | `feature` | Exécute une spec : découpe en étapes, appelle le skill compétent à chacune, vérifie dans Studio, livre avec placeholders |
+| `hat3d` | Image → modèle 3D Roblox : `model.json` comme source de vérité, préview HTML à valider, `build.lua` généré pour Studio |
 | `vfx` | Crée des effets visuels (particules, faisceaux, traînées) en presets réutilisables, dérivés de la charte du projet |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
@@ -101,6 +102,7 @@ game-design ──► docs/design/<feature>.md        règles, chiffres, cas lim
      ▼
 feature ──────► découpe en étapes ordonnées     serveur avant client, toujours
      │              │
+     │              ├─► hat3d   (étape 0 : les props dont la feature a besoin)
      │              ├─► code    (étapes 1-5, vérifiées dans Studio)
      │              ├─► vfx     (étape 6, vérifiée dans Studio)
      │              └─► debug   (si une étape casse)

@@ -40,6 +40,7 @@ fiable, le déclenchement automatique ne l'est pas.
 |---|---|
 | Code serveur, client, configuration, câblage son | `/roblox:code` |
 | Particules, faisceaux, traînées, surbrillances, flashs | `/roblox:vfx` |
+| Modèle 3D, prop, objet construit depuis une image | `/roblox:hat3d` |
 | Diagnostic quand une étape casse | `/roblox:debug` |
 | Cadrage manquant ou spec à trancher | `/roblox:game-design` |
 
@@ -90,12 +91,16 @@ réparer.
    spec, ne devine pas : invoque `/roblox:game-design` d'abord.
 2. **Relève les contraintes techniques** avant de découper : le rig est-il R6
    ou R15 ? quels systèmes existants sont touchés ? l'arborescence est-elle
-   Rojo ou faut-il passer par le MCP ?
+   Rojo ou faut-il passer par le MCP ? la feature a-t-elle besoin d'un objet
+   qui n'existe pas encore — une épée, un coffre, une borne ? Un prop est une
+   **entrée** de la feature : il se construit avant le code qui s'en sert,
+   sinon les étapes suivantes travaillent sur du vide.
 3. **Découpe en étapes**, chacune avec son skill, son livrable et sa
    vérification. L'ordre par défaut, à adapter :
 
    | # | Étape | Skill |
    |---|---|---|
+   | 0 | Prop ou modèle 3D dont la feature a besoin | `hat3d` |
    | 1 | Configuration et types partagés | `code` |
    | 2 | Logique serveur : la source de vérité | `code` |
    | 3 | Remotes : intentions du client, validées serveur | `code` |
