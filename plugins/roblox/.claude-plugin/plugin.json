@@ -1,6 +1,6 @@
 {
-  "name": "hat",
-  "description": "Mes skills personnels : workflows répétables avec un format de sortie stable.",
+  "name": "roblox",
+  "description": "Développement de jeux Roblox : code Luau vanilla, vérifié dans Studio avant livraison.",
   "version": "0.1.0",
   "author": { "name": "haatmis" },
   "repository": "https://github.com/haatmis/HatSkills",

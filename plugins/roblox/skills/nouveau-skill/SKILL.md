@@ -24,7 +24,7 @@ compte autant que la rédaction.
 
 ## Contexte figé
 
-- **Repo** : `HatSkills`. Les skills vont dans `plugins/hat/skills/<nom>/SKILL.md`.
+- **Repo** : `HatSkills`. Les skills vont dans `plugins/roblox/skills/<nom>/SKILL.md`.
 - **Langue** : français, y compris dans le frontmatter.
 - **Nom** : kebab-case, et `name` du frontmatter identique au nom du dossier.
 - **Budget** : corps < 500 lignes ; `description` + `when_to_use` ≤ 1 536 car.
@@ -46,7 +46,7 @@ compte autant que la rédaction.
    - Qu'est-ce que tu te retrouves à re-préciser à chaque fois ?
    - À quoi ressemble une bonne sortie ? (demande un exemple réel)
 3. **Cherche les voisins.** Liste les skills déjà présents dans
-   `plugins/hat/skills/` et repère ceux dont le vocabulaire de déclenchement
+   `plugins/roblox/skills/` et repère ceux dont le vocabulaire de déclenchement
    recoupe le nouveau. Prévois une exclusion croisée dans les deux sens.
 4. **Écris la description** selon la formule : ce que ça produit → quand s'en
    servir (phrases réelles, ton un peu insistant) → quand ne pas s'en servir
@@ -62,7 +62,7 @@ compte autant que la rédaction.
 
 ## Format de sortie
 
-Crée `plugins/hat/skills/<nom>/SKILL.md` exactement sur ce gabarit :
+Crée `plugins/roblox/skills/<nom>/SKILL.md` exactement sur ce gabarit :
 
 ```markdown
 ---
@@ -111,7 +111,7 @@ Entrée :
 J'en ai marre de reformater mes notes de réunion client à chaque fois.
 ```
 
-Sortie (après interview) : `plugins/hat/skills/compte-rendu-client/SKILL.md`,
+Sortie (après interview) : `plugins/roblox/skills/compte-rendu-client/SKILL.md`,
 dont la description est
 
 ```

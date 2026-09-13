@@ -7,9 +7,9 @@
   "description": "Mes skills pour Claude.",
   "plugins": [
     {
-      "name": "hat",
-      "source": "./plugins/hat",
-      "description": "Mes skills personnels : workflows répétables avec un format de sortie stable.",
+      "name": "roblox",
+      "source": "./plugins/roblox",
+      "description": "Développement de jeux Roblox : code Luau vanilla, vérifié dans Studio avant livraison.",
       "author": { "name": "haatmis" },
       "license": "Apache-2.0"
     }

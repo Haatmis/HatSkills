@@ -1,21 +1,21 @@
 # HatSkills
 
-Mes skills pour Claude, packagés en plugin.
+Mes skills Claude pour le développement de jeux **Roblox**, packagés en plugin.
 
 ## Installation
 
 ```shell
 /plugin marketplace add haatmis/HatSkills
-/plugin install hat@hatskills
+/plugin install roblox@hatskills
 ```
 
-Les skills s'invoquent alors `/hat:<nom>` — ou se déclenchent tout seuls quand
+Les skills s'invoquent alors `/roblox:<nom>` — ou se déclenchent tout seuls quand
 leur `description` correspond à ce que tu demandes.
 
 Pour développer sans installer :
 
 ```bash
-claude --plugin-dir ./plugins/hat
+claude --plugin-dir ./plugins/roblox
 # puis /reload-plugins après chaque modification
 ```
 
@@ -24,7 +24,7 @@ claude --plugin-dir ./plugins/hat
 ```
 HatSkills/
 ├── .claude-plugin/marketplace.json   # le marketplace « hatskills »
-├── plugins/hat/                      # le plugin
+├── plugins/roblox/                      # le plugin
 │   ├── .claude-plugin/plugin.json
 │   └── skills/<nom>/SKILL.md         # ← les skills vivent ici
 ├── docs/                             # la méthode
@@ -35,11 +35,11 @@ HatSkills/
 ## Ajouter un skill
 
 ```shell
-/hat:nouveau-skill
+/roblox:nouveau-skill
 ```
 
 Ou à la main : copie `templates/SKILL.template.md` dans
-`plugins/hat/skills/<nom>/SKILL.md`, remplis-le, puis
+`plugins/roblox/skills/<nom>/SKILL.md`, remplis-le, puis
 
 ```bash
 python3 scripts/validate.py
@@ -70,4 +70,11 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 
 | Skill | Ce qu'il fait |
 |---|---|
+| `code` | Écrit du code Luau vanilla pour un jeu Roblox, et le vérifie dans Studio via le MCP avant de le rendre |
 | `nouveau-skill` | Crée un skill conforme aux conventions de ce repo, après interview |
+
+Conventions communes portées par `code` : vanilla strict (aucune lib externe),
+nommage Roblox officiel, `--!strict` sur les ModuleScripts, arborescence Rojo
+`src/{server,client,shared}`, logique de jeu côté serveur uniquement, et zéro
+API dépréciée (table complète dans
+[`references/api-obsolete.md`](plugins/roblox/skills/code/references/api-obsolete.md)).
