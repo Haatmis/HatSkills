@@ -9,8 +9,9 @@
 3. [Beam et Trail](#3-beam-et-trail)
 4. [Highlight et lumières](#4-highlight-et-lumières)
 5. [Recettes de base](#5-recettes-de-base)
-6. [Performance](#6-performance)
-7. [Pièges qui ne lèvent aucune erreur](#7-pièges-qui-ne-lèvent-aucune-erreur)
+6. [Le retour qui informe](#6-le-retour-qui-informe)
+7. [Performance](#7-performance)
+8. [Pièges qui ne lèvent aucune erreur](#8-pièges-qui-ne-lèvent-aucune-erreur)
 
 ---
 
@@ -131,7 +132,63 @@ effet lui donne beaucoup de présence — une par effet suffit largement.
 | Portail, zone | `ParticleEmitter` continu, côté serveur | `Shape = Cylinder`, `Rate` bas, `Lifetime` long |
 | Projectile magique | `ParticleEmitter` attaché + `Trail` | L'emitter suit le projectile, le `Trail` marque la course |
 
-## 6. Performance
+## 6. Le retour qui informe
+
+Rien à voir avec les particules : ce sont des interfaces, posées dans le monde
+ou à l'écran. Le critère n'est pas « est-ce joli » mais **« est-ce lu »**.
+
+| Ce qu'on veut dire | L'instance |
+|---|---|
+| Un nombre sur une cible (dégâts, soin) | `BillboardGui` + `TextLabel`, tweené |
+| L'état d'une cible (barre de vie) | `BillboardGui` + `Frame`, persistant |
+| « J'ai été touché » | `ScreenGui` : cadre ou vignette au bord, bref |
+| « Voici ma cible » | `Highlight`, ou un réticule en `ScreenGui` |
+| Un état durable (cooldown, munitions) | `ScreenGui` fixe, pas dans le monde |
+
+### La pastille de dégâts
+
+Le motif le plus courant, et celui qu'on rate le plus souvent.
+
+| Propriété | Réglage | Pourquoi |
+|---|---|---|
+| `BillboardGui.Adornee` | Un `Attachment` temporaire au point d'impact | Suit la cible sans lui appartenir |
+| `StudsOffsetWorldSpace` | Décalage aléatoire de ±1 stud en X et Z | **Sans ça, trois coups rapides empilent trois pastilles illisibles** |
+| `AlwaysOnTop` | `true` | Une information masquée par un mur n'informe pas |
+| `MaxDistance` | 60 à 100 studs | Inutile d'afficher les chiffres d'un combat à l'autre bout |
+| `LightInfluence` | `0` | Le texte garde sa couleur de nuit |
+| `TextLabel.TextScaled` | `true` | Lisible à toute distance |
+| `TextStrokeTransparency` | `0` à `0,3` | Le contour est ce qui rend le texte lisible sur n'importe quel fond |
+| `TextColor3` | Dérivé de la charte | Rouge pour subi, blanc pour infligé : la couleur porte le « qui » |
+
+L'animation : monter de 2 à 3 studs en 0,6 à 1 s avec `TweenService`, et faire
+tomber `TextTransparency` à `1` sur la fin. Une `EasingStyle.Quad` en `Out`
+donne l'impression que le chiffre s'échappe ; du linéaire fait mécanique.
+
+Détruire le `BillboardGui` **après** le tween, jamais pendant : sinon le
+chiffre disparaît d'un coup au lieu de s'éteindre — le même piège que les
+particules.
+
+### Qui crée quoi
+
+Une pastille est **locale** : chaque client crée les siennes. Le serveur
+diffuse « X a pris N dégâts », chaque client décide s'il l'affiche et comment.
+Créer le `BillboardGui` côté serveur le réplique à tout le monde, y compris à
+ceux qui sont à 300 studs — du réseau dépensé pour rien.
+
+Corollaire utile : le même événement peut donner un chiffre blanc chez
+l'attaquant et un chiffre rouge chez la victime, sans code en double.
+
+### Ce qui rate le plus souvent
+
+| Symptôme | Cause |
+|---|---|
+| On ne sait pas si on a touché | Aucun retour, ou un retour purement décoratif |
+| Les chiffres sont illisibles | Pas de contour, ou trois pastilles superposées |
+| Le retour « bave » sur l'action suivante | Durée trop longue — au-delà d'une seconde, c'est du décor |
+| La victime ne comprend pas d'où ça vient | Tout le retour est sur l'attaquant, rien au bord de son écran |
+| Ça rame en combat de masse | `BillboardGui` créés côté serveur, ou `MaxDistance` absent |
+
+## 7. Performance
 
 Le coût dominant n'est pas le nombre de particules mais **la surface
 transparente empilée à l'écran**. Dix grosses particules translucides qui se
@@ -148,7 +205,7 @@ recouvrent coûtent plus cher que cent petites bien réparties.
 Sur téléphone, viser la lisibilité plutôt que la densité : un impact net à
 12 particules se lit mieux en mêlée qu'un nuage à 60.
 
-## 7. Pièges qui ne lèvent aucune erreur
+## 8. Pièges qui ne lèvent aucune erreur
 
 | Symptôme | Cause |
 |---|---|

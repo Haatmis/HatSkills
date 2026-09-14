@@ -99,7 +99,10 @@ Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
 
 - **Un événement plutôt qu'une boucle.** Un `while true do task.wait() end` qui
   surveille un état devrait être un signal — `Changed`,
-  `GetPropertyChangedSignal`, `Touched`.
+  `GetPropertyChangedSignal`, `Touched`. Une règle qui réagit à un état — une
+  pause, un cooldown, un seuil — se branche sur ce signal aussi, pas sur le
+  seul chemin de code qui a causé l'état : sinon elle rate les autres causes,
+  et ne se teste qu'en rejouant ce chemin en entier.
 - **Le réseau se compte.** Un Remote par frame et par joueur ne passe pas
   l'échelle. Regroupe, ou n'envoie qu'au changement.
 - **Ce qui est créé en boucle se réutilise.** Projectiles, effets, éléments
@@ -110,7 +113,7 @@ Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
 Et l'anti-règle, aussi importante : **ne micro-optimise pas.** Mettre un service
 en variable locale, préférer `ipairs` à `pairs`, dérouler une boucle — ça rend
 le code moins lisible pour un gain que tu n'as pas mesuré. Si la performance
-est vraiment le sujet, `references/perf.md` donne les coûts réels, les seuils
+est vraiment le sujet, `${CLAUDE_SKILL_DIR}/references/perf.md` donne les coûts réels, les seuils
 et comment mesurer avant de toucher à quoi que ce soit.
 
 **Arborescence** (fixée pour tous les projets) :
@@ -135,7 +138,7 @@ Script, `Nom.client.luau` → LocalScript, `init.luau` → le module d'un dossie
 | `BodyVelocity`, `BodyPosition`, `BodyGyro` | `LinearVelocity`, `AlignPosition`, `AlignOrientation` |
 
 Avant d'écrire du mouvement, de l'animation, du timing, de l'input ou de
-l'accès aux services, lis `references/api-obsolete.md` : la table complète y
+l'accès aux services, lis `${CLAUDE_SKILL_DIR}/references/api-obsolete.md` : la table complète y
 est, avec le remplaçant exact et ce qui change dans l'usage.
 
 ## Procédure
@@ -183,7 +186,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
 Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
 ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
-Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`. Sur Windows, si `python3` ouvre le Microsoft Store au lieu de s'exécuter,
+relance avec `py` : c'est un alias, pas un interpréteur.
 
 
 ## Format de sortie
@@ -268,8 +272,6 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
   dernière sauvegarde de tous les joueurs encore connectés.
 - **Poser `.Parent` avant les propriétés.** L'instance est répliquée puis
   modifiée : coût réseau inutile et clignotement visible.
-- **Réinventer un système déjà présent dans `src/`.** L'étape 2 de la
-  procédure existe pour ça.
 
 ## Avant de rendre
 

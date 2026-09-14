@@ -26,6 +26,15 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Windows : la console est en cp1252 par défaut, et les flèches ou accents de
+# ce script la font lever UnicodeEncodeError — donc planter APRÈS avoir fait
+# son travail. Un script qui échoue une fois qu'il a réussi apprend à ignorer
+# son verdict, ce qui est pire que pas de script du tout.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
 SEUIL = 8          # au-delà, on signale qu'il y a de la matière à consolider
 TYPES = {
     "correction":   "l'utilisateur m'a corrigé",

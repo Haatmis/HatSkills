@@ -223,7 +223,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
   --lesson "Toujours …" --context "ce qui se passait, une ligne"
 ```
 
-Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`. Sur Windows, si `python3` ouvre le Microsoft Store au lieu de s'exécuter,
+relance avec `py` : c'est un alias, pas un interpréteur.
 
 ## Avant de rendre
 

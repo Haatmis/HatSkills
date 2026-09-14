@@ -2,13 +2,16 @@
 name: vfx
 description: >
   Crée des effets visuels pour un jeu Roblox — particules, faisceaux,
-  traînées, surbrillances, flashs — sous forme de presets réutilisables dans
-  src/shared/VFX/, cohérents avec la charte visuelle du projet, puis les
-  vérifie dans Studio. Utilise ce skill dès qu'un rendu visuel est demandé :
-  « ajoute un effet », « des particules », « une explosion », « un impact »,
-  « une traînée sur l'épée », « un halo », « ça doit briller », « un effet de
-  soin », « faire clignoter », ou quand feature confie une étape VFX — même si
-  la demande est formulée comme du code. N'utilise pas ce skill pour la
+  traînées, surbrillances, flashs — et le **retour visuel qui informe le
+  joueur** : pastille de dégâts chiffrée, marqueur de coup, barre de vie
+  flottante. Le tout en presets réutilisables dans src/shared/VFX/, cohérents
+  avec la charte du projet, puis vérifiés dans Studio. Utilise ce skill dès
+  qu'un rendu visuel est demandé : « ajoute un effet », « des particules »,
+  « une explosion », « un impact », « une traînée sur l'épée », « un halo »,
+  « ça doit briller », « faire clignoter », « afficher les dégâts », « une
+  pastille qui monte et disparaît », « on ne voit pas qu'on touche », ou quand
+  feature confie une étape VFX — même si la demande est formulée comme du
+  code. N'utilise pas ce skill pour la
   logique de jeu qui déclenche l'effet (voir code), pour un rendu qui ne
   marche pas alors qu'il devrait (voir debug), ni pour modéliser une
   géométrie ou un mesh.
@@ -52,6 +55,30 @@ décrire ce qu'il faut chercher dans la bibliothèque — « une texture de fum�
 douce, carrée, fond transparent » — et poser l'entrée à `0` dans
 `src/shared/VFX/Assets.luau`. L'effet doit tourner sans.
 
+**Décorer et informer sont deux métiers.** Un effet qui décore peut être
+discret, atmosphérique, stylisé — il enrichit. Un effet qui **informe** doit
+être *lu* : combien de dégâts, qui a touché, combien il me reste. Les règles ne
+sont pas les mêmes, et confondre les deux produit le défaut le plus courant du
+combat Roblox — on tape, quelque chose scintille, et on ne sait pas si on a
+fait 2 ou 200.
+
+Pour tout ce qui informe :
+
+- **Lisible en un tiers de seconde**, sans le fixer. Contour ou ombre sur le
+  texte, sinon il disparaît sur un fond clair.
+- **Une seule information par élément.** Un nombre dit les dégâts. Pas les
+  dégâts *et* le type *et* le critique.
+- **Ça ne se superpose jamais à soi-même.** Trois coups rapides au même endroit
+  donnent trois pastilles illisibles : décale chacune, un peu au hasard.
+- **Ça part vite.** 0,6 à 1 s. Un retour qui traîne devient du décor, et pollue
+  le suivant.
+- **Le coup encaissé se voit sans regarder la source.** Celui qui prend les
+  coups regarde ailleurs : son retour à lui est au bord de l'écran, pas sur le
+  personnage qui frappe.
+
+Le détail des instances — `BillboardGui`, tween de montée, distance
+d'affichage — est dans `${CLAUDE_SKILL_DIR}/references/boite-a-outils.md`.
+
 **Un preset, pas un effet jetable.** Tout va dans `src/shared/VFX/`, appelable
 par son nom. Un effet écrit en dur dans un système est un effet qu'on ne
 retrouvera pas et qui divergera du reste.
@@ -77,7 +104,7 @@ coût dominant n'est pas le nombre de particules mais la surface transparente
 empilée : dix grosses particules translucides coûtent plus cher que cent
 petites. Vise la lisibilité, pas la quantité.
 
-`references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
+`${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
 propriétés qui comptent vraiment, des recettes de base et les pièges de
 performance. Lis-le avant de choisir ton instance.
 
@@ -194,7 +221,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
 Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
 ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
-Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`. Sur Windows, si `python3` ouvre le Microsoft Store au lieu de s'exécuter,
+relance avec `py` : c'est un alias, pas un interpréteur.
 
 ## Avant de rendre
 
@@ -207,6 +235,9 @@ Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 - [ ] Salve avec `:Emit(n)`, pas avec `Enabled`.
 - [ ] Nettoyage après `Lifetime.Max` + marge, vérifié dans Studio.
 - [ ] Aucune instance résiduelle après l'effet.
+- [ ] Pour tout ce qui informe : lisible en un tiers de seconde, une seule
+      information, décalé pour ne pas se superposer, parti en moins d'une
+      seconde.
 - [ ] Section « À regarder » remplie, et l'incapacité à juger le rendu dite
       explicitement.
 - [ ] Au moins trois réglages donnés avec leur sens.

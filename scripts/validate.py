@@ -12,6 +12,15 @@ import re
 import sys
 from pathlib import Path
 
+# Windows : la console est en cp1252 par défaut, et les flèches ou accents de
+# ce script la font lever UnicodeEncodeError — donc planter APRÈS avoir fait
+# son travail. Un script qui échoue une fois qu'il a réussi apprend à ignorer
+# son verdict, ce qui est pire que pas de script du tout.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
 # Champs reconnus par Claude Code dans le frontmatter d'un SKILL.md.
 KNOWN_KEYS = {
     "name", "description", "when_to_use", "argument-hint", "arguments",
@@ -159,6 +168,20 @@ def check(path, report):
     return (folder, words(combined)) if desc else None
 
 
+def evals_documentes(report):
+    """Chaque cas d'éval présent sur le disque doit figurer dans son README.
+
+    Un README qui annonce sept cas quand il y en a dix ne casse rien — il
+    désinforme, ce qui est pire : on croit mesurer plus qu'on ne mesure.
+    """
+    for readme in ROOT.glob("plugins/*/evals/README.md"):
+        texte = readme.read_text(encoding="utf-8")
+        for cas in sorted(d for d in readme.parent.iterdir() if d.is_dir()):
+            if f"`{cas.name}`" not in texte:
+                report.append(("ERREUR", readme,
+                               f"le cas d'éval « {cas.name} » n'est documenté nulle part"))
+
+
 def main():
     targets = [Path(a) for a in sys.argv[1:]] or [ROOT]
     files = sorted({
@@ -172,6 +195,7 @@ def main():
         return 0
 
     report, descs = [], []
+    evals_documentes(report)
     for f in files:
         got = check(f, report)
         if got:

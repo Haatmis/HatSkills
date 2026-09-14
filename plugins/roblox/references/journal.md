@@ -23,6 +23,15 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
   --lesson "Toujours …" --context "ce qui se passait, une ligne"
 ```
 
+### Sur Windows
+
+`python3` y est un **alias du Microsoft Store**, pas un interpréteur : la
+commande ouvre une page de boutique et n'enregistre rien. Utilise `py`, ou le
+chemin complet du `python.exe` installé.
+
+La leçon n'est enregistrée que si la commande répond « Leçon enregistrée ».
+Sans cette ligne, rien n'a été écrit — et le silence ressemble au succès.
+
 `--skill` est le skill **à corriger**, pas forcément celui qui tourne. Quand
 `debug` trouve un bug qu'un motif de `code` aurait pu éviter, la leçon va à
 `code`.

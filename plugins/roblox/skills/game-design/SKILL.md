@@ -37,7 +37,7 @@ chiffres, tu signales ce qui ne va pas, et tu contredis quand il le faut.
 adapté ». Avance un chiffre jouable et dis d'où il sort : le temps pour tuer
 visé, la comparaison à un standard du genre, la contrainte technique.
 Corriger un chiffre est facile ; partir d'une page blanche ne l'est pas.
-`references/reperes-roblox.md` donne les valeurs par défaut de la plateforme et
+`${CLAUDE_SKILL_DIR}/references/reperes-roblox.md` donne les valeurs par défaut de la plateforme et
 les fourchettes usuelles — lis-le avant de chiffrer quoi que ce soit.
 
 **Contredis quand tu vois un problème.** Si l'idée a un défaut — elle casse
@@ -51,6 +51,18 @@ c'est sa décision : tu notes la réserve dans la spec et tu avances.
 spec. Tout le reste, tu le tranches toi-même en le marquant comme une
 hypothèse dans la spec — l'utilisateur corrigera ce qui ne lui va pas. Un
 interrogatoire de quinze questions tue l'envie de construire.
+
+**Une mécanique qu'on ne peut pas lire n'existe pas.** Si le joueur inflige
+20 dégâts et que rien ne le lui dit, il ne sait ni qu'il a touché, ni combien,
+ni si ça sert à quelque chose — et il conclut que la feature est cassée. Le
+retour n'est pas de la décoration ajoutée après : c'est la moitié de la
+mécanique, et il se spécifie en même temps qu'elle.
+
+Trois questions à te poser sur chaque feature, et à trancher dans la spec :
+comment le joueur sait que **son action a marché** ; comment il sait qu'il
+**subit** quelque chose ; comment il sait **où il en est** — points de vie,
+cooldown, progression. Une réponse « rien » est un choix, mais ce doit être un
+choix assumé et écrit.
 
 **Pense au joueur qui triche.** Sur Roblox, toute mécanique qui donne un
 avantage sera attaquée. Note-le dans la spec pour que l'implémentation le
@@ -107,6 +119,15 @@ avec que sans.>
 | Valeur | Proposé | Pourquoi |
 |---|---|---|
 | Dégâts par coup | 25 | 4 coups pour tuer un joueur à 100 PV |
+
+## Retour joueur
+| Ce que le joueur doit savoir | Comment il l'apprend |
+|---|---|
+| Mon action a marché | <ex. pastille de dégâts chiffrée sur la cible> |
+| Je subis quelque chose | <ex. flash rouge bref au bord de l'écran> |
+| Où j'en suis | <ex. barre de vie au-dessus de la cible visée> |
+
+<Une ligne « rien » est acceptable si c'est délibéré — écris pourquoi.>
 
 ## Échelle
 <Combien de joueurs simultanés, combien d'instances, combien d'appels par
@@ -186,7 +207,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
 Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
 ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
-Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`. Sur Windows, si `python3` ouvre le Microsoft Store au lieu de s'exécuter,
+relance avec `py` : c'est un alias, pas un interpréteur.
 
 ## Avant de rendre
 
@@ -197,6 +219,8 @@ Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 - [ ] L'échelle attendue est chiffrée — elle décide de la structure.
 - [ ] Les cas limites couvrent : cible morte, joueur parti, actions
       simultanées, valeurs nulles ou négatives.
+- [ ] La section « Retour joueur » est remplie : action réussie, dégât subi,
+      état courant. Une mécanique illisible n'existe pas pour le joueur.
 - [ ] Au moins un risque de design identifié, ou une raison de n'en voir aucun.
 - [ ] La section exploiteur est remplie dès que la feature donne un avantage.
 - [ ] Les hypothèses non demandées sont marquées comme telles.

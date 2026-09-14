@@ -3,6 +3,81 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.7.0
+
+**Le retour joueur devient une catégorie.** Lacune trouvée sur la première
+feature réelle : le système de combat fonctionnait, était sécurisé, vérifié —
+et aucune pastille de dégâts. Ni `game-design` ni `vfx` n'y avaient pensé,
+parce que rien dans le plugin ne parlait de lisibilité. C'était une lacune de
+conception, pas d'exécution : personne n'avait rien demandé.
+
+- `game-design` remplit une section **Retour joueur** dans chaque spec : action
+  réussie, dégât subi, état courant. « Rien » est un choix acceptable, mais il
+  doit être écrit.
+- `vfx` distingue **décorer** et **informer**. Un effet décoratif enrichit et
+  peut être discret ; un effet qui informe doit être lu en un tiers de seconde,
+  porter une seule information, ne pas se superposer à lui-même, et partir en
+  moins d'une seconde.
+- La boîte à outils gagne le volet correspondant : quelle instance pour quelle
+  information, le réglage complet d'une pastille de dégâts, et surtout le
+  décalage aléatoire sans lequel trois coups rapides empilent trois chiffres
+  illisibles. Plus la règle qui économise du réseau : une pastille est
+  **locale**, le serveur diffuse l'événement et chaque client décide.
+
+## 0.6.4
+
+Reprise de la consolidation validée dans une session parallèle, pour éviter
+une fusion manuelle à quatre fichiers en conflit.
+
+- `code` sait maintenant qu'une règle réagissant à un état se branche sur le
+  **signal** qui porte cet état, pas sur le seul chemin de code qui l'a
+  provoqué — sinon elle rate les autres causes et ne se teste qu'en rejouant
+  ce chemin. Leçon issue du vrai bug : la pause de régénération accrochée au
+  coup de poing au lieu de la perte de PV.
+- Retrait du piège « Réinventer un système déjà présent dans `src/` », qui ne
+  faisait que renvoyer à l'étape 2 de la procédure sans rien ajouter.
+
+## 0.6.3
+
+Trois bugs Windows, tous introduits par moi : les scripts ont été écrits et
+testés sous Linux, jamais sur la seule plateforme où ils tournent vraiment.
+
+- **`check_version.py` sortait en erreur après avoir conclu « OK ».** La
+  console Windows est en cp1252 et ne sait pas encoder la flèche `→` :
+  `UnicodeEncodeError`, exit 1, juste après avoir réussi. Un script qui échoue
+  une fois qu'il a réussi apprend à ignorer son verdict — c'est pire que pas
+  de script. Reproduit sous cp1252, corrigé, revérifié.
+- `validate.py`, `journal.py` et `build_help.py` avaient le même défaut
+  latent. Les quatre reconfigurent maintenant leur sortie en UTF-8.
+- **`python3` est un alias du Microsoft Store sur Windows** : la commande du
+  journal ouvrait une page de boutique et n'enregistrait rien. La capture
+  était donc muette. Les huit skills et la référence indiquent `py` en repli.
+
+## 0.6.2
+
+Les 18 renvois vers `references/` étaient écrits en relatif. Observé en usage
+réel : le modèle construisait le chemin absolu vers le cache du plugin à la
+main, avec un `cat … 2>/dev/null || ls` en repli — il tâtonnait. Tous passés en
+`${CLAUDE_SKILL_DIR}/references/…`. Le gabarit suit, sinon le prochain skill
+repartirait en relatif.
+
+## 0.6.1
+
+Le README des évals annonçait sept cas alors que la suite en a dix : les trois
+ajoutés en même temps que `atelier` n'avaient jamais été documentés. Les
+graders, eux, étaient à jour. Un README qui sous-annonce ne casse rien — il
+désinforme, et on croit mesurer moins qu'on ne mesure.
+
+Corrigé, et restructuré : les frontières, le routage simple, et `hors-perimetre`
+à part — il n'a aucun skill attendu, ce que le tableau ne savait pas exprimer.
+
+`validate.py` refuse désormais un cas d'éval absent de son README : ce
+décalage-là ne peut plus revenir.
+
+Ajout d'un protocole de mesure **à la main**, avec les dix prompts : le harnais
+`claude plugin eval` est en accès anticipé et peut ne pas être activé sur un
+compte. Il automatise la mesure, il ne la conditionne pas.
+
 ## 0.6.0
 
 **Autorité physique.** `code` ne disait rien de la propriété réseau — le sujet

@@ -1,7 +1,7 @@
 {
   "name": "roblox",
   "description": "Développement de jeux Roblox : code Luau vanilla, vérifié dans Studio avant livraison.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": {
     "name": "haatmis"
   },
