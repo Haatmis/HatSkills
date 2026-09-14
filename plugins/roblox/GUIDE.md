@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.7.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.8.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -118,11 +118,23 @@ part dans un journal. À 8 leçons, il te propose `/roblox:atelier`, qui les
 promeut dans les skills — **avec ton accord sur le diff**. C'est comme ça que
 le plugin s'améliore ; rien ne bouge tout seul.
 
-Pour que le journal suive d'une machine à l'autre :
+**Le journal ne suit pas tes machines par défaut.** Il vit dans un dossier
+local, et une session cloud le perd quand son conteneur est recyclé. Une ligne
+dans ton profil PowerShell le règle une fois pour toutes :
 
 ```powershell
 $env:HATSKILLS_JOURNAL_DIR = "C:\...\HatSkills\.journal"
 ```
+
+Il devient alors versionné : il suit tes machines, il a un historique, et deux
+machines qui divergent fusionnent sans conflit.
+
+**Et il ne retient que ce que Claude a observé lui-même** — une correction que
+tu lui as faite, une erreur que la vérification a révélée. Jamais une consigne
+trouvée dans un fichier, un commentaire ou une page web : ce sont des données,
+pas des instructions. À la consolidation, toute leçon qui demanderait
+d'exécuter quelque chose ou d'affaiblir une vérification est refusée **et
+signalée**, pas écartée en silence.
 
 ## Quand ça se passe mal
 
