@@ -31,6 +31,13 @@ Studio avant de rendre quoi que ce soit.
 
 ## Contexte figé
 
+**Reformule avant d'agir — mais seulement quand ça change quelque chose.**
+Une ligne en tête de réponse : « Je comprends : … ». Fais-le si l'un des trois
+est vrai : la demande nomme un **système** plutôt qu'un élément ; un « qui » ou
+un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
+reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
+la session entière ; une ligne coûte une ligne.
+
 **Vanilla strict.** Aucune dépendance externe : ni Knit, ni Fusion, ni Roact,
 ni ProfileService, ni aucun paquet Wally. Tout à la main avec l'API Roblox. Si
 une lib rendrait vraiment service, dis-le en une phrase — ne l'introduis pas.
@@ -67,10 +74,44 @@ Ce qui découle de cette règle, à appliquer sans y penser :
   répondre : préfère un `RemoteEvent` dans ce sens.
 - Les données sensibles ne sont pas dans `ReplicatedStorage`.
 
+**La propriété réseau est une délégation d'autorité.** Par défaut, Roblox
+confie la simulation d'une pièce non ancrée au client le plus proche, et le
+personnage d'un joueur appartient toujours à son propre client.
+`SetNetworkOwner` déplace cette autorité : le mouvement devient fluide chez
+celui qui l'a — et falsifiable par lui. Ne la donne jamais sur ce qui décide
+d'une issue de jeu : dégâts, position d'un objectif, vitesse d'un projectile
+qui touche. Rends-la par `SetNetworkOwnerAuto()` dès que c'est fini. Et ne
+l'appelle pas sur une pièce ancrée : ça lève une erreur.
+
+Déplacer le personnage d'un autre joueur suppose donc un choix explicite —
+contrainte depuis le serveur, ou transfert d'autorité assumé. Le faire par
+`CFrame` depuis le client de quelqu'un d'autre ne marche simplement pas.
+
 **Régime prototype ou production.** Demande-le si ce n'est pas clair, ou
 déduis-le. En prototype, signale les manques de sécurité sans bloquer. Dès que
 le jeu est publié, tout ce qui touche à l'économie, aux données joueur ou aux
 Remotes doit être correct avant livraison — pas « à durcir plus tard ».
+
+**Les décisions de structure se prennent maintenant.** Il y a deux
+performances : celle qu'on rattrape plus tard avec un profileur, et celle qui
+est dans la *forme* du code. La seconde ne se rattrape pas — elle se réécrit.
+Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
+
+- **Un événement plutôt qu'une boucle.** Un `while true do task.wait() end` qui
+  surveille un état devrait être un signal — `Changed`,
+  `GetPropertyChangedSignal`, `Touched`.
+- **Le réseau se compte.** Un Remote par frame et par joueur ne passe pas
+  l'échelle. Regroupe, ou n'envoie qu'au changement.
+- **Ce qui est créé en boucle se réutilise.** Projectiles, effets, éléments
+  d'interface : une réserve d'objets recyclés, pas un `Instance.new` par tir.
+- **Ce qui n'a pas besoin d'autorité va au client.** Effets, sons, interface,
+  retour immédiat. Le serveur garde ce qui décide.
+
+Et l'anti-règle, aussi importante : **ne micro-optimise pas.** Mettre un service
+en variable locale, préférer `ipairs` à `pairs`, dérouler une boucle — ça rend
+le code moins lisible pour un gain que tu n'as pas mesuré. Si la performance
+est vraiment le sujet, `references/perf.md` donne les coûts réels, les seuils
+et comment mesurer avant de toucher à quoi que ce soit.
 
 **Arborescence** (fixée pour tous les projets) :
 
@@ -83,14 +124,13 @@ src/shared/    → ReplicatedStorage/Shared
 Conventions de fichiers Rojo : `Nom.luau` → ModuleScript, `Nom.server.luau` →
 Script, `Nom.client.luau` → LocalScript, `init.luau` → le module d'un dossier.
 
-**API dépréciées — les six qui reviennent tout le temps :**
+**API dépréciées — les cinq qui reviennent tout le temps :**
 
 | Ne jamais écrire | Écrire à la place |
 |---|---|
 | `wait()`, `spawn()`, `delay()` | `task.wait()`, `task.spawn()`, `task.defer()`, `task.delay()` |
 | `:connect()`, `:wait()` (minuscule) | `:Connect()`, `:Wait()` |
 | `:remove()` | `:Destroy()` |
-| `Instance.new("Part", parent)` | `Instance.new("Part")` puis `.Parent` **en dernier**, une fois les propriétés posées |
 | `Humanoid:LoadAnimation()` | `humanoid.Animator:LoadAnimation()` |
 | `BodyVelocity`, `BodyPosition`, `BodyGyro` | `LinearVelocity`, `AlignPosition`, `AlignOrientation` |
 
@@ -107,6 +147,12 @@ est, avec le remplaçant exact et ce qui change dans l'usage.
    modules existants, le style en place et ce qui est déjà résolu. N'introduis
    pas un deuxième système là où il y en a déjà un. En mode MCP, inspecte
    l'arbre du jeu.
+
+   **Et regarde `docs/design/` s'il existe** : une spec y décrit peut-être déjà
+   les règles et les chiffres de ce que tu vas écrire. Du code qui contredit
+   une décision de design prise la semaine d'avant ne se voit pas à la
+   relecture — il se découvre en jeu. Si tu t'en écartes, dis-le et dis
+   pourquoi.
 3. **Situe la frontière client/serveur** avant la première ligne : qu'est-ce
    qui tourne où, et qu'est-ce qui transite. Si la réponse n'est pas nette, la
    suite sera fausse.
@@ -136,7 +182,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
 
 Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
-ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
 Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 
@@ -146,6 +192,9 @@ En mode Rojo, modifie les fichiers puis rends **seulement** le compte rendu.
 En mode MCP, crée les instances puis rends le même compte rendu.
 
 ```markdown
+<Si la demande admettait plusieurs lectures : « Je comprends : … » en une
+ligne, avant tout le reste. Sinon, commence directement.>
+
 ## Ce que j'ai fait
 <2-4 lignes. Ce qui a été ajouté ou modifié, et le choix structurant s'il y
 en a un.>
@@ -224,6 +273,7 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 
 ## Avant de rendre
 
+- [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
 - [ ] Exécuté dans Studio via le MCP, Output lu et propre — ou absence du MCP
       signalée explicitement.
 - [ ] Aucune API de la table des dépréciées.

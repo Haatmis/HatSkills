@@ -43,6 +43,11 @@ Règle : précisé deux fois à la main = doit être ici.>
 
 ## Procédure
 
+<Pour un skill de production : reformule la demande en une ligne avant d'agir,
+mais seulement si elle nomme un système plutôt qu'un élément, laisse un
+« qui »/« quoi » implicite, ou dépasse un fichier. Sinon c'est du bruit.>
+
+
 1. <Étape vérifiable, à l'impératif.>
 2. <…>
 3. <…>
@@ -77,7 +82,7 @@ Sortie :
 
 ## Apprendre de la session
 
-<Ne retire pas cette section : c'est elle qui alimente /roblox:affiner.>
+<Ne retire pas cette section : c'est elle qui alimente /roblox:atelier.>
 
 Trois signaux valent une entrée au journal, et trois seulement : l'utilisateur
 t'a corrigé, la vérification Studio a révélé une erreur de ta part, ou un
@@ -91,7 +96,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
 
 Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
-ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
 Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 ## Avant de rendre

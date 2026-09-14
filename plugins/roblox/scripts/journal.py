@@ -2,7 +2,7 @@
 """Journal d'apprentissage du plugin roblox.
 
 Accumule les leçons tirées de l'usage réel des skills, pour qu'elles soient
-consolidées plus tard dans les SKILL.md par /roblox:affiner.
+consolidées plus tard dans les SKILL.md par /roblox:atelier.
 
 Le journal vit dans ${CLAUDE_PLUGIN_DATA}, qui survit aux mises à jour du
 plugin et est partagé entre tous tes projets.
@@ -119,7 +119,7 @@ def rappel(entrees):
     n = sum(1 for e in entrees if e.get("statut") == "en-attente")
     if n >= SEUIL:
         print(f"\n>>> {n} leçons en attente (seuil {SEUIL}). "
-              "Signale à l'utilisateur qu'il peut lancer /roblox:affiner.")
+              "Signale à l'utilisateur qu'il peut lancer /roblox:atelier.")
     return 0
 
 
@@ -137,7 +137,7 @@ def cmd_status(args):
         suffixe = f", dont {recurrentes} récurrente(s)" if recurrentes else ""
         print(f"  {skill:16} {len(lst)}{suffixe}")
     if len(entrees) >= SEUIL:
-        print("\n>>> Seuil atteint : propose /roblox:affiner à l'utilisateur.")
+        print("\n>>> Seuil atteint : propose /roblox:atelier à l'utilisateur.")
     return 0
 
 

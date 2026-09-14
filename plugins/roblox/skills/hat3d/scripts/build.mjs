@@ -497,7 +497,9 @@ writeFileSync(join(outDir, "build.lua"), luaSrc);
 if (luaSrc.length > PLAFOND_SOURCE) {
   warnings.push("build.lua fait " + luaSrc.length.toLocaleString("fr-FR") + " caractères, au-dessus du plafond "
     + "de " + PLAFOND_SOURCE.toLocaleString("fr-FR") + " d'une source de script Roblox : il ne peut pas être poussé "
-    + "en ModuleScript" + (compact ? " même en compact — passer par serve.mjs + install-json.lua, qui transportent le model.json en données."
+    + "en ModuleScript" + (compact ? " même en compact. Reduire le nombre de parts (segments plus bas dans le "
+    + "generateur), ou decouper le modele en plusieurs build.lua. Le transport du "
+    + "model.json en donnees (serve.mjs + install-json.lua) n'est pas fourni par ce plugin."
       : ". Relancer avec --compact (environ 5× plus court)."));
 } else if (luaSrc.length > PLAFOND_SOURCE * 0.85) {
   warnings.push("build.lua fait " + luaSrc.length.toLocaleString("fr-FR") + " caractères — proche du plafond de "

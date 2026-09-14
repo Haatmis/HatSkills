@@ -2,6 +2,10 @@
 
 Mes skills Claude pour le développement de jeux **Roblox**, packagés en plugin.
 
+> 👉 **[GUIDE.md](plugins/roblox/GUIDE.md)** — le guide rapide : à quoi sert chaque skill,
+> comment se déroule une feature, que faire quand ça rate. Commence par là — ou tape `/roblox:help` pour l'ouvrir dans ton navigateur.
+> Ce qui change d'une version à l'autre : [CHANGELOG.md](CHANGELOG.md).
+
 ## Installation
 
 ```shell
@@ -35,7 +39,7 @@ HatSkills/
 ## Ajouter un skill
 
 ```shell
-/roblox:nouveau-skill
+/roblox:atelier
 ```
 
 Ou à la main : copie `templates/SKILL.template.md` dans
@@ -74,10 +78,10 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 | `feature` | Exécute une spec : découpe en étapes, appelle le skill compétent à chacune, vérifie dans Studio, livre avec placeholders |
 | `hat3d` | Image → modèle 3D Roblox : `model.json` comme source de vérité, préview HTML à valider, `build.lua` généré pour Studio |
 | `vfx` | Crée des effets visuels (particules, faisceaux, traînées) en presets réutilisables, dérivés de la charte du projet |
+| `help` | Ouvre le guide dans le navigateur, généré depuis `GUIDE.md` |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
-| `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |
-| `nouveau-skill` | Crée un skill conforme aux conventions de ce repo, après interview |
+| `atelier` | Crée un skill après interview, ou consolide le journal dans les skills existants |
 
 Conventions communes portées par `code` : vanilla strict (aucune lib externe),
 nommage Roblox officiel, `--!strict` sur les ModuleScripts, arborescence Rojo
@@ -147,7 +151,8 @@ distingue une vraie règle d'un incident isolé.
 Le protocole complet vit dans
 [`plugins/roblox/references/journal.md`](plugins/roblox/references/journal.md) ;
 chaque skill en porte une version compacte. Les huit skills sont câblés —
-sauf `affiner`, qui vide le journal plutôt que de le remplir.
+sauf le mode « consolider » d'`atelier`, qui vide le journal
+plutôt que de le remplir.
 
 Le journal vit par défaut dans `${CLAUDE_PLUGIN_DATA}` : **par machine**. Des
 terminaux différents sur le même PC le partagent, une autre machine crée un
@@ -157,12 +162,12 @@ Pour qu'il suive, pointe `HATSKILLS_JOURNAL_DIR` vers un dossier synchronisé �
 divergences sans conflit.
 
 **2. Consolidation, quand tu le décides.** À partir de 8 leçons en attente, le
-skill actif te signale qu'il y a de la matière. Tu lances `/roblox:affiner`,
+skill actif te signale qu'il y a de la matière. Tu lances `/roblox:atelier`,
 qui trie, propose un diff et n'écrit qu'après ton accord.
 
 La contrainte qui gouverne tout : **chaque ligne d'un SKILL.md est rechargée à
 chaque déclenchement.** Un skill qui grossit à chaque passage se dilue et rend
-de moins bons résultats. C'est pourquoi `affiner` cherche systématiquement ce
+de moins bons résultats. C'est pourquoi `atelier` cherche systématiquement ce
 qui peut *sortir*, et pourquoi une leçon vue une seule fois n'entre pas.
 
 ## Mesurer plutôt que supposer
