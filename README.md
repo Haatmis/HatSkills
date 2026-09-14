@@ -2,6 +2,10 @@
 
 Mes skills Claude pour le développement de jeux **Roblox**, packagés en plugin.
 
+> 👉 **[GUIDE.md](GUIDE.md)** — le guide rapide : à quoi sert chaque skill,
+> comment se déroule une feature, que faire quand ça rate. Commence par là.
+> Ce qui change d'une version à l'autre : [CHANGELOG.md](CHANGELOG.md).
+
 ## Installation
 
 ```shell

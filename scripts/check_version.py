@@ -17,6 +17,10 @@ import sys
 
 MANIFESTE = "plugins/roblox/.claude-plugin/plugin.json"
 SURVEILLE = "plugins/"
+# Une version mineure ou majeure, c'est une « grosse maj » : elle doit arriver
+# avec de quoi la comprendre, sinon personne ne sait ce qui a changé — l'auteur
+# le premier, six mois plus tard.
+AVEC_LA_MAJ = ("GUIDE.md", "CHANGELOG.md")
 
 
 def git(*args):
@@ -44,6 +48,15 @@ def version_actuelle():
         return None
 
 
+def triplet(v):
+    """'0.2.0' -> (0, 2, 0). None si ce n'est pas du semver lisible."""
+    try:
+        parts = [int(x) for x in str(v).split(".")[:3]]
+        return tuple(parts + [0] * (3 - len(parts)))
+    except (ValueError, AttributeError):
+        return None
+
+
 def main():
     base = sys.argv[1] if len(sys.argv) > 1 else "origin/main"
     fourche = git("merge-base", "HEAD", base)
@@ -57,7 +70,10 @@ def main():
     changes = set()
     for args in (("diff", "--name-only", fourche, "HEAD"),
                  ("diff", "--name-only", "--cached"),
-                 ("diff", "--name-only")):
+                 ("diff", "--name-only"),
+                 # git diff ignore les fichiers non suivis : sans cette ligne,
+                 # un GUIDE.md tout neuf est invisible au garde-fou.
+                 ("ls-files", "--others", "--exclude-standard")):
         changes.update((git(*args) or "").splitlines())
     touches = sorted(f for f in changes if f.startswith(SURVEILLE))
     if not touches:
@@ -80,6 +96,21 @@ def main():
         print("Sans ça, personne ne recevra cette mise à jour : le plugin "
               "installé restera sur l'ancienne version, en silence.")
         return 1
+
+    # Grosse mise à jour : le guide et le journal des versions suivent.
+    a, b = triplet(avant), triplet(apres)
+    if a and b and (a[0], a[1]) != (b[0], b[1]):
+        oublis = [f for f in AVEC_LA_MAJ if f not in changes]
+        if oublis:
+            accord = "n'a pas été mis à jour" if len(oublis) == 1 \
+                else "n'ont pas été mis à jour"
+            print(f"ERREUR : version mineure {avant} → {apres}, mais "
+                  f"{' et '.join(oublis)} {accord}.")
+            print("\nUne grosse mise à jour arrive avec de quoi la comprendre. "
+                  "Voir la règle permanente dans CLAUDE.md.")
+            return 1
+        print(f"Version {avant} → {apres} (mineure) — guide et changelog à jour. OK.")
+        return 0
 
     print(f"Version {avant} → {apres} pour {len(touches)} fichier(s) modifié(s). OK.")
     return 0
