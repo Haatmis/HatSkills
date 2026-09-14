@@ -105,7 +105,8 @@ def check(path, report):
                  "s'en servir, avec des phrases réelles ?")
         low = combined.lower()
         if not any(t in low for t in ("quand", "dès que", "when", "use this",
-                                      "utilise ce", "lorsque")):
+                                      "utilise ce", "lorsque", "utiliser pour",
+                                      "à utiliser", "use for", "trigger")):
             warn("la description ne dit pas QUAND déclencher "
                  "(« Utilise ce skill quand… »)")
         if not any(t in low for t in ("n'utilise pas", "ne pas utiliser",

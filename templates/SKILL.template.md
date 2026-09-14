@@ -75,10 +75,31 @@ Sortie :
 - <Erreur fréquente> — <pourquoi c'est faux ici>. <Le pourquoi vaut mieux
   qu'un MUST : il se généralise aux cas non prévus.>
 
+## Apprendre de la session
+
+<Ne retire pas cette section : c'est elle qui alimente /roblox:affiner.>
+
+Trois signaux valent une entrée au journal, et trois seulement : l'utilisateur
+t'a corrigé, la vérification Studio a révélé une erreur de ta part, ou un
+contexte a dû t'être re-précisé. Formule une **règle**, pas un récit :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
+  --skill <nom-du-skill> --type correction \
+  --lesson "Toujours …" --context "ce qui se passait, une ligne"
+```
+
+Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
+lance rien. Si la commande annonce que le seuil est atteint, signale en une
+ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+
 ## Avant de rendre
 
 - [ ] <vérification concrète>
 - [ ] <vérification concrète>
+- [ ] Leçon enregistrée au journal si tu as été corrigé, si Studio a révélé
+      une erreur de ta part, ou si un contexte a dû t'être re-précisé.
 
 <!--
 Ressources embarquées (à créer seulement si besoin) :

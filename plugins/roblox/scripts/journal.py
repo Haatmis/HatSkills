@@ -21,6 +21,7 @@ import argparse
 import json
 import os
 import re
+import socket
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -34,7 +35,17 @@ TYPES = {
 
 
 def data_dir(explicite=None):
-    for candidat in (explicite, os.environ.get("CLAUDE_PLUGIN_DATA")):
+    """Où vit le journal, par ordre de priorité.
+
+    HATSKILLS_JOURNAL_DIR passe avant CLAUDE_PLUGIN_DATA : c'est ce qui permet
+    de pointer un dossier synchronisé (le repo, un cloud) pour que les leçons
+    d'une machine rejoignent celles des autres. CLAUDE_PLUGIN_DATA reste le
+    défaut sain — par plugin, persistant, mais local à la machine, et perdu
+    dans une session cloud éphémère.
+    """
+    for candidat in (explicite,
+                     os.environ.get("HATSKILLS_JOURNAL_DIR"),
+                     os.environ.get("CLAUDE_PLUGIN_DATA")):
         if candidat and candidat.strip() and "${" not in candidat:
             return Path(candidat).expanduser()
     return Path.home() / ".claude" / "plugins" / "data" / "roblox-hatskills"
@@ -95,6 +106,7 @@ def cmd_add(args):
         "lesson": args.lesson.strip(),
         "context": (args.context or "").strip(),
         "occurrences": 1,
+        "machine": socket.gethostname(),
         "statut": "en-attente",
     }
     entrees.append(entree)
@@ -144,7 +156,9 @@ def cmd_list(args):
         n = e.get("occurrences", 1)
         marque = f" ×{n}" if n > 1 else ""
         etat = "" if e.get("statut") == "en-attente" else f" [{e['statut']}]"
-        print(f"\n[{e['id']}] {e['skill']} / {e['type']}{marque}{etat}")
+        machines = {x.get("machine") for x in entrees if x.get("machine")}
+        prov = f" @{e['machine']}" if len(machines) > 1 and e.get("machine") else ""
+        print(f"\n[{e['id']}] {e['skill']} / {e['type']}{marque}{etat}{prov}")
         print(f"    {e['lesson']}")
         if e.get("context"):
             print(f"    contexte : {e['context']}")
@@ -169,6 +183,14 @@ def cmd_resolve(args):
     print(f"{touches} entrée(s) marquée(s) consolidée(s).")
     if manquants:
         print(f"Ignorés (inconnus) : {sorted(manquants)}")
+
+    # Journal partagé : deux machines ont pu attribuer le même id.
+    for i in sorted(ids):
+        homonymes = [e for e in entrees if e.get("id") == i]
+        if len(homonymes) > 1:
+            machines = ", ".join(sorted({e.get("machine", "?") for e in homonymes}))
+            print(f"  ⚠ id {i} portée par {len(homonymes)} entrées ({machines}) "
+                  "— toutes marquées. Vérifie que c'était voulu.")
     return 0
 
 

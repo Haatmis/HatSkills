@@ -72,6 +72,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 |---|---|
 | `game-design` | Cadre une feature avant tout code : règles, chiffres jouables, cas limites, risques — et écrit la spec dans `docs/design/` |
 | `feature` | Exécute une spec : découpe en étapes, appelle le skill compétent à chacune, vérifie dans Studio, livre avec placeholders |
+| `hat3d` | Image → modèle 3D Roblox : `model.json` comme source de vérité, préview HTML à valider, `build.lua` généré pour Studio |
 | `vfx` | Crée des effets visuels (particules, faisceaux, traînées) en presets réutilisables, dérivés de la charte du projet |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
@@ -101,6 +102,7 @@ game-design ──► docs/design/<feature>.md        règles, chiffres, cas lim
      ▼
 feature ──────► découpe en étapes ordonnées     serveur avant client, toujours
      │              │
+     │              ├─► hat3d   (étape 0 : les props dont la feature a besoin)
      │              ├─► code    (étapes 1-5, vérifiées dans Studio)
      │              ├─► vfx     (étape 6, vérifiée dans Studio)
      │              └─► debug   (si une étape casse)
@@ -142,6 +144,18 @@ Le journal vit dans `${CLAUDE_PLUGIN_DATA}/journal.jsonl` : il survit aux mises
 identiques fusionnent et incrémentent un compteur — c'est ce compteur qui
 distingue une vraie règle d'un incident isolé.
 
+Le protocole complet vit dans
+[`plugins/roblox/references/journal.md`](plugins/roblox/references/journal.md) ;
+chaque skill en porte une version compacte. Les huit skills sont câblés —
+sauf `affiner`, qui vide le journal plutôt que de le remplir.
+
+Le journal vit par défaut dans `${CLAUDE_PLUGIN_DATA}` : **par machine**. Des
+terminaux différents sur le même PC le partagent, une autre machine crée un
+second journal, et une session cloud le perd quand son conteneur est détruit.
+Pour qu'il suive, pointe `HATSKILLS_JOURNAL_DIR` vers un dossier synchronisé —
+`HatSkills/.journal` fait très bien l'affaire, et `.gitattributes` fusionne les
+divergences sans conflit.
+
 **2. Consolidation, quand tu le décides.** À partir de 8 leçons en attente, le
 skill actif te signale qu'il y a de la matière. Tu lances `/roblox:affiner`,
 qui trie, propose un diff et n'écrit qu'après ton accord.
@@ -150,3 +164,33 @@ La contrainte qui gouverne tout : **chaque ligne d'un SKILL.md est rechargée à
 chaque déclenchement.** Un skill qui grossit à chaque passage se dilue et rend
 de moins bons résultats. C'est pourquoi `affiner` cherche systématiquement ce
 qui peut *sortir*, et pourquoi une leçon vue une seule fois n'entre pas.
+
+## Mesurer plutôt que supposer
+
+Le validateur détecte les collisions **probables** entre descriptions, par
+recouvrement de vocabulaire. Il ne dit pas ce qui se passe vraiment. Pour ça,
+une suite de sept évals de routage mesure **quel skill se déclenche** sur une
+phrase réelle, et surtout lesquels ne doivent pas :
+
+```bash
+cd plugins/roblox && claude plugin eval .
+```
+
+Les quatre cas de frontière sont les plus informatifs. Un skill qui ne se
+déclenche jamais est un problème visible ; un skill qui prend le terrain d'un
+autre ne se voit pas, et rend un résultat plausible mais du mauvais métier.
+
+Détail des cas et lecture des échecs :
+[`plugins/roblox/evals/README.md`](plugins/roblox/evals/README.md).
+
+## Intégration continue
+
+| Workflow | Quand | Coût |
+|---|---|---|
+| `validate.yml` | Chaque push et chaque PR | Gratuit — aucun appel au modèle |
+| `evals.yml` | À la main (`workflow_dispatch`) | **Payant** — chaque cas est un vrai appel |
+
+Les évals ne sont volontairement pas branchées sur chaque push : elles
+factureraient ton compte à chaque virgule changée. Les graders utilisés sont
+tous de type `tool_used`, donc sans modèle juge, et `max_turns: 3` plafonne
+le coût — le routage se décide au premier tour.

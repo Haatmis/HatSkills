@@ -40,6 +40,7 @@ fiable, le déclenchement automatique ne l'est pas.
 |---|---|
 | Code serveur, client, configuration, câblage son | `/roblox:code` |
 | Particules, faisceaux, traînées, surbrillances, flashs | `/roblox:vfx` |
+| Modèle 3D, prop, objet construit depuis une image | `/roblox:hat3d` |
 | Diagnostic quand une étape casse | `/roblox:debug` |
 | Cadrage manquant ou spec à trancher | `/roblox:game-design` |
 
@@ -90,12 +91,16 @@ réparer.
    spec, ne devine pas : invoque `/roblox:game-design` d'abord.
 2. **Relève les contraintes techniques** avant de découper : le rig est-il R6
    ou R15 ? quels systèmes existants sont touchés ? l'arborescence est-elle
-   Rojo ou faut-il passer par le MCP ?
+   Rojo ou faut-il passer par le MCP ? la feature a-t-elle besoin d'un objet
+   qui n'existe pas encore — une épée, un coffre, une borne ? Un prop est une
+   **entrée** de la feature : il se construit avant le code qui s'en sert,
+   sinon les étapes suivantes travaillent sur du vide.
 3. **Découpe en étapes**, chacune avec son skill, son livrable et sa
    vérification. L'ordre par défaut, à adapter :
 
    | # | Étape | Skill |
    |---|---|---|
+   | 0 | Prop ou modèle 3D dont la feature a besoin | `hat3d` |
    | 1 | Configuration et types partagés | `code` |
    | 2 | Logique serveur : la source de vérité | `code` |
    | 3 | Remotes : intentions du client, validées serveur | `code` |
@@ -191,6 +196,23 @@ proprement en attendant.
 - **Dériver au-delà de la spec.** Ce qui n'y est pas n'est pas à faire. Une
   bonne idée en cours de route se propose, elle ne s'implémente pas en douce.
 
+## Apprendre de la session
+
+Trois signaux valent une entrée au journal, et trois seulement : l'utilisateur
+t'a corrigé, la vérification Studio a révélé une erreur de ta part, ou un
+contexte a dû t'être re-précisé. Formule une **règle**, pas un récit :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
+  --skill feature --type correction \
+  --lesson "Toujours …" --context "ce qui se passait, une ligne"
+```
+
+Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
+lance rien. Si la commande annonce que le seuil est atteint, signale en une
+ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+
 ## Avant de rendre
 
 - [ ] La spec a été lue, et le plan en découle.
@@ -203,3 +225,5 @@ proprement en attendant.
 - [ ] Aucun placeholder ne peut lever une erreur.
 - [ ] `Config/Assets.luau` à jour, chaque entrée disant comment l'obtenir.
 - [ ] Écarts avec la spec signalés, ou conformité affirmée.
+- [ ] Leçon enregistrée au journal si tu as été corrigé, si Studio a révélé
+      une erreur de ta part, ou si un contexte a dû t'être re-précisé.

@@ -1,0 +1,36 @@
+name: Évals de routage
+
+# PAYANT : chaque cas est un vrai appel au modèle, facturé sur le compte dont
+# la clé est en secret. Déclenchement manuel uniquement — jamais sur push.
+on:
+  workflow_dispatch:
+    inputs:
+      seuil:
+        description: 'Score minimum par cas (0 à 1)'
+        required: false
+        default: '0.8'
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installer Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Lancer la suite
+        working-directory: plugins/roblox
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude plugin eval . \
+            --trust-plugin \
+            --json results.json \
+            --threshold ${{ inputs.seuil }} \
+            --no-publish \
+            --max-cost-usd 5
+      - name: Archiver le rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultats-evals
+          path: plugins/roblox/results.json

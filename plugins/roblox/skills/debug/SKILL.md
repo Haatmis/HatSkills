@@ -108,8 +108,11 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
 9. **Cherche le même motif ailleurs** dans le projet. Corrige les occurrences
    identiques ; signale celles qui demandent une décision.
 
-10. **Journal.** Si la cause était un motif que le skill `code` aurait pu
-    éviter, enregistre la règle :
+10. **Journal.** Trois signaux valent une entrée : l'utilisateur t'a corrigé,
+    Studio a révélé une erreur de ta part, ou un contexte a dû t'être
+    re-précisé. Le plus fréquent ici : la cause était un motif que le skill
+    `code` aurait pu éviter. Formule une **règle**, pas un récit, et adresse-la
+    au skill **à corriger** — souvent `code`, pas `debug` :
 
     ```bash
     python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
@@ -118,7 +121,8 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
     ```
 
     C'est le cas le plus utile de tout le dispositif : un bug corrigé une fois
-    devient une règle qui l'empêche d'exister.
+    devient une règle qui l'empêche d'exister. Protocole complet :
+    `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 ## Format de sortie
 

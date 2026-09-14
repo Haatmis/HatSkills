@@ -1,0 +1,4 @@
+# Le journal d'apprentissage est append-only : en cas de divergence entre deux
+# machines, garder les lignes des deux côtés est toujours le bon résultat.
+# Sans ça, chaque synchronisation produit un conflit à résoudre à la main.
+.journal/journal.jsonl merge=union
