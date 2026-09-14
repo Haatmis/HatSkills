@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.5.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.6.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -82,6 +82,22 @@ print », il fait le travail sans commentaire.
 **Le cycle des assets** : Claude ne peut ni publier une animation, ni créer un
 son. Il te livre un système complet avec des `0`, tu remplis quand tu veux, tu
 dis « reprends », et seuls les branchements concernés sont revérifiés.
+
+## Il pense à la perf en écrivant, pas après
+
+Quatre décisions de structure sont prises au moment d'écrire, parce qu'elles ne
+se rattrapent pas ensuite — elles se réécrivent : un événement plutôt qu'une
+boucle par frame, le réseau compté plutôt qu'estimé, les objets créés en boucle
+recyclés, et ce qui n'a pas besoin d'autorité déplacé sur le client.
+
+En revanche il **ne micro-optimise pas** : pas de service mis en local, pas de
+`ipairs` par réflexe. Ça abîme la lisibilité pour un gain que personne n'a
+mesuré. Si la perf devient vraiment le sujet, il sait où sont les vrais coûts
+et comment les mesurer.
+
+Ta spec porte maintenant une ligne **Échelle** — combien de joueurs, combien
+d'instances au pic. C'est elle qui décide de la structure : un système pour 4
+joueurs et un pour 40 ne s'écrivent pas pareil.
 
 ## Le journal, en trois lignes
 

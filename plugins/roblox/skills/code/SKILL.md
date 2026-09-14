@@ -74,10 +74,44 @@ Ce qui découle de cette règle, à appliquer sans y penser :
   répondre : préfère un `RemoteEvent` dans ce sens.
 - Les données sensibles ne sont pas dans `ReplicatedStorage`.
 
+**La propriété réseau est une délégation d'autorité.** Par défaut, Roblox
+confie la simulation d'une pièce non ancrée au client le plus proche, et le
+personnage d'un joueur appartient toujours à son propre client.
+`SetNetworkOwner` déplace cette autorité : le mouvement devient fluide chez
+celui qui l'a — et falsifiable par lui. Ne la donne jamais sur ce qui décide
+d'une issue de jeu : dégâts, position d'un objectif, vitesse d'un projectile
+qui touche. Rends-la par `SetNetworkOwnerAuto()` dès que c'est fini. Et ne
+l'appelle pas sur une pièce ancrée : ça lève une erreur.
+
+Déplacer le personnage d'un autre joueur suppose donc un choix explicite —
+contrainte depuis le serveur, ou transfert d'autorité assumé. Le faire par
+`CFrame` depuis le client de quelqu'un d'autre ne marche simplement pas.
+
 **Régime prototype ou production.** Demande-le si ce n'est pas clair, ou
 déduis-le. En prototype, signale les manques de sécurité sans bloquer. Dès que
 le jeu est publié, tout ce qui touche à l'économie, aux données joueur ou aux
 Remotes doit être correct avant livraison — pas « à durcir plus tard ».
+
+**Les décisions de structure se prennent maintenant.** Il y a deux
+performances : celle qu'on rattrape plus tard avec un profileur, et celle qui
+est dans la *forme* du code. La seconde ne se rattrape pas — elle se réécrit.
+Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
+
+- **Un événement plutôt qu'une boucle.** Un `while true do task.wait() end` qui
+  surveille un état devrait être un signal — `Changed`,
+  `GetPropertyChangedSignal`, `Touched`.
+- **Le réseau se compte.** Un Remote par frame et par joueur ne passe pas
+  l'échelle. Regroupe, ou n'envoie qu'au changement.
+- **Ce qui est créé en boucle se réutilise.** Projectiles, effets, éléments
+  d'interface : une réserve d'objets recyclés, pas un `Instance.new` par tir.
+- **Ce qui n'a pas besoin d'autorité va au client.** Effets, sons, interface,
+  retour immédiat. Le serveur garde ce qui décide.
+
+Et l'anti-règle, aussi importante : **ne micro-optimise pas.** Mettre un service
+en variable locale, préférer `ipairs` à `pairs`, dérouler une boucle — ça rend
+le code moins lisible pour un gain que tu n'as pas mesuré. Si la performance
+est vraiment le sujet, `references/perf.md` donne les coûts réels, les seuils
+et comment mesurer avant de toucher à quoi que ce soit.
 
 **Arborescence** (fixée pour tous les projets) :
 
@@ -90,14 +124,13 @@ src/shared/    → ReplicatedStorage/Shared
 Conventions de fichiers Rojo : `Nom.luau` → ModuleScript, `Nom.server.luau` →
 Script, `Nom.client.luau` → LocalScript, `init.luau` → le module d'un dossier.
 
-**API dépréciées — les six qui reviennent tout le temps :**
+**API dépréciées — les cinq qui reviennent tout le temps :**
 
 | Ne jamais écrire | Écrire à la place |
 |---|---|
 | `wait()`, `spawn()`, `delay()` | `task.wait()`, `task.spawn()`, `task.defer()`, `task.delay()` |
 | `:connect()`, `:wait()` (minuscule) | `:Connect()`, `:Wait()` |
 | `:remove()` | `:Destroy()` |
-| `Instance.new("Part", parent)` | `Instance.new("Part")` puis `.Parent` **en dernier**, une fois les propriétés posées |
 | `Humanoid:LoadAnimation()` | `humanoid.Animator:LoadAnimation()` |
 | `BodyVelocity`, `BodyPosition`, `BodyGyro` | `LinearVelocity`, `AlignPosition`, `AlignOrientation` |
 

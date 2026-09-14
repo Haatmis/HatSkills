@@ -3,6 +3,33 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.6.0
+
+**Autorité physique.** `code` ne disait rien de la propriété réseau — le sujet
+le plus piégeux pour tout ce qui déplace un personnage ou un objet. Il sait
+maintenant que `SetNetworkOwner` délègue une autorité falsifiable, qu'elle ne
+se donne jamais sur ce qui décide d'une issue de jeu, qu'elle se rend par
+`SetNetworkOwnerAuto()`, et qu'elle lève une erreur sur une pièce ancrée.
+
+**Optimisation structurelle, pas micro.** Quatre règles gratuites à l'écriture
+et coûteuses à rattraper : événement plutôt que boucle par frame, réseau
+compté plutôt qu'estimé, réutilisation plutôt que création en boucle, travail
+sans autorité déplacé sur le client. Avec l'anti-règle explicite : ne pas
+micro-optimiser sans mesure — ça abîme la lisibilité pour un gain invisible.
+
+`references/perf.md` porte le détail : les coûts réels par ordre, les outils de
+mesure, le pooling et quand il ne vaut pas le détour, des seuils indicatifs, et
+la liste de ce qui ne mérite pas le détour. Consulté au besoin, pas payé à
+chaque déclenchement.
+
+**`game-design` chiffre l'échelle.** La spec porte une section « Échelle » —
+joueurs simultanés, instances, appels au pic. C'est l'entrée qui décide de la
+structure du code, et elle manquait.
+
+Un retrait au passage : `Instance.new("Part", parent)` sortait dans la table
+des dépréciées **et** dans les Pièges, où le pourquoi est expliqué. La table
+en garde cinq au lieu de six.
+
 ## 0.5.0
 
 **Reformulation conditionnelle.** Les cinq skills de production reformulent la

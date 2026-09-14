@@ -108,6 +108,12 @@ avec que sans.>
 |---|---|---|
 | Dégâts par coup | 25 | 4 coups pour tuer un joueur à 100 PV |
 
+## Échelle
+<Combien de joueurs simultanés, combien d'instances, combien d'appels par
+seconde au pic. C'est ce qui décide de la structure du code : un système pour
+4 joueurs et un système pour 40 ne s'écrivent pas pareil, et on ne passe pas
+de l'un à l'autre par retouche.>
+
 ## Cas limites
 | Situation | Comportement attendu |
 |---|---|
@@ -188,6 +194,7 @@ Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 - [ ] Trois questions maximum, toutes décisives.
 - [ ] `docs/design/` et `src/shared/Config/` consultés.
 - [ ] Chaque chiffre a sa justification à côté.
+- [ ] L'échelle attendue est chiffrée — elle décide de la structure.
 - [ ] Les cas limites couvrent : cible morte, joueur parti, actions
       simultanées, valeurs nulles ou négatives.
 - [ ] Au moins un risque de design identifié, ou une raison de n'en voir aucun.
