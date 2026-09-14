@@ -99,7 +99,10 @@ Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
 
 - **Un événement plutôt qu'une boucle.** Un `while true do task.wait() end` qui
   surveille un état devrait être un signal — `Changed`,
-  `GetPropertyChangedSignal`, `Touched`.
+  `GetPropertyChangedSignal`, `Touched`. Une règle qui réagit à un état — une
+  pause, un cooldown, un seuil — se branche sur ce signal aussi, pas sur le
+  seul chemin de code qui a causé l'état : sinon elle rate les autres causes,
+  et ne se teste qu'en rejouant ce chemin en entier.
 - **Le réseau se compte.** Un Remote par frame et par joueur ne passe pas
   l'échelle. Regroupe, ou n'envoie qu'au changement.
 - **Ce qui est créé en boucle se réutilise.** Projectiles, effets, éléments
@@ -269,8 +272,6 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
   dernière sauvegarde de tous les joueurs encore connectés.
 - **Poser `.Parent` avant les propriétés.** L'instance est répliquée puis
   modifiée : coût réseau inutile et clignotement visible.
-- **Réinventer un système déjà présent dans `src/`.** L'étape 2 de la
-  procédure existe pour ça.
 
 ## Avant de rendre
 

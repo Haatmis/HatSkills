@@ -3,6 +3,19 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.6.4
+
+Reprise de la consolidation validée dans une session parallèle, pour éviter
+une fusion manuelle à quatre fichiers en conflit.
+
+- `code` sait maintenant qu'une règle réagissant à un état se branche sur le
+  **signal** qui porte cet état, pas sur le seul chemin de code qui l'a
+  provoqué — sinon elle rate les autres causes et ne se teste qu'en rejouant
+  ce chemin. Leçon issue du vrai bug : la pause de régénération accrochée au
+  coup de poing au lieu de la perte de PV.
+- Retrait du piège « Réinventer un système déjà présent dans `src/` », qui ne
+  faisait que renvoyer à l'étape 2 de la procédure sans rien ajouter.
+
 ## 0.6.3
 
 Trois bugs Windows, tous introduits par moi : les scripts ont été écrits et
