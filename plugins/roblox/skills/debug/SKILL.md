@@ -135,6 +135,8 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
     devient une règle qui l'empêche d'exister. Protocole complet :
     `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
+    Sur Windows, si `python3` ouvre le Microsoft Store, relance avec `py`.
+
 ## Format de sortie
 
 ```markdown

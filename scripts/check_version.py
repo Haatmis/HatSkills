@@ -15,6 +15,15 @@ import pathlib
 import subprocess
 import sys
 
+# Windows : la console est en cp1252 par défaut, et les flèches ou accents de
+# ce script la font lever UnicodeEncodeError — donc planter APRÈS avoir fait
+# son travail. Un script qui échoue une fois qu'il a réussi apprend à ignorer
+# son verdict, ce qui est pire que pas de script du tout.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
 MANIFESTE = "plugins/roblox/.claude-plugin/plugin.json"
 SURVEILLE = "plugins/"
 # Une version mineure ou majeure, c'est une « grosse maj » : elle doit arriver

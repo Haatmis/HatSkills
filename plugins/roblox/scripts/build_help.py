@@ -19,6 +19,15 @@ import sys
 import tempfile
 from pathlib import Path
 
+# Windows : la console est en cp1252 par défaut, et les flèches ou accents de
+# ce script la font lever UnicodeEncodeError — donc planter APRÈS avoir fait
+# son travail. Un script qui échoue une fois qu'il a réussi apprend à ignorer
+# son verdict, ce qui est pire que pas de script du tout.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
 CSS = """
 :root{--bg:#fbfaf8;--fg:#23201d;--mut:#6b645c;--line:#e5e0d8;--card:#fff;
 --acc:#b4512a;--code-bg:#f3f0eb}

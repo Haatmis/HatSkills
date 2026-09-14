@@ -3,6 +3,22 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.6.3
+
+Trois bugs Windows, tous introduits par moi : les scripts ont été écrits et
+testés sous Linux, jamais sur la seule plateforme où ils tournent vraiment.
+
+- **`check_version.py` sortait en erreur après avoir conclu « OK ».** La
+  console Windows est en cp1252 et ne sait pas encoder la flèche `→` :
+  `UnicodeEncodeError`, exit 1, juste après avoir réussi. Un script qui échoue
+  une fois qu'il a réussi apprend à ignorer son verdict — c'est pire que pas
+  de script. Reproduit sous cp1252, corrigé, revérifié.
+- `validate.py`, `journal.py` et `build_help.py` avaient le même défaut
+  latent. Les quatre reconfigurent maintenant leur sortie en UTF-8.
+- **`python3` est un alias du Microsoft Store sur Windows** : la commande du
+  journal ouvrait une page de boutique et n'enregistrait rien. La capture
+  était donc muette. Les huit skills et la référence indiquent `py` en repli.
+
 ## 0.6.2
 
 Les 18 renvois vers `references/` étaient écrits en relatif. Observé en usage

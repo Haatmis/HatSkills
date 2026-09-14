@@ -12,6 +12,15 @@ import re
 import sys
 from pathlib import Path
 
+# Windows : la console est en cp1252 par défaut, et les flèches ou accents de
+# ce script la font lever UnicodeEncodeError — donc planter APRÈS avoir fait
+# son travail. Un script qui échoue une fois qu'il a réussi apprend à ignorer
+# son verdict, ce qui est pire que pas de script du tout.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
 # Champs reconnus par Claude Code dans le frontmatter d'un SKILL.md.
 KNOWN_KEYS = {
     "name", "description", "when_to_use", "argument-hint", "arguments",
