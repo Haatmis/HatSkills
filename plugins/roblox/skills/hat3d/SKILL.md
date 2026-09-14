@@ -52,15 +52,20 @@ pour une créature de meute affichée par dizaines.
 
 Quand la forme demande de **vraies surfaces** — un galbe continu, un congé
 d'arête, une coque organique — aucun assemblage de Block et de Cylinder ne
-rattrapera un maillage. Le skill **`hat3d-blender`** modèle alors dans
-Blender (via le MCP Blender), exporte un FBX et un `manifest.json`, et génère un
-`assemble.lua` qui pose les MeshParts avec les tailles, couleurs, groupes et
-**le même player d'animations** que ce pipeline-ci.
+rattrapera un maillage. Un skill **`hat3d-blender`** couvre ce cas : modéliser
+dans Blender via le MCP Blender, exporter un FBX et un `manifest.json`, et
+générer un `assemble.lua` qui pose les MeshParts avec le même player
+d'animations que ce pipeline-ci.
+
+⚠ **Ce skill n'est pas fourni par ce plugin.** S'il n'est pas installé, ne le
+cherche pas et ne l'improvise pas : dis à l'utilisateur que la forme demandée
+dépasse ce que des primitives peuvent rendre, et propose soit de rester ici
+avec une approximation assumée, soit de modéliser le mesh à part.
 
 Ce qui décide : **est-ce qu'une arête vive est un défaut ?** Une caisse, une
 borne, un lampadaire, un coffre : non — rester ici, c'est cinq fois plus rapide
 à itérer et tout reste recolorable part par part. Un casque, un poisson, une
-aile de voiture, une racine : oui — basculer sur `hat3d-blender`.
+aile de voiture, une racine : oui — le cas `hat3d-blender` ci-dessus.
 
 Le coût du détour : Blender doit tourner avec l'addon MCP connecté, et l'import
 du FBX dans Studio est un geste **manuel** (l'Importateur 3D n'est pas
@@ -274,7 +279,9 @@ volée de marches sans contremarche, une part invisible noyée dans une autre.
 généré, où la correction serait perdue à la régénération suivante.
 
 Détail des contrôles et des arbitrages : `references/finition.md`.
-Passe guidée de bout en bout : la commande `/hat3d-finition`.
+Une commande `/hat3d-finition` existe dans certaines installations pour
+guider la passe de bout en bout ; elle n'est pas fournie par ce plugin. Le
+script `finition.mjs` ci-dessus fait le travail sans elle.
 
 ### 5. Construire dans Roblox
 
@@ -412,13 +419,13 @@ cliquer une pièce dans la préview et te la désigner par son nom.
 - Répondre en français, noms de parts lisibles (français ou anglais, cohérents).
 - Le viewer est autonome (Three.js inliné) : aucun serveur, aucun réseau requis.
 - Grands ensembles (une zone, une map) : hors périmètre — Hat3D fait des
-  **modèles/props** ; pour le level design, rester sur les scripts de zone
-  existants (`generate_zone*.lua`) du projet. Pour câbler un modèle Hat3D à
-  du gameplay (RemoteEvent, appel d'animation depuis un script) une fois
-  construit, voir le skill `hatstack`.
+  **modèles/props**. Pour le level design, s'en remettre aux scripts de zone
+  du projet s'il en a. Pour câbler un modèle une fois construit à du gameplay
+  — RemoteEvent, appel d'animation depuis un script — passer la main à
+  `/roblox:code`.
 - Formes de base uniquement (pas de MeshPart, pas d'union) : c'est le choix de
-  ce pipeline. Quand il devient le mauvais choix, `hat3d-blender` prend le
-  relais — voir § Un troisième mode.
+  ce pipeline. Quand il devient le mauvais choix, voir § Un troisième mode — en
+  gardant à l'esprit que `hat3d-blender` n'est pas fourni ici.
 
 ## Apprendre de la session
 

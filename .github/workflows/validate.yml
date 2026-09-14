@@ -11,8 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # check_version.py compare avec origin/main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Frontmatter, descriptions, renvois, recouvrements
         run: python3 scripts/validate.py
+      - name: Version bumpée si le plugin a changé
+        run: python3 scripts/check_version.py origin/main
