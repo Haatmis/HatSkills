@@ -159,6 +159,20 @@ def check(path, report):
     return (folder, words(combined)) if desc else None
 
 
+def evals_documentes(report):
+    """Chaque cas d'éval présent sur le disque doit figurer dans son README.
+
+    Un README qui annonce sept cas quand il y en a dix ne casse rien — il
+    désinforme, ce qui est pire : on croit mesurer plus qu'on ne mesure.
+    """
+    for readme in ROOT.glob("plugins/*/evals/README.md"):
+        texte = readme.read_text(encoding="utf-8")
+        for cas in sorted(d for d in readme.parent.iterdir() if d.is_dir()):
+            if f"`{cas.name}`" not in texte:
+                report.append(("ERREUR", readme,
+                               f"le cas d'éval « {cas.name} » n'est documenté nulle part"))
+
+
 def main():
     targets = [Path(a) for a in sys.argv[1:]] or [ROOT]
     files = sorted({
@@ -172,6 +186,7 @@ def main():
         return 0
 
     report, descs = [], []
+    evals_documentes(report)
     for f in files:
         got = check(f, report)
         if got:

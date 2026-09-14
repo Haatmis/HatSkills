@@ -3,6 +3,23 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.6.1
+
+Le README des évals annonçait sept cas alors que la suite en a dix : les trois
+ajoutés en même temps que `atelier` n'avaient jamais été documentés. Les
+graders, eux, étaient à jour. Un README qui sous-annonce ne casse rien — il
+désinforme, et on croit mesurer moins qu'on ne mesure.
+
+Corrigé, et restructuré : les frontières, le routage simple, et `hors-perimetre`
+à part — il n'a aucun skill attendu, ce que le tableau ne savait pas exprimer.
+
+`validate.py` refuse désormais un cas d'éval absent de son README : ce
+décalage-là ne peut plus revenir.
+
+Ajout d'un protocole de mesure **à la main**, avec les dix prompts : le harnais
+`claude plugin eval` est en accès anticipé et peut ne pas être activé sur un
+compte. Il automatise la mesure, il ne la conditionne pas.
+
 ## 0.6.0
 
 **Autorité physique.** `code` ne disait rien de la propriété réseau — le sujet
