@@ -58,6 +58,48 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" status
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" list --skill code
 ```
 
+## Où vit le journal
+
+Par ordre de priorité :
+
+| Source | Portée | Quand c'est le bon choix |
+|---|---|---|
+| `--data-dir <chemin>` | Ce seul appel | Tests, cas ponctuel |
+| `HATSKILLS_JOURNAL_DIR` | Ce que tu pointes | **Plusieurs machines** — vise un dossier synchronisé |
+| `CLAUDE_PLUGIN_DATA` | Ce plugin, cette machine | Le défaut. Survit aux mises à jour du plugin |
+| Défaut | `~/.claude/plugins/data/roblox-hatskills` | Repli si rien n'est posé |
+
+Deux pièges du défaut, à connaître :
+
+- **Il est local à la machine.** Travailler depuis un portable crée un second
+  journal qui ne rejoindra jamais le premier. Des terminaux différents sur la
+  *même* machine, en revanche, partagent bien le même fichier.
+- **Une session cloud le perd.** Le conteneur est détruit après inactivité. La
+  capture répond « leçon enregistrée », et tout disparaît quelques heures plus
+  tard. Silencieux, donc dangereux.
+
+### Le faire suivre
+
+Pointe la variable vers un dossier synchronisé — le repo HatSkills lui-même
+est le plus simple, et tu gagnes l'historique :
+
+```powershell
+$env:HATSKILLS_JOURNAL_DIR = "C:\...\HatSkills\.journal"
+```
+
+```bash
+export HATSKILLS_JOURNAL_DIR="$HOME/HatSkills/.journal"
+```
+
+Le fichier est en ajout seul, et `.gitattributes` déclare
+`merge=union` dessus : deux machines qui divergent voient leurs lignes
+conservées des deux côtés, sans conflit à résoudre.
+
+La contrepartie : chaque machine numérote de son côté, donc **deux entrées
+peuvent porter le même id**. Chacune enregistre sa `machine`, `list` l'affiche
+dès qu'il y en a plusieurs, et `resolve` prévient quand une id en désigne
+plusieurs à la fois. Vérifie que c'était voulu avant de continuer.
+
 ## Pourquoi ce n'est pas automatique
 
 Un skill ne se réécrit pas seul, et c'est tant mieux : chaque ligne ajoutée est

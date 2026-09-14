@@ -149,6 +149,13 @@ Le protocole complet vit dans
 chaque skill en porte une version compacte. Les huit skills sont câblés —
 sauf `affiner`, qui vide le journal plutôt que de le remplir.
 
+Le journal vit par défaut dans `${CLAUDE_PLUGIN_DATA}` : **par machine**. Des
+terminaux différents sur le même PC le partagent, une autre machine crée un
+second journal, et une session cloud le perd quand son conteneur est détruit.
+Pour qu'il suive, pointe `HATSKILLS_JOURNAL_DIR` vers un dossier synchronisé —
+`HatSkills/.journal` fait très bien l'affaire, et `.gitattributes` fusionne les
+divergences sans conflit.
+
 **2. Consolidation, quand tu le décides.** À partir de 8 leçons en attente, le
 skill actif te signale qu'il y a de la matière. Tu lances `/roblox:affiner`,
 qui trie, propose un diff et n'écrit qu'après ton accord.
