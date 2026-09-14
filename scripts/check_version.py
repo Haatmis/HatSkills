@@ -20,7 +20,7 @@ SURVEILLE = "plugins/"
 # Une version mineure ou majeure, c'est une « grosse maj » : elle doit arriver
 # avec de quoi la comprendre, sinon personne ne sait ce qui a changé — l'auteur
 # le premier, six mois plus tard.
-AVEC_LA_MAJ = ("GUIDE.md", "CHANGELOG.md")
+AVEC_LA_MAJ = ("plugins/roblox/GUIDE.md", "CHANGELOG.md")
 
 
 def git(*args):

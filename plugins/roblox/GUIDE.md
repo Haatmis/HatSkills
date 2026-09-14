@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.2.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.3.0** · 9 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -38,8 +38,11 @@ Tu n'as normalement **rien à taper** : ils se déclenchent seuls sur ce que tu
 | `hat3d` | « fais-moi un coffre en 3D » | Un `model.json`, une préview HTML à valider, un `build.lua` pour Studio |
 | `nouveau-skill` | « fais-en un skill » | Un nouveau skill conforme, après une courte interview |
 | `affiner` | « consolide le journal » | Les leçons accumulées promues dans les skills, diff à valider |
+| `help` | `/roblox:help` | Cette page, dans ton navigateur |
 
 Pour forcer l'un d'eux, tape son nom : `/roblox:game-design je voudrais…`
+
+Et pour relire cette page à tout moment : **`/roblox:help`**. Elle est regénérée à chaque appel depuis ce fichier, donc jamais périmée.
 
 ## Le parcours d'une feature
 

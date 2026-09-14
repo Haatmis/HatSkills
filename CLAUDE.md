@@ -5,7 +5,7 @@
 À **chaque changement de version mineure ou majeure** du plugin
 (`0.2.x` → `0.3.0`, `0.x` → `1.0`), mettre à jour dans le même commit :
 
-- `GUIDE.md` — le guide rapide destiné à l'utilisateur. Court, scannable,
+- `plugins/roblox/GUIDE.md` — le guide rapide destiné à l'utilisateur. Il vit **dans** le plugin, pour être livré avec lui et servir de source à `/roblox:help`. Court, scannable,
   sans jargon. Il doit répondre à « c'est quoi, ça fait quoi, comment je m'en
   sers, que faire quand ça rate ». Le numéro de version en tête doit
   correspondre à `plugin.json`.

@@ -2,8 +2,8 @@
 
 Mes skills Claude pour le développement de jeux **Roblox**, packagés en plugin.
 
-> 👉 **[GUIDE.md](GUIDE.md)** — le guide rapide : à quoi sert chaque skill,
-> comment se déroule une feature, que faire quand ça rate. Commence par là.
+> 👉 **[GUIDE.md](plugins/roblox/GUIDE.md)** — le guide rapide : à quoi sert chaque skill,
+> comment se déroule une feature, que faire quand ça rate. Commence par là — ou tape `/roblox:help` pour l'ouvrir dans ton navigateur.
 > Ce qui change d'une version à l'autre : [CHANGELOG.md](CHANGELOG.md).
 
 ## Installation
@@ -78,6 +78,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 | `feature` | Exécute une spec : découpe en étapes, appelle le skill compétent à chacune, vérifie dans Studio, livre avec placeholders |
 | `hat3d` | Image → modèle 3D Roblox : `model.json` comme source de vérité, préview HTML à valider, `build.lua` généré pour Studio |
 | `vfx` | Crée des effets visuels (particules, faisceaux, traînées) en presets réutilisables, dérivés de la charte du projet |
+| `help` | Ouvre le guide dans le navigateur, généré depuis `GUIDE.md` |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
 | `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |

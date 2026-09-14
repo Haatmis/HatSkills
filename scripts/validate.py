@@ -104,13 +104,20 @@ def check(path, report):
             warn(f"description très courte ({len(desc)} car.) : dit-elle QUAND "
                  "s'en servir, avec des phrases réelles ?")
         low = combined.lower()
-        if not any(t in low for t in ("quand", "dès que", "when", "use this",
+        # Un skill en invocation manuelle seule n'est jamais choisi sur sa
+        # description : lui réclamer un vocabulaire de déclenchement et des
+        # exclusions croisées n'a pas de sens.
+        manuel = str(fm.get("disable-model-invocation", "")).lower() == "true"
+        if manuel:
+            pass
+        elif not any(t in low for t in ("quand", "dès que", "when", "use this",
                                       "utilise ce", "lorsque", "utiliser pour",
                                       "à utiliser", "use for", "trigger")):
             warn("la description ne dit pas QUAND déclencher "
                  "(« Utilise ce skill quand… »)")
-        if not any(t in low for t in ("n'utilise pas", "ne pas utiliser",
-                                      "do not use", "plutôt", "voir ")):
+        if not manuel and not any(t in low for t in ("n'utilise pas",
+                                      "ne pas utiliser", "do not use",
+                                      "plutôt", "voir ")):
             warn("la description ne dit pas quand NE PAS s'en servir — "
                  "source n°1 de chevauchement entre skills")
 

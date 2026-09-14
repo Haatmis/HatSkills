@@ -3,6 +3,20 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.3.0
+
+- **`/roblox:help`** — ouvre le guide dans le navigateur. La page est
+  **générée** depuis `GUIDE.md` à chaque appel plutôt que stockée : une aide
+  écrite à la main diverge du guide dès la mise à jour suivante, et une aide
+  périmée affirme des choses fausses avec assurance. Ouverture compatible
+  Windows, macOS et Linux ; en session distante sans navigateur, le chemin du
+  fichier est donné au lieu d'échouer.
+- `GUIDE.md` déménage à la racine du plugin : il n'était pas livré avec
+  l'installation, donc `/roblox:help` ne l'aurait pas trouvé.
+- Le validateur n'exige plus de vocabulaire de déclenchement ni d'exclusion
+  croisée sur un skill en invocation manuelle seule — par construction, il
+  n'est jamais choisi sur sa description.
+
 ## 0.2.0
 
 Première mise à jour réellement distribuée : la `0.1.0` n'ayant jamais été
