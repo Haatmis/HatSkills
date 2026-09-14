@@ -42,7 +42,7 @@ hat3d/<slug>/
 | Pour | tout — l'objectif est de **reproduire l'image source**, courbes et galbes compris | rendu stylisé demandé explicitement, ou mob instancié en masse |
 | Budget | 40 à 3000 parts selon le sujet (aucun plafond Roblox — voir `style-detaille.md` § Budget) | 5 à 35 parts |
 | Source de vérité | un **générateur** `gen-<slug>.mjs` qui produit le `model.json` | `model.json` écrit à la main |
-| Guide | `references/style-detaille.md` | `references/style-lowpoly.md` |
+| Guide | `${CLAUDE_SKILL_DIR}/references/style-detaille.md` | `${CLAUDE_SKILL_DIR}/references/style-lowpoly.md` |
 
 **Le détaillé est le défaut** : on ne livre plus de « tas de cubes ». Le
 low-poly ne se choisit que si l'utilisateur demande un rendu minimaliste, ou
@@ -79,21 +79,21 @@ là son intérêt, pas la vitesse d'écriture.
 
 ## Lectures obligatoires avant d'écrire un model.json
 
-- `references/part-schema.md` — schéma JSON, axes, conventions Wedge/Cylinder,
+- `${CLAUDE_SKILL_DIR}/references/part-schema.md` — schéma JSON, axes, conventions Wedge/Cylinder,
   matériaux autorisés, pivot au sol.
-- `references/style-detaille.md` — **le guide du mode par défaut** : lecture de
+- `${CLAUDE_SKILL_DIR}/references/style-detaille.md` — **le guide du mode par défaut** : lecture de
   l'image en familles de formes (le Block en dernier), inventaire de formes,
   primitives de `lib/volume.mjs` (révolution, tore, nappe, chanfrein, fuseau,
   membrane, plumes, écailles, miroir), pièges du miroir d'Euler et des surfaces
   coplanaires, budget par nombre d'exemplaires à l'écran.
-- `references/style-lowpoly.md` — **seulement si le low-poly est demandé** :
+- `${CLAUDE_SKILL_DIR}/references/style-lowpoly.md` — **seulement si le low-poly est demandé** :
   lecture d'image simplifiée, budget 5-35 parts, palette, échelle en studs.
-- `references/animations.md` — **si le modèle doit bouger** : schéma des tracks
+- `${CLAUDE_SKILL_DIR}/references/animations.md` — **si le modèle doit bouger** : schéma des tracks
   keyframes, pivots, easings, recettes (porte, couvercle, tiroir, rotation),
   API du player Lua, et le schéma des `emitters` (particules Roblox).
-- `references/finition.md` — **avant de construire dans Studio** : le catalogue
+- `${CLAUDE_SKILL_DIR}/references/finition.md` — **avant de construire dans Studio** : le catalogue
   des défauts géométriques et la passe qui les rattrape.
-- `references/erreurs-connues.md` — catalogue des erreurs de modélisation déjà
+- `${CLAUDE_SKILL_DIR}/references/erreurs-connues.md` — catalogue des erreurs de modélisation déjà
   rencontrées (proportions, attaches entre masses, silhouette...) et comment
   les éviter. Lecture obligatoire, pas optionnelle — plusieurs entrées
   viennent de corrections qui n'ont pas besoin d'être refaites.
@@ -238,7 +238,7 @@ détail qu'une fois la ligne bonne.
 
 Pour une animation, screenshoter plusieurs temps via les paramètres d'URL
 (`--params "?anim=Nom&t=0.7"`) : pose de base à `t=0`, un temps intermédiaire,
-pose finale à `t=duration` (détails : `references/animations.md`).
+pose finale à `t=duration` (détails : `${CLAUDE_SKILL_DIR}/references/animations.md`).
 
 La caméra se pilote aussi par l'URL — indispensable pour juger un modèle **tel
 que le joueur le verra** (yeux à ~4 studs), la vue 3/4 par défaut mentant sur
@@ -285,7 +285,7 @@ volée de marches sans contremarche, une part invisible noyée dans une autre.
 `--fix` applique les corrections sûres — et refuse d'écrire sur un `model.json`
 généré, où la correction serait perdue à la régénération suivante.
 
-Détail des contrôles et des arbitrages : `references/finition.md`.
+Détail des contrôles et des arbitrages : `${CLAUDE_SKILL_DIR}/references/finition.md`.
 Une commande `/hat3d-finition` existe dans certaines installations pour
 guider la passe de bout en bout ; elle n'est pas fournie par ce plugin. Le
 script `finition.mjs` ci-dessus fait le travail sans elle.
@@ -324,7 +324,7 @@ Le script est idempotent (remplace le modèle du même nom dans `workspace`) ;
 `CONFIG` en tête permet de changer parent/position/rotation sans regénérer.
 Si le modèle a des animations, tester dans Studio juste après le build :
 `require(workspace.<Nom>.Hat3DAnim).play("<Animation>")` (API complète
-dans `references/animations.md`).
+dans `${CLAUDE_SKILL_DIR}/references/animations.md`).
 
 Premier usage d'un `CornerWedge` : vérifier l'orientation dans Studio vs la
 préview (procédure de calibration dans part-schema.md § Calibration).
@@ -339,7 +339,7 @@ Si la correction révèle une erreur de modélisation qui pourrait se reproduire
 sur un autre modèle — pas un simple ajustement de goût (« le toit plus
 foncé »), mais un défaut structurel (« les racines détachées du tronc »,
 « la charnière pas alignée avec le pivot ») — ajouter une entrée à
-`references/erreurs-connues.md` avant de continuer : symptôme observé, cause
+`${CLAUDE_SKILL_DIR}/references/erreurs-connues.md` avant de continuer : symptôme observé, cause
 réelle, correction, règle à appliquer pour l'éviter la prochaine fois. Format
 des entrées existantes à suivre. Sans ça, la correction ne profite qu'à ce
 modèle-ci ; avec ça, elle profite à tous les suivants.

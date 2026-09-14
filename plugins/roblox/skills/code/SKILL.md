@@ -110,7 +110,7 @@ Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
 Et l'anti-règle, aussi importante : **ne micro-optimise pas.** Mettre un service
 en variable locale, préférer `ipairs` à `pairs`, dérouler une boucle — ça rend
 le code moins lisible pour un gain que tu n'as pas mesuré. Si la performance
-est vraiment le sujet, `references/perf.md` donne les coûts réels, les seuils
+est vraiment le sujet, `${CLAUDE_SKILL_DIR}/references/perf.md` donne les coûts réels, les seuils
 et comment mesurer avant de toucher à quoi que ce soit.
 
 **Arborescence** (fixée pour tous les projets) :
@@ -135,7 +135,7 @@ Script, `Nom.client.luau` → LocalScript, `init.luau` → le module d'un dossie
 | `BodyVelocity`, `BodyPosition`, `BodyGyro` | `LinearVelocity`, `AlignPosition`, `AlignOrientation` |
 
 Avant d'écrire du mouvement, de l'animation, du timing, de l'input ou de
-l'accès aux services, lis `references/api-obsolete.md` : la table complète y
+l'accès aux services, lis `${CLAUDE_SKILL_DIR}/references/api-obsolete.md` : la table complète y
 est, avec le remplaçant exact et ce qui change dans l'usage.
 
 ## Procédure

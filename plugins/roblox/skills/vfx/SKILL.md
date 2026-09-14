@@ -77,7 +77,7 @@ coût dominant n'est pas le nombre de particules mais la surface transparente
 empilée : dix grosses particules translucides coûtent plus cher que cent
 petites. Vise la lisibilité, pas la quantité.
 
-`references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
+`${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
 propriétés qui comptent vraiment, des recettes de base et les pièges de
 performance. Lis-le avant de choisir ton instance.
 

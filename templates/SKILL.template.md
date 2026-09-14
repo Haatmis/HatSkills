@@ -108,8 +108,10 @@ Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 <!--
 Ressources embarquées (à créer seulement si besoin) :
-  references/  docs détaillées — renvoie-y AVEC une condition de déclenchement
-               (« pour les cas multi-devises, lis references/devises.md »)
+  references/  docs détaillées — renvoie-y AVEC une condition de déclenchement,
+               et en chemin absolu, sinon le modèle tâtonne :
+               « pour les cas multi-devises, lis
+                 ${CLAUDE_SKILL_DIR}/references/devises.md »
   scripts/     code exécutable — ne consomme pas de contexte, ne dérive pas
   assets/      fichiers utilisés dans la sortie (modèles, polices, icônes)
 Chemins : ${CLAUDE_SKILL_DIR}/scripts/verifier.py

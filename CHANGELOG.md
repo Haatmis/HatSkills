@@ -3,6 +3,14 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.6.2
+
+Les 18 renvois vers `references/` étaient écrits en relatif. Observé en usage
+réel : le modèle construisait le chemin absolu vers le cache du plugin à la
+main, avec un `cat … 2>/dev/null || ls` en repli — il tâtonnait. Tous passés en
+`${CLAUDE_SKILL_DIR}/references/…`. Le gabarit suit, sinon le prochain skill
+repartirait en relatif.
+
 ## 0.6.1
 
 Le README des évals annonçait sept cas alors que la suite en a dix : les trois

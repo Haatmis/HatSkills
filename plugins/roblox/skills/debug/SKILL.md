@@ -69,7 +69,7 @@ problème.
 - *Marche en Studio, casse en jeu publié* → API réservée à Studio, services
   désactivés, ou latence réelle.
 
-`references/symptomes-frequents.md` relie chaque symptôme Roblox courant à ses
+`${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md` relie chaque symptôme Roblox courant à ses
 causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
 évite d'explorer au hasard.
 
@@ -99,7 +99,7 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
 
 4. **Forme une hypothèse, et la plus petite expérience qui la démolirait.**
    Une hypothèse qu'aucune observation ne peut contredire n'est pas une
-   hypothèse. Consulte `references/symptomes-frequents.md` à ce moment-là.
+   hypothèse. Consulte `${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md` à ce moment-là.
 
 5. **Reproduis dans Studio via le MCP.** Tu dois *voir* le bug avant d'y
    toucher. S'il ne se reproduit pas, ton modèle du problème est faux : reviens
