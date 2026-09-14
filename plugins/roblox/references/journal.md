@@ -47,7 +47,7 @@ compteur qui distingue une règle d'un incident isolé. Une entrée vue une seul
 fois n'entrera pas dans un skill.
 
 À partir de **8 leçons en attente**, la commande le signale dans sa sortie.
-Ajoute alors une ligne en fin de réponse pour dire que `/roblox:affiner` est
+Ajoute alors une ligne en fin de réponse pour dire que `/roblox:atelier` est
 disponible, puis reprends ce que tu faisais. **N'affine jamais de toi-même** :
 modifier un skill est une décision de l'utilisateur.
 
@@ -105,4 +105,4 @@ plusieurs à la fois. Vérifie que c'était voulu avant de continuer.
 Un skill ne se réécrit pas seul, et c'est tant mieux : chaque ligne ajoutée est
 rechargée à **chaque** déclenchement. Une boucle qui ne ferait qu'ajouter
 dégraderait les skills au lieu de les améliorer. La consolidation est donc un
-acte délibéré, qui retire autant qu'il ajoute — voir le skill `affiner`.
+acte délibéré, qui retire autant qu'il ajoute — voir le mode « consolider » de `atelier`.

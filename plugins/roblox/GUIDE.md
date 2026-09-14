@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.3.0** · 9 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.4.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -36,8 +36,7 @@ Tu n'as normalement **rien à taper** : ils se déclenchent seuls sur ce que tu
 | `debug` | « ça marche pas », « le shop déconne » | Le bug reproduit dans Studio, la cause racine, le correctif minimal |
 | `vfx` | « des particules quand on tape » | Un preset réutilisable dans `src/shared/VFX/`, cohérent avec ta charte |
 | `hat3d` | « fais-moi un coffre en 3D » | Un `model.json`, une préview HTML à valider, un `build.lua` pour Studio |
-| `nouveau-skill` | « fais-en un skill » | Un nouveau skill conforme, après une courte interview |
-| `affiner` | « consolide le journal » | Les leçons accumulées promues dans les skills, diff à valider |
+| `atelier` | « fais-en un skill », « consolide le journal » | Un nouveau skill après interview, ou les leçons promues dans les skills existants |
 | `help` | `/roblox:help` | Cette page, dans ton navigateur |
 
 Pour forcer l'un d'eux, tape son nom : `/roblox:game-design je voudrais…`
@@ -77,7 +76,7 @@ dis « reprends », et seuls les branchements concernés sont revérifiés.
 ## Le journal, en trois lignes
 
 Quand tu corriges Claude, ou que Studio révèle une erreur de sa part, la leçon
-part dans un journal. À 8 leçons, il te propose `/roblox:affiner`, qui les
+part dans un journal. À 8 leçons, il te propose `/roblox:atelier`, qui les
 promeut dans les skills — **avec ton accord sur le diff**. C'est comme ça que
 le plugin s'améliore ; rien ne bouge tout seul.
 

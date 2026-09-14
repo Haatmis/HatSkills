@@ -23,7 +23,7 @@ La méthode est dans `docs/`. En résumé :
 - Un gabarit de sortie exact, pas une description en prose.
 - Ce qui a été précisé deux fois à la main appartient au `Contexte figé`.
 - Section `Apprendre de la session` obligatoire : sans elle, le skill ne
-  remonte rien à `/roblox:affiner`.
+  remonte rien à `/roblox:atelier`.
 
 ## Avant de committer
 

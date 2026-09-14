@@ -136,7 +136,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/journal.py" add \
 
 Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
-ligne que `/roblox:affiner` est disponible — n'affine jamais de toi-même.
+ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
 Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 

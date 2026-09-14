@@ -3,6 +3,24 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.4.0
+
+⚠ **`/roblox:nouveau-skill` et `/roblox:affiner` disparaissent** au profit de
+**`/roblox:atelier`**, qui fait les deux.
+
+La fusion n'a pas été faite pour économiser des tokens — le gain permanent est
+marginal. Deux autres raisons : les deux skills se disputaient le même
+vocabulaire (« skill », « améliorer »), et ils se déclenchaient dans des
+sessions Roblox alors qu'ils n'ont rien à voir avec faire un jeu. Une paire de
+collision en moins, un parasite en moins.
+
+Le skill fusionné fait **925 tokens de moins** que la somme des deux : le
+contexte figé, les pièges et les garde-fous étaient largement communs.
+
+C'est la seule entorse assumée à la règle « un skill = un livrable » : deux
+modes, deux gabarits de sortie, parce que les deux gestes sont rares et que le
+mode se lit sans hésitation dans la demande.
+
 ## 0.3.0
 
 - **`/roblox:help`** — ouvre le guide dans le navigateur. La page est

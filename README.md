@@ -39,7 +39,7 @@ HatSkills/
 ## Ajouter un skill
 
 ```shell
-/roblox:nouveau-skill
+/roblox:atelier
 ```
 
 Ou à la main : copie `templates/SKILL.template.md` dans
@@ -81,8 +81,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 | `help` | Ouvre le guide dans le navigateur, généré depuis `GUIDE.md` |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
-| `affiner` | Consolide le journal d'apprentissage dans les skills, en proposant un diff à valider |
-| `nouveau-skill` | Crée un skill conforme aux conventions de ce repo, après interview |
+| `atelier` | Crée un skill après interview, ou consolide le journal dans les skills existants |
 
 Conventions communes portées par `code` : vanilla strict (aucune lib externe),
 nommage Roblox officiel, `--!strict` sur les ModuleScripts, arborescence Rojo
@@ -162,7 +161,7 @@ Pour qu'il suive, pointe `HATSKILLS_JOURNAL_DIR` vers un dossier synchronisé �
 divergences sans conflit.
 
 **2. Consolidation, quand tu le décides.** À partir de 8 leçons en attente, le
-skill actif te signale qu'il y a de la matière. Tu lances `/roblox:affiner`,
+skill actif te signale qu'il y a de la matière. Tu lances `/roblox:atelier`,
 qui trie, propose un diff et n'écrit qu'après ton accord.
 
 La contrainte qui gouverne tout : **chaque ligne d'un SKILL.md est rechargée à
