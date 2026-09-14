@@ -30,6 +30,13 @@ qu'il faut regarder et les boutons à tourner.
 
 ## Contexte figé
 
+**Reformule avant d'agir — mais seulement quand ça change quelque chose.**
+Une ligne en tête de réponse : « Je comprends : … ». Fais-le si l'un des trois
+est vrai : la demande nomme un **système** plutôt qu'un élément ; un « qui » ou
+un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
+reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
+la session entière ; une ligne coûte une ligne.
+
 **La charte visuelle d'abord.** `src/shared/VFX/Style.luau` porte l'identité
 visuelle du projet : palette, durées, densité, budget mobile. Tous les presets
 en dérivent — c'est ce qui empêche le jeu de devenir un patchwork. Lis-la avant
@@ -94,6 +101,9 @@ performance. Lis-le avant de choisir ton instance.
 ## Format de sortie
 
 ```markdown
+<Si la demande admettait plusieurs lectures : « Je comprends : … » en une
+ligne, avant tout le reste. Sinon, commence directement.>
+
 ## L'effet
 <Ce qui se passe visuellement, en 2 lignes. Décris, ne vends pas.>
 
@@ -188,6 +198,7 @@ Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 ## Avant de rendre
 
+- [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
 - [ ] `Style.luau` lu, ou créé après trois questions.
 - [ ] Couleurs, durées et densité dérivées de la charte, pas en dur.
 - [ ] Aucun identifiant d'asset inventé ; l'effet tourne sans texture fournie.

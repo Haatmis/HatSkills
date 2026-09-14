@@ -43,6 +43,11 @@ Règle : précisé deux fois à la main = doit être ici.>
 
 ## Procédure
 
+<Pour un skill de production : reformule la demande en une ligne avant d'agir,
+mais seulement si elle nomme un système plutôt qu'un élément, laisse un
+« qui »/« quoi » implicite, ou dépasse un fichier. Sinon c'est du bruit.>
+
+
 1. <Étape vérifiable, à l'impératif.>
 2. <…>
 3. <…>

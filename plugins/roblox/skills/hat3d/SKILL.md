@@ -128,6 +128,13 @@ hors contexte projet), choisir un dossier de travail temporaire et
 **l'annoncer** avant de modéliser — ne pas créer silencieusement `hat3d/`
 dans un dossier qui n'a rien à voir avec le jeu de l'utilisateur.
 
+**Reformule avant d'agir — mais seulement quand ça change quelque chose.**
+Une ligne avant de modéliser : « Je comprends : … ». Fais-le si l'un des trois
+est vrai : la demande nomme un **système** plutôt qu'un élément ; un « qui » ou
+un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
+reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
+la session entière ; une ligne coûte une ligne.
+
 **Ne pas interrompre avant de modéliser.** Choisir des valeurs par défaut
 raisonnables, livrer un premier résultat (préview + build.lua), et corriger
 ensemble à partir de ce qui est vu — pas l'inverse. Poser une salve de
@@ -382,6 +389,9 @@ Ce que tu rends à l'utilisateur après une génération, en plus des trois
 artefacts posés sur le disque :
 
 ```markdown
+<Si la demande admettait plusieurs lectures : « Je comprends : … » en une
+ligne, avant tout le reste. Sinon, commence directement.>
+
 ## <Nom du modèle>
 <Ce qui a été modélisé, en 2 lignes : silhouette, masses principales.>
 
@@ -443,3 +453,7 @@ Types : `correction`, `studio-error`, `re-precision`. Rien à signaler : ne
 lance rien. Si la commande annonce que le seuil est atteint, signale en une
 ligne que `/roblox:atelier` est disponible — n'affine jamais de toi-même.
 Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
+
+## Avant de rendre
+
+- [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.

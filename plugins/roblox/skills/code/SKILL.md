@@ -31,6 +31,13 @@ Studio avant de rendre quoi que ce soit.
 
 ## Contexte figé
 
+**Reformule avant d'agir — mais seulement quand ça change quelque chose.**
+Une ligne en tête de réponse : « Je comprends : … ». Fais-le si l'un des trois
+est vrai : la demande nomme un **système** plutôt qu'un élément ; un « qui » ou
+un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
+reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
+la session entière ; une ligne coûte une ligne.
+
 **Vanilla strict.** Aucune dépendance externe : ni Knit, ni Fusion, ni Roact,
 ni ProfileService, ni aucun paquet Wally. Tout à la main avec l'API Roblox. Si
 une lib rendrait vraiment service, dis-le en une phrase — ne l'introduis pas.
@@ -107,6 +114,12 @@ est, avec le remplaçant exact et ce qui change dans l'usage.
    modules existants, le style en place et ce qui est déjà résolu. N'introduis
    pas un deuxième système là où il y en a déjà un. En mode MCP, inspecte
    l'arbre du jeu.
+
+   **Et regarde `docs/design/` s'il existe** : une spec y décrit peut-être déjà
+   les règles et les chiffres de ce que tu vas écrire. Du code qui contredit
+   une décision de design prise la semaine d'avant ne se voit pas à la
+   relecture — il se découvre en jeu. Si tu t'en écartes, dis-le et dis
+   pourquoi.
 3. **Situe la frontière client/serveur** avant la première ligne : qu'est-ce
    qui tourne où, et qu'est-ce qui transite. Si la réponse n'est pas nette, la
    suite sera fausse.
@@ -146,6 +159,9 @@ En mode Rojo, modifie les fichiers puis rends **seulement** le compte rendu.
 En mode MCP, crée les instances puis rends le même compte rendu.
 
 ```markdown
+<Si la demande admettait plusieurs lectures : « Je comprends : … » en une
+ligne, avant tout le reste. Sinon, commence directement.>
+
 ## Ce que j'ai fait
 <2-4 lignes. Ce qui a été ajouté ou modifié, et le choix structurant s'il y
 en a un.>
@@ -224,6 +240,7 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 
 ## Avant de rendre
 
+- [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
 - [ ] Exécuté dans Studio via le MCP, Output lu et propre — ou absence du MCP
       signalée explicitement.
 - [ ] Aucune API de la table des dépréciées.

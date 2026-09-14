@@ -32,6 +32,13 @@ l'un en l'autre.
 
 ## Contexte figé
 
+**Reformule avant d'agir — mais seulement quand ça change quelque chose.**
+Une ligne en tête de réponse : « Je comprends : … ». Fais-le si l'un des trois
+est vrai : la demande nomme un **système** plutôt qu'un élément ; un « qui » ou
+un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
+reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
+la session entière ; une ligne coûte une ligne.
+
 **Les conventions du projet** — vanilla strict, nommage Roblox officiel,
 typage, arborescence Rojo, logique côté serveur — sont celles du skill `code`.
 Un correctif les respecte. En cas de doute sur une API, la table des
@@ -78,9 +85,13 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
    Si l'utilisateur a collé une erreur, tu as l'observé : ne redemande que ce
    qui manque.
 
-2. **Localise le code.** En projet Rojo, cherche dans `src/` le système nommé.
-   Sinon, inspecte l'arbre du jeu via le MCP. Ne demande pas à l'utilisateur
-   où c'est tant que tu peux le trouver toi-même.
+2. **Localise le code, et cherche l'attendu écrit.** En projet Rojo, cherche
+   dans `src/` le système nommé, et regarde si `docs/design/` en porte la
+   spec : elle dit ce qui *devrait* se passer, ce qui est exactement la moitié
+   du diagnostic. Un comportement conforme à la spec n'est pas un bug, c'est un
+   désaccord de design — et ça se règle ailleurs. Sinon, inspecte l'arbre du
+   jeu via le MCP. Ne demande pas à l'utilisateur où c'est tant que tu peux le
+   trouver toi-même.
 
 3. **Lis le vrai chemin d'exécution**, de l'événement déclencheur jusqu'au
    point de rupture. Pas seulement la fonction suspecte : qui l'appelle, quand,
@@ -127,6 +138,9 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
 ## Format de sortie
 
 ```markdown
+<Si la demande admettait plusieurs lectures : « Je comprends : … » en une
+ligne, avant tout le reste. Sinon, commence directement.>
+
 ## Symptôme
 <L'attendu et l'observé, en deux lignes.>
 
@@ -196,6 +210,7 @@ Le shop déconne, les joueurs achètent sans payer
 
 ## Avant de rendre
 
+- [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
 - [ ] Attendu et observé établis, pas supposés.
 - [ ] Bug reproduit dans Studio avant correction — ou absence de preuve
       annoncée explicitement comme telle.

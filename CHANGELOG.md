@@ -3,6 +3,24 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.5.0
+
+**Reformulation conditionnelle.** Les cinq skills de production reformulent la
+demande en une ligne avant d'agir — mais seulement quand elle nomme un système
+plutôt qu'un élément, laisse un « qui » implicite, ou dépasse un fichier.
+Ailleurs, c'est du bruit.
+
+L'alternative envisagée était de déclencher `game-design` sur tout. Rejetée :
+une spec complète pour quinze lignes de Luau, c'est un outil qu'on contourne
+au bout de deux fois — et qui ne sert alors plus, même là où il comptait.
+Comprendre et spécifier sont deux gestes de coût très différent.
+
+**`code` et `debug` lisent `docs/design/`.** Rien ne les y obligeait : une
+décision de design prise lundi pouvait être contredite par du code écrit
+jeudi, sans que ça se voie à la relecture. Pour `debug` le gain est double —
+la spec dit ce qui *devrait* se passer, soit la moitié du diagnostic, et un
+comportement conforme à la spec n'est pas un bug mais un désaccord de design.
+
 ## 0.4.0
 
 ⚠ **`/roblox:nouveau-skill` et `/roblox:affiner` disparaissent** au profit de

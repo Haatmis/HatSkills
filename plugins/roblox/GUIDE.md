@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.4.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.5.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -61,13 +61,23 @@ Et pour relire cette page à tout moment : **`/roblox:help`**. Elle est regéné
   un système qui tourne + la liste de ce qu'il te reste à fournir
 ```
 
+## Avant d'agir, il reformule — parfois
+
+Quand ta demande admet plusieurs lectures, le skill répond d'abord une ligne :
+« Je comprends : … ». Corrige-la si c'est faux, et tu viens d'éviter un
+malentendu à 400 lignes.
+
+Il ne le fait que si ça change quelque chose — la demande nomme un système,
+un « qui » reste implicite, ou le travail dépasse un fichier. Sur « ajoute un
+print », il fait le travail sans commentaire.
+
 ## Les trois fichiers qui comptent dans ton jeu
 
 | Fichier | À quoi il sert |
 |---|---|
 | `src/shared/Config/Assets.luau` | Les IDs d'animations, de sons, de meshes. Un `0` = à fournir. Le code saute proprement ce qui manque, donc **le jeu tourne sans** |
 | `src/shared/VFX/Style.luau` | Ta charte visuelle : palette, durées, densité. Tous les effets en dérivent — tu changes le style du jeu entier ici |
-| `docs/design/*.md` | Les specs. Pourquoi un chiffre vaut 15 et pas 20, six mois plus tard |
+| `docs/design/*.md` | Les specs. `code` les lit avant d'écrire, `debug` avant de diagnostiquer — un comportement conforme à la spec n'est pas un bug |
 
 **Le cycle des assets** : Claude ne peut ni publier une animation, ni créer un
 son. Il te livre un système complet avec des `0`, tu remplis quand tu veux, tu

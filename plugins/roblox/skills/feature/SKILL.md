@@ -32,6 +32,13 @@ chaque étape, plus la liste courte de ce qui reste à fournir.
 
 ## Contexte figé
 
+**Reformule avant d'agir — mais seulement quand ça change quelque chose.**
+Une ligne en tête de réponse : « Je comprends : … ». Fais-le si l'un des trois
+est vrai : la demande nomme un **système** plutôt qu'un élément ; un « qui » ou
+un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
+reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
+la session entière ; une ligne coûte une ligne.
+
 **Appelle explicitement les autres skills.** N'écris pas de VFX toi-même en
 espérant t'en sortir : invoque le skill du domaine. L'appel explicite est
 fiable, le déclenchement automatique ne l'est pas.
@@ -131,6 +138,9 @@ est désormais actif, ce qui reste à `0`. Ne recode pas ce qui marchait déjà.
 ## Format de sortie
 
 ```markdown
+<Si la demande admettait plusieurs lectures : « Je comprends : … » en une
+ligne, avant tout le reste. Sinon, commence directement.>
+
 ## Plan
 | # | Étape | Skill | Vérifié |
 |---|---|---|---|
@@ -215,6 +225,7 @@ Protocole complet : `${CLAUDE_PLUGIN_ROOT}/references/journal.md`.
 
 ## Avant de rendre
 
+- [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
 - [ ] La spec a été lue, et le plan en découle.
 - [ ] Rig R6/R15 identifié avant toute étape d'animation.
 - [ ] Serveur avant client.
