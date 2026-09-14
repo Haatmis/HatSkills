@@ -3,6 +3,27 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.7.0
+
+**Le retour joueur devient une catégorie.** Lacune trouvée sur la première
+feature réelle : le système de combat fonctionnait, était sécurisé, vérifié —
+et aucune pastille de dégâts. Ni `game-design` ni `vfx` n'y avaient pensé,
+parce que rien dans le plugin ne parlait de lisibilité. C'était une lacune de
+conception, pas d'exécution : personne n'avait rien demandé.
+
+- `game-design` remplit une section **Retour joueur** dans chaque spec : action
+  réussie, dégât subi, état courant. « Rien » est un choix acceptable, mais il
+  doit être écrit.
+- `vfx` distingue **décorer** et **informer**. Un effet décoratif enrichit et
+  peut être discret ; un effet qui informe doit être lu en un tiers de seconde,
+  porter une seule information, ne pas se superposer à lui-même, et partir en
+  moins d'une seconde.
+- La boîte à outils gagne le volet correspondant : quelle instance pour quelle
+  information, le réglage complet d'une pastille de dégâts, et surtout le
+  décalage aléatoire sans lequel trois coups rapides empilent trois chiffres
+  illisibles. Plus la règle qui économise du réseau : une pastille est
+  **locale**, le serveur diffuse l'événement et chaque client décide.
+
 ## 0.6.4
 
 Reprise de la consolidation validée dans une session parallèle, pour éviter

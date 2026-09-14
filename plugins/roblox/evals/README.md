@@ -1,13 +1,13 @@
 # Évals de routage
 
-Dix cas qui mesurent **quel skill se déclenche** sur une phrase réelle. C'est
+Onze cas qui mesurent **quel skill se déclenche** sur une phrase réelle. C'est
 la seule façon de savoir si les descriptions font leur travail : le
 recouvrement de vocabulaire que mesure `scripts/validate.py` détecte les
 collisions probables, il ne dit pas ce qui se passe vraiment.
 
 ## Ce que chaque cas vérifie
 
-### Les frontières — quatre cas
+### Les frontières — cinq cas
 
 Ce sont les plus informatifs. Chacun vérifie qu'un skill part **et** que son
 voisin reste à sa place.
@@ -18,6 +18,7 @@ voisin reste à sa place.
 | `bug-humanoid-nil` | `debug` | `code` |
 | `remote-simple` | `code` | `game-design` |
 | `equilibrage-sans-code` | `game-design` | `code` |
+| `pastille-degats` | `vfx` | `code` |
 
 ### Le routage simple — cinq cas
 

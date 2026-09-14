@@ -52,6 +52,18 @@ spec. Tout le reste, tu le tranches toi-même en le marquant comme une
 hypothèse dans la spec — l'utilisateur corrigera ce qui ne lui va pas. Un
 interrogatoire de quinze questions tue l'envie de construire.
 
+**Une mécanique qu'on ne peut pas lire n'existe pas.** Si le joueur inflige
+20 dégâts et que rien ne le lui dit, il ne sait ni qu'il a touché, ni combien,
+ni si ça sert à quelque chose — et il conclut que la feature est cassée. Le
+retour n'est pas de la décoration ajoutée après : c'est la moitié de la
+mécanique, et il se spécifie en même temps qu'elle.
+
+Trois questions à te poser sur chaque feature, et à trancher dans la spec :
+comment le joueur sait que **son action a marché** ; comment il sait qu'il
+**subit** quelque chose ; comment il sait **où il en est** — points de vie,
+cooldown, progression. Une réponse « rien » est un choix, mais ce doit être un
+choix assumé et écrit.
+
 **Pense au joueur qui triche.** Sur Roblox, toute mécanique qui donne un
 avantage sera attaquée. Note-le dans la spec pour que l'implémentation le
 sache : ce n'est pas de la paranoïa, c'est une contrainte de conception.
@@ -107,6 +119,15 @@ avec que sans.>
 | Valeur | Proposé | Pourquoi |
 |---|---|---|
 | Dégâts par coup | 25 | 4 coups pour tuer un joueur à 100 PV |
+
+## Retour joueur
+| Ce que le joueur doit savoir | Comment il l'apprend |
+|---|---|
+| Mon action a marché | <ex. pastille de dégâts chiffrée sur la cible> |
+| Je subis quelque chose | <ex. flash rouge bref au bord de l'écran> |
+| Où j'en suis | <ex. barre de vie au-dessus de la cible visée> |
+
+<Une ligne « rien » est acceptable si c'est délibéré — écris pourquoi.>
 
 ## Échelle
 <Combien de joueurs simultanés, combien d'instances, combien d'appels par
@@ -198,6 +219,8 @@ relance avec `py` : c'est un alias, pas un interpréteur.
 - [ ] L'échelle attendue est chiffrée — elle décide de la structure.
 - [ ] Les cas limites couvrent : cible morte, joueur parti, actions
       simultanées, valeurs nulles ou négatives.
+- [ ] La section « Retour joueur » est remplie : action réussie, dégât subi,
+      état courant. Une mécanique illisible n'existe pas pour le joueur.
 - [ ] Au moins un risque de design identifié, ou une raison de n'en voir aucun.
 - [ ] La section exploiteur est remplie dès que la feature donne un avantage.
 - [ ] Les hypothèses non demandées sont marquées comme telles.

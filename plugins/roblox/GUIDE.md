@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.6.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.7.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -82,6 +82,18 @@ print », il fait le travail sans commentaire.
 **Le cycle des assets** : Claude ne peut ni publier une animation, ni créer un
 son. Il te livre un système complet avec des `0`, tu remplis quand tu veux, tu
 dis « reprends », et seuls les branchements concernés sont revérifiés.
+
+## Il te demande comment le joueur voit ce qui se passe
+
+Une mécanique qu'on ne peut pas lire n'existe pas : si tu infliges 20 dégâts et
+que rien ne le dit, le joueur croit que la feature est cassée.
+
+`game-design` remplit donc une section **Retour joueur** dans chaque spec —
+comment le joueur sait que son action a marché, qu'il subit quelque chose, et
+où il en est. Et `vfx` sait que **décorer et informer sont deux métiers** : un
+effet décoratif peut être discret, une pastille de dégâts doit être *lue* en un
+tiers de seconde, ne pas se superposer à elle-même, et disparaître en moins
+d'une seconde.
 
 ## Il pense à la perf en écrivant, pas après
 
