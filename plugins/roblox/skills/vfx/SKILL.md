@@ -76,9 +76,6 @@ Pour tout ce qui informe :
   coups regarde ailleurs : son retour à lui est au bord de l'écran, pas sur le
   personnage qui frappe.
 
-Le détail des instances — `BillboardGui`, tween de montée, distance
-d'affichage — est dans `${CLAUDE_SKILL_DIR}/references/boite-a-outils.md`.
-
 **Un preset, pas un effet jetable.** Tout va dans `src/shared/VFX/`, appelable
 par son nom. Un effet écrit en dur dans un système est un effet qu'on ne
 retrouvera pas et qui divergera du reste.
@@ -99,14 +96,23 @@ et mal cadré. `Rate` est réservé aux effets continus.
 s'éteindre. Un emitter jamais détruit est une fuite : chaque coup d'épée
 laisse un `Attachment` derrière lui.
 
+**Un effet qu'on ne remarque pas n'existe pas.** Le réglage juste ne se
+trouve pas en visant le milieu : trop discret est indistinguable d'absent, et
+c'est le retour le plus fréquent après livraison — le système marchait, il ne
+se voyait pas. Vise le haut, et donne un réglage pour baisser. Dans l'autre
+sens, il faut d'abord que l'utilisateur devine qu'il manque quelque chose.
+Ça ne contredit pas la ligne suivante : on gagne en contraste, en durée et en
+échelle sur le premier tiers de seconde, pas en nombre de particules.
+
 **Budget mobile.** Une bonne part des joueurs Roblox est sur téléphone. Le
 coût dominant n'est pas le nombre de particules mais la surface transparente
 empilée : dix grosses particules translucides coûtent plus cher que cent
 petites. Vise la lisibilité, pas la quantité.
 
 `${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
-propriétés qui comptent vraiment, des recettes de base et les pièges de
-performance. Lis-le avant de choisir ton instance.
+propriétés qui comptent vraiment, des recettes de base, les pièges de
+performance, et le détail des pastilles de dégâts — `BillboardGui`, tween de
+montée, distance d'affichage. Lis-le avant de choisir ton instance.
 
 ## Procédure
 
