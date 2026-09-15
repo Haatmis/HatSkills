@@ -62,13 +62,6 @@ qui a réglé quoi.
 ailleurs. Corriger une occurrence sur cinq donne l'illusion d'avoir résolu le
 problème.
 
-**Signaux qui orientent d'emblée :**
-- *Marche en Play Solo, casse à deux joueurs* → frontière client/serveur ou
-  état serveur qui suppose un joueur unique.
-- *Marche au deuxième lancement, pas au premier* → course au chargement.
-- *Marche en Studio, casse en jeu publié* → API réservée à Studio, services
-  désactivés, ou latence réelle.
-
 `${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md` relie chaque symptôme Roblox courant à ses
 causes habituelles. À l'étape 4, avant de former une hypothèse, lis son
 **sommaire** puis la section du symptôme observé : ça évite d'explorer au
@@ -193,6 +186,11 @@ Le shop déconne, les joueurs achètent sans payer
   cherche d'abord.
 - **Oublier que ça peut être un bug de chargement.** En Roblox, « ça marche au
   deuxième essai » n'est presque jamais aléatoire : c'est un ordre d'exécution.
+- **Faire confiance à son propre harnais.** Un test qui appelle `FireServer`
+  directement court-circuite l'état interne du module client — une distance,
+  un mode, que seul le vrai clic initialise : les mesures ne valent que pour
+  ce chemin-là. Quand le vrai chemin d'entrée n'est pas pilotable, dis-le au
+  rendu au lieu de conclure.
 
 ## Apprendre de la session
 

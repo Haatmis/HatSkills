@@ -61,7 +61,9 @@ jamais par `any` implicite.
 **Serveur par défaut.** Toute logique de jeu vit sur le serveur : économie,
 statistiques, inventaire, progression, dégâts, validation. Le client affiche
 et envoie des intentions, rien de plus. Un client est toujours supposé hostile
-— un exploiteur contrôle entièrement ce qui tourne chez lui.
+— un exploiteur contrôle entièrement ce qui tourne chez lui. Si tu es tenté
+d'y mettre de la logique « parce que c'est plus simple », c'est qu'il manque
+un Remote.
 
 Ce qui découle de cette règle, à appliquer sans y penser :
 - Tout `RemoteEvent`/`RemoteFunction` valide ses arguments côté serveur :
@@ -111,6 +113,10 @@ Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
   l'échelle. Regroupe, ou n'envoie qu'au changement.
 - **Ce qui est créé en boucle se réutilise.** Projectiles, effets, éléments
   d'interface : une réserve d'objets recyclés, pas un `Instance.new` par tir.
+  Les `Sound` d'abord : créé à la volée, un son démarre ~0,35 s en retard le
+  temps que le moteur récupère l'asset — précharge
+  (`ContentProvider:PreloadAsync`) et réutilise, sinon l'utilisateur croira
+  son fichier audio mal exporté.
 - **Ce qui n'a pas besoin d'autorité va au client.** Effets, sons, interface,
   retour immédiat. Le serveur garde ce qui décide.
 
@@ -263,12 +269,6 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 
 ## Pièges
 
-- **Rendre du code non exécuté.** Le MCP est là : s'en passer, c'est retomber
-  sur du code « plausible ». Une API qui n'existe pas ne se voit pas à la
-  relecture, elle se voit dans l'Output.
-- **Mettre la logique côté client parce que c'est plus simple.** Ça marche en
-  Play Solo et ça se fait vider en production. Si tu es tenté, c'est
-  généralement qu'il manque un Remote.
 - **Faire confiance aux arguments d'un Remote.** Le type, les bornes *et* le
   droit d'agir. Vérifier le type seul ne protège de rien : un exploiteur
   envoie des nombres parfaitement valides.
