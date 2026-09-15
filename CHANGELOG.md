@@ -3,6 +3,42 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.9.0
+
+**Dix passes de relecture, et ce qu'elles ont trouvé n'était pas du confort.**
+Presque tout ce qui suit est un défaut silencieux : rien ne plantait, et le
+plugin ne faisait pas ce qu'il annonçait.
+
+`/roblox:help` ne pouvait pas marcher sous Windows. Le skill n'avait aucun
+repli `py`, et son `allowed-tools` n'autorisait que `python3` — l'alias
+Microsoft Store. La commande ouvrait une boutique, et le repli était interdit
+avant d'être tenté. C'est la troisième fois que ce défaut passe : `validate.py`
+refuse maintenant tout skill qui appelle `python3` sans donner le repli.
+
+Le journal ratait sa déduplication **sur sa propre langue**. Les accents
+n'étaient pas retirés avant la normalisation, donc « déplace » et « deplace »
+ne se reconnaissaient pas. Comme c'est le compteur d'occurrences qui décide de
+ce qui monte dans un skill, une leçon vue trois fois pouvait rester à ×1 et n'y
+monter jamais. Un `--skill` mal orthographié était aussi accepté en silence,
+créant une leçon qu'`atelier` ne saurait jamais où promouvoir.
+
+`vfx` gagne la règle que l'usage réel réclamait : **un effet qu'on ne remarque
+pas n'existe pas.** Viser le haut, et donner un réglage pour baisser. En
+compensation, deux renvois vers le même fichier ont fusionné.
+
+La page d'aide affichait des backticks dans l'onglet du navigateur et
+construisait son sommaire en JavaScript — donc le perdait dès qu'on relisait
+le fichier autrement, ce qui est précisément le cas prévu quand l'ouverture
+échoue. Le sommaire est maintenant dans le HTML.
+
+Trois garde-fous ferment des dérives déjà constatées : `check_version.py`
+comparait à la base de fusion seule et laissait passer une version **derrière**
+celle déjà publiée ; l'en-tête du guide avait décroché d'une version ; le
+protocole manuel des évals couvrait dix cas sur onze, et le README racine en
+annonçait sept pour onze, avec une commande d'éval qui doublait la facture
+faute de `--ablation none`. Chaque garde-fou a été vérifié sur un cas cassé
+avant d'être gardé.
+
 ## 0.8.1
 
 Réconcilie deux versions écrites en parallèle : la `0.8.0` (durcissement du

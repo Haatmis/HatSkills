@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.8.1** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.9.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -95,6 +95,11 @@ effet décoratif peut être discret, une pastille de dégâts doit être *lue* e
 tiers de seconde, ne pas se superposer à elle-même, et disparaître en moins
 d'une seconde.
 
+Depuis la `0.9.0`, `vfx` vise aussi **le haut plutôt que le milieu** : un effet
+trop discret est indistinguable d'un effet absent, et c'est le retour le plus
+fréquent après livraison. Il te donne un réglage pour baisser — dans l'autre
+sens, il faudrait d'abord que tu devines qu'il manque quelque chose.
+
 ## Il pense à la perf en écrivant, pas après
 
 Quatre décisions de structure sont prises au moment d'écrire, parce qu'elles ne
@@ -144,6 +149,7 @@ signalée**, pas écartée en silence.
 | Aucun skill ne s'est déclenché | Appelle-le à la main : `/roblox:<nom>` |
 | Le code livré n'a pas été vérifié | Studio doit être ouvert avec le MCP connecté. Sinon Claude te le dit — il ne fait jamais semblant |
 | Un effet est moche | Normal : Claude ne voit pas le rendu. Il te donne les réglages à tourner |
+| Une commande du plugin n'affiche rien, ou ouvre le Microsoft Store | Tu es sous Windows : `python3` y est un alias. Claude relance avec `py` — dis-le-lui s'il ne le fait pas |
 | Tu n'as pas les dernières corrections | `/plugin update roblox@hatskills` |
 
 ## Ce que le plugin ne fait pas
