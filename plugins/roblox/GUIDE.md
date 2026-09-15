@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.9.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.10.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -42,6 +42,24 @@ Tu n'as normalement **rien à taper** : ils se déclenchent seuls sur ce que tu
 Pour forcer l'un d'eux, tape son nom : `/roblox:game-design je voudrais…`
 
 Et pour relire cette page à tout moment : **`/roblox:help`**. Elle est regénérée à chaque appel depuis ce fichier, donc jamais périmée.
+
+## Ce qui décide si un skill t'aide
+
+Ce n'est pas la taille de ton jeu, ni la difficulté de la tâche. C'est **à quel
+point ta demande laisse des choses non dites.**
+
+« Ajoute un système de dégâts » ne dit pas combien, ni à qui, ni ce qu'on voit
+quand ça touche. Tout ce que le skill porte — les questions à poser, l'ordre
+des étapes, ce qui doit être vérifié — remplace du va-et-vient avec toi. Le
+gain est maximal.
+
+« Ajoute un `print` dans cette fonction » ne laisse rien de non dit. Il n'y a
+rien à cadrer, et le skill ne ferait que coûter son contenu pour rien. C'est
+pour ça qu'il ne se déclenche pas, et c'est normal.
+
+Entre les deux, tu peux le sentir à une chose : **si tu sais déjà exactement
+quel fichier va changer et comment, tu n'as pas besoin d'un skill.** Si tu
+devrais d'abord en discuter avec quelqu'un, tu es au bon endroit.
 
 ## Le parcours d'une feature
 

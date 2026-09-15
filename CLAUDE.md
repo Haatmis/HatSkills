@@ -28,9 +28,23 @@ La méthode est dans `docs/`. En résumé :
 ## Avant de committer
 
 ```bash
-python3 scripts/validate.py        # 0 erreur ET 0 alerte
+python3 scripts/validate.py        # 0 erreur, et chaque alerte réglée ou assumée
 python3 scripts/check_version.py   # version bumpée si le plugin a changé
 ```
+
+Zéro erreur, toujours. Les alertes se règlent, sauf une qu'on assume : tant
+qu'aucune campagne d'évals n'est enregistrée dans `plugins/roblox/evals/RESULTATS.md`,
+le validateur rappelle que le routage n'est pas mesuré. Elle ne se tait qu'en
+jouant les onze prompts, trois fois chacun. C'est voulu — une alerte qu'on fait
+taire autrement redevient invisible.
+
+## Le journal des versions dit aussi ce qui n'a pas avancé
+
+Une entrée de `CHANGELOG.md` qui ne raconte que des victoires n'est pas un
+journal, c'est une affiche. Chaque entrée dit ce qui a reculé, ce qui a grossi
+alors qu'il devait maigrir, ou ce qui n'a pas pu être vérifié. C'est ce qui
+rend le reste croyable — et c'est ce qui permet de retrouver la dette six mois
+plus tard, quand plus personne ne s'en souvient.
 
 ## Ce qu'on ne fait pas
 

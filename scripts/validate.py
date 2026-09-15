@@ -225,6 +225,47 @@ def _nombre(mot):
     return int(mot) if mot.isdigit() else NOMBRES.get(mot.lower())
 
 
+def routage_mesure(report):
+    """Depuis quand le routage n'a-t-il pas été remesuré ?
+
+    Emprunté à la bannière de péremption de `codegraph` : quand l'index peut
+    être en retard, la réponse le dit en tête plutôt que de servir de vieilles
+    données avec aplomb. Ici l'« index », c'est la mesure du déclenchement. Sans
+    cette trace, « le routage n'est pas mesuré » dépendait de la mémoire de
+    celui qui parle.
+
+    Alerte, pas erreur : un correctif ponctuel ne justifie pas de rejouer
+    trente-trois prompts. C'est un rappel, pas un barrage.
+    """
+    for resultats in ROOT.glob("plugins/*/evals/RESULTATS.md"):
+        manifeste = resultats.parent.parent / ".claude-plugin" / "plugin.json"
+        if not manifeste.exists():
+            continue
+        import json
+        try:
+            courante = json.loads(manifeste.read_text(encoding="utf-8")).get("version")
+        except json.JSONDecodeError:
+            continue
+        texte = resultats.read_text(encoding="utf-8")
+        # Seule la table d'en-tête compte : tout ce qui suit le premier titre de
+        # section est du mode d'emploi, exemples compris. Les lire comme des
+        # campagnes ferait passer un exemple pour une mesure.
+        entete = texte.split("\n## ", 1)[0]
+        versions = [v for v in re.findall(r"^\|\s*(\d+\.\d+\.\d+)\s*\|", entete, re.M)]
+        if not versions:
+            report.append(("ALERTE", resultats,
+                           "le routage n'a jamais été mesuré entièrement — "
+                           "protocole dans evals/README.md"))
+            continue
+        derniere = max(versions, key=lambda v: [int(x) for x in v.split(".")])
+        a = [int(x) for x in derniere.split(".")]
+        b = [int(x) for x in str(courante).split(".")[:3]]
+        if a[:2] != b[:2]:
+            report.append(("ALERTE", resultats,
+                           f"routage mesuré pour la dernière fois en {derniere}, "
+                           f"le plugin est en {courante}"))
+
+
 def comptes_annonces(report):
     """Le README racine annonce des nombres d'évals. Ils vieillissent seuls.
 
@@ -300,6 +341,7 @@ def main():
     evals_documentes(report)
     guide_a_jour(report)
     comptes_annonces(report)
+    routage_mesure(report)
     for f in files:
         got = check(f, report)
         if got:

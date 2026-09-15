@@ -3,6 +3,41 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.10.0
+
+**Quatre emprunts à la méthodologie de `codegraph`**, un index de code local
+qui publie ses propres mesures — et dont le benchmark s'est fait contester sur
+son témoin. Les deux moitiés étaient instructives.
+
+**Trois runs par prompt, pas un.** Le protocole manuel des évals mesurait
+chaque cas une seule fois. Le déclenchement d'un skill est stochastique : une
+mesure unique ne distingue pas « ça marche » de « ça a marché cette fois-là ».
+Chaque prompt se joue maintenant trois fois, médiane comme verdict, et tout
+prompt qui n'est pas 3/3 est signalé — un 2/3 est une description limite, qui
+lâchera sans prévenir.
+
+**La péremption devient visible.** `evals/RESULTATS.md` enregistre chaque
+campagne : version mesurée, date, couverture, verdict. `validate.py` alerte
+quand la dernière mesure date d'une version antérieure, ou qu'il n'y en a
+aucune — ce qui est le cas aujourd'hui. C'est la bannière de péremption de
+`codegraph`, transposée : l'aveu ne dépend plus de la mémoire de celui qui
+parle. L'alerte ne se tait qu'en jouant les onze prompts.
+
+**Le journal des versions dit aussi ce qui recule.** Nouvelle règle dans
+`CLAUDE.md`, appliquée rétroactivement à la `0.9.0` : ce qui a grossi alors
+qu'il devait maigrir, ou ce qui n'a pas pu être vérifié, s'écrit. Un journal
+qui ne raconte que des victoires est une affiche.
+
+**Le guide nomme la vraie variable.** Ce qui décide si un skill aide, ce n'est
+ni la taille du jeu ni la difficulté : c'est à quel point la demande laisse des
+choses non dites. Nouvelle section, avec le test simple — si tu sais déjà quel
+fichier va changer et comment, tu n'as pas besoin d'un skill.
+
+Deux choses délibérément **pas** reprises : les pourcentages de vitrine, parce
+que le témoin de `codegraph` est un agent que personne ne fait tourner, et
+l'outil unique, parce qu'on a déjà mesuré qu'un skill fusionné coûte neuf fois
+ses descriptions séparées.
+
 ## 0.9.0
 
 **Dix passes de relecture, et ce qu'elles ont trouvé n'était pas du confort.**
@@ -30,6 +65,13 @@ La page d'aide affichait des backticks dans l'onglet du navigateur et
 construisait son sommaire en JavaScript — donc le perdait dès qu'on relisait
 le fichier autrement, ce qui est précisément le cas prévu quand l'ouverture
 échoue. Le sommaire est maintenant dans le HTML.
+
+**Ce qui n'a pas avancé.** Le corps de `vfx` a grossi de six lignes nettes :
+la règle ajoutée valait sa place, la redondance retirée en compensation ne
+suffisait pas. `CLAUDE.md` demande de retirer autant qu'on ajoute, et le solde
+reste à payer à la prochaine consolidation. Le routage, lui, n'a toujours pas
+été mesuré — `claude plugin eval` reste en accès anticipé, et dix prompts du
+protocole manuel sur onze n'ont jamais été joués.
 
 Trois garde-fous ferment des dérives déjà constatées : `check_version.py`
 comparait à la base de fusion seule et laissait passer une version **derrière**

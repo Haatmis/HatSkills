@@ -108,6 +108,21 @@ contexte de la question précédente fausse le déclenchement. Pour chaque
 prompt : le coller, regarder quel skill Claude Code annonce avoir invoqué,
 noter, passer au suivant. Ne corrige rien en cours de route.
 
+**Trois fois chaque prompt, pas une.** Le déclenchement est stochastique : un
+prompt qui route bien une fois peut partir chez le voisin la fois suivante, et
+une mesure unique ne distingue pas « ça marche » de « ça a marché cette
+fois-là ». Note les trois résultats, garde la médiane comme verdict, et
+signale tout prompt qui n'est pas 3/3 — un 2/3 est une description limite, qui
+lâchera chez l'utilisateur sans prévenir. Trente-trois collages, une demi-heure.
+
+C'est la méthode que suit le benchmark de `codegraph` : quatre runs par bras,
+médianes rapportées. Un run unique sur un système non déterministe produit une
+anecdote, pas un chiffre.
+
+Reporte la campagne dans `RESULTATS.md` en repartant. Sans cette trace,
+personne ne sait depuis quand le routage n'a pas été vérifié — et
+`validate.py` te le rappellera.
+
 | # | Prompt à taper | Attendu | Interdit |
 |---|---|---|---|
 | 1 | Rajoute un système qui permet de taper et d'infliger des dégâts aux autres joueurs | `game-design` | `code` |
