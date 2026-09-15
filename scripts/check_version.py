@@ -89,14 +89,30 @@ def main():
         print("Aucun fichier du plugin modifié — rien à vérifier.")
         return 0
 
-    avant, apres = version_a(fourche), version_actuelle()
-    if avant is None:
+    apres = version_actuelle()
+    # Deux références, pas une. La base de fusion dit d'où part cette branche ;
+    # la pointe de la base dit ce qui est DÉJÀ publié. Ne regarder que la
+    # première laisse passer une version qui n'avance pas sur le publié : deux
+    # sessions partent de 0.7.0, l'une publie 0.8.0, l'autre livre 0.7.1 — la
+    # comparaison à la fourche dit « ça monte », et pourtant personne ne reçoit
+    # rien, parce que 0.7.1 est derrière la version déjà installée.
+    avant = version_a(fourche)
+    publie = version_a(base)
+    if avant is None and publie is None:
         print(f"Pas de version à la base : nouveau manifeste, version {apres}.")
         return 0
 
-    if avant == apres:
+    candidats = [(triplet(v), v) for v in (avant, publie) if triplet(v)]
+    reference = max(candidats)[1] if candidats else avant
+    ta, tb = triplet(reference), triplet(apres)
+
+    if ta and tb and tb <= ta:
+        cause = ("inchangée" if tb == ta else "en recul")
         print(f"ERREUR : {len(touches)} fichier(s) du plugin modifié(s), "
-              f"mais version inchangée ({avant}).")
+              f"mais version {cause} ({reference} → {apres}).")
+        if reference == publie and publie != avant:
+            print(f"  La version {publie} est déjà publiée sur {base} — "
+                  "il faut passer devant, pas à côté.")
         for f in touches[:8]:
             print(f"  {f}")
         if len(touches) > 8:
@@ -105,6 +121,8 @@ def main():
         print("Sans ça, personne ne recevra cette mise à jour : le plugin "
               "installé restera sur l'ancienne version, en silence.")
         return 1
+
+    avant = reference
 
     # Grosse mise à jour : le guide et le journal des versions suivent.
     a, b = triplet(avant), triplet(apres)

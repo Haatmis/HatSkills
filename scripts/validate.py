@@ -198,6 +198,38 @@ def evals_documentes(report):
                                f"le cas d'éval « {cas.name} » n'est documenté nulle part"))
 
 
+def guide_a_jour(report):
+    """Le guide annonce une version et un nombre de skills. Les deux dérivent.
+
+    CLAUDE.md exige que le numéro en tête du guide corresponde à plugin.json.
+    Rien ne le vérifiait, et il avait déjà décroché. Un guide qui annonce la
+    mauvaise version n'est pas une coquille : c'est la seule page que
+    l'utilisateur lit pour savoir ce qu'il a reçu.
+    """
+    import json
+    for manifeste in ROOT.glob("plugins/*/.claude-plugin/plugin.json"):
+        racine = manifeste.parent.parent
+        guide = racine / "GUIDE.md"
+        if not guide.exists():
+            continue
+        try:
+            version = json.loads(manifeste.read_text(encoding="utf-8")).get("version")
+        except json.JSONDecodeError:
+            report.append(("ERREUR", manifeste, "JSON illisible"))
+            continue
+        texte = guide.read_text(encoding="utf-8")
+        entete = "\n".join(texte.splitlines()[:10])
+        if version and version not in entete:
+            report.append(("ERREUR", guide,
+                           f"l'en-tête n'annonce pas la version {version} du manifeste "
+                           "— voir la règle permanente dans CLAUDE.md"))
+        reel = len(list((racine / "skills").glob("*/SKILL.md")))
+        for annonce in set(re.findall(r"(\d+)\s+skills", texte)):
+            if int(annonce) != reel:
+                report.append(("ERREUR", guide,
+                               f"le guide annonce {annonce} skills, il y en a {reel}"))
+
+
 def main():
     targets = [Path(a) for a in sys.argv[1:]] or [ROOT]
     files = sorted({
@@ -212,6 +244,7 @@ def main():
 
     report, descs = [], []
     evals_documentes(report)
+    guide_a_jour(report)
     for f in files:
         got = check(f, report)
         if got:
