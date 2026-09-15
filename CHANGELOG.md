@@ -3,6 +3,48 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.16.0
+
+**`hat3d` rentre dans la famille.** Il était le seul skill à ne venir de la
+méthode : ni `Situation`, ni `Contexte figé`, ni `Exemple`, un `Workflow` au
+lieu d'une `Procédure` et des `Rappels` au lieu de `Pièges`. Ce n'était pas
+cosmétique : `atelier` consolide les leçons dans le `Contexte figé`, et `hat3d`
+n'en avait pas — une leçon apprise sur la 3D n'avait littéralement aucun
+endroit où aller, et serait restée dans le journal pour toujours.
+
+Et **ça n'a rien coûté**. La restructuration plus un exemple entrée → sortie
+sont payés par la section « génération d'image IA », descendue en fiche : 441
+tokens qui se chargeaient à chaque modèle demandé, y compris pour les
+utilisateurs sans clé d'API — c'est-à-dire presque tout le monde.
+
+**Le garde-fou « Exemple » ne gardait rien.** Il cherchait le mot « exemple »
+n'importe où dans le corps. Chez `hat3d`, une seule occurrence, dans un chemin
+de fichier, le satisfaisait alors qu'aucun exemple n'existait. Il exige
+désormais une vraie section. Vérifié en la renommant : l'alerte tombe.
+
+**Deux exclusions vers `anim`.** `vfx` et `hat3d` ne le nommaient pas.
+Les deux paires sont fondées sur une phrase réellement prononcée — « quand on
+frappe, il ne se passe rien » peut aller chez `vfx` comme chez `anim` ; « anime
+la porte » et « anime le perso » ne visent pas le même skill. Coût : **55
+tokens permanents**, payés à chaque tour. C'est un pari, et il est étiqueté
+comme tel dans `budget.json` : si la campagne d'évals montre un bon routage
+sans, ces 55 tokens sont à reprendre.
+
+**La doctrine d'exclusion est réécrite, et elle dit maintenant l'inverse sur un
+point.** On tenait que l'exclusion devait aller dans les deux sens. C'est
+probablement faux : le modèle voit toutes les descriptions en même temps quand
+il route, donc une exclusion à sens unique porte déjà l'information. La
+confusion, elle, est souvent à sens unique — celui qui risque de prendre le
+travail de l'autre doit le dire, pas l'inverse. Et nommer son voisin importe
+son vocabulaire, donc **rapproche** les deux descriptions aux yeux du détecteur
+de recouvrement. Les quinze asymétries actuelles restent donc en l'état, sauf
+les deux ci-dessus. `CLAUDE.md` porte la doctrine et ses limites.
+
+**Ce qui n'a pas avancé.** La doctrine d'exclusion n'a toujours jamais été
+mesurée — ni l'ancienne version, ni la nouvelle. C'est la plus grosse croyance
+non vérifiée du plugin, et elle gouverne le seul coût payé à chaque tour. La
+campagne d'évals est le seul moyen d'en sortir, et elle n'a toujours pas tourné.
+
 ## 0.15.0
 
 Trois emprunts à l'étude des skills Roblox concurrents et de la doc officielle,

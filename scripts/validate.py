@@ -164,8 +164,13 @@ def check(path, report, mesures):
 
     if "## format" not in low_body and "format de sortie" not in low_body:
         warn("pas de section « Format de sortie » : principale cause de dérive")
-    if "exemple" not in low_body and "example" not in low_body:
-        warn("aucun exemple entrée → sortie")
+    # Le mot « exemple » n'importe où suffisait : chez hat3d, une seule
+    # occurrence, dans un chemin de fichier, satisfaisait le contrôle alors
+    # qu'aucun exemple entrée → sortie n'existait. Un garde-fou qui passe
+    # toujours vaut un garde-fou absent.
+    if not manuel_ and not re.search(r"^## (exemple|example)", low_body, re.M):
+        warn("pas de section « Exemple » : un exemple entrée → sortie est ce "
+             "qui cale le format mieux qu'une consigne")
 
     # Renvois vers des fichiers absents. Un chemin peut être relatif au skill
     # (references/), au plugin (${CLAUDE_PLUGIN_ROOT}/scripts/) ou au repo.

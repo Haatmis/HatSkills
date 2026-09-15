@@ -10,8 +10,10 @@ description: >
   ou un concept ; animer un modèle (porte, couvercle, rotation…) ; itérer sur un modèle
   Hat3D existant ; regénérer preview/build. N'utilise pas ce skill pour des
   effets de particules autonomes (voir vfx), pour la logique de jeu qui
-  utilisera le modèle une fois construit (voir code), ni pour une zone ou une
-  map entière — Hat3D fait des props, pas du level design.
+  utilisera le modèle une fois construit (voir code), pour animer un
+  personnage à Humanoid — Hat3D anime des props, pas des rigs (voir anim) —
+  ni pour une zone ou une map entière : Hat3D fait des props, pas du level
+  design.
 user-invocable: true
 compatibility: >-
   Node.js (scripts .mjs) et un Chromium headless — Chrome ou Edge — pour
@@ -21,7 +23,11 @@ compatibility: >-
 
 # Hat3D — image → maquette HTML → modèle Roblox
 
-Pipeline en trois artefacts, tous dans le dossier du modèle :
+## Situation
+
+L'utilisateur veut un objet 3D pour son jeu. Claude ne voit pas le rendu : il
+construit, vérifie ce qui est vérifiable, et c'est l'utilisateur qui tranche
+sur l'aspect. Pipeline en trois artefacts, tous dans le dossier du modèle :
 
 ```
 hat3d/<slug>/
@@ -31,11 +37,13 @@ hat3d/<slug>/
                    embarque le ModuleScript Hat3DAnim si le modèle a des animations
 ```
 
+## Contexte figé
+
 **Ne jamais éditer `preview.html` ou `build.lua` à la main** — toujours modifier
 `model.json` puis regénérer. Ce que la préview montre est ce que Studio construit
 (mêmes conventions géométriques des deux côtés).
 
-## Deux modes, deux méthodes
+### Deux modes, deux méthodes
 
 | | **Détaillé** (défaut) | **Low-poly** (sur demande) |
 |---|---|---|
@@ -77,7 +85,7 @@ recalculer trente positions, donc on ne le fait pas, donc le modèle se fige
 sur sa première version). Le générateur rend la proportion modifiable, c'est
 là son intérêt, pas la vitesse d'écriture.
 
-## Lectures obligatoires avant d'écrire un model.json
+### Lectures obligatoires avant d'écrire un model.json
 
 - `${CLAUDE_SKILL_DIR}/references/part-schema.md` — schéma JSON, axes, conventions Wedge/Cylinder,
   matériaux autorisés, pivot au sol.
@@ -104,7 +112,7 @@ là son intérêt, pas la vitesse d'écriture.
   pour une vraie demande de coffre revient à sauter le détaillé par défaut ;
   s'en servir pour la mécanique, pas comme gabarit de style.
 
-## Workflow
+## Procédure
 
 ### 1. Cadrer
 
@@ -116,7 +124,7 @@ trois sources de référence :
    détails, cf. style-lowpoly), en l'annonçant. C'est aussi le repli si la
    génération IA (cas 3) échoue ou n'est pas configurée.
 3. **Texte + génération d'image IA** (si `config.json` du skill existe — voir
-   § Génération d'image de référence par IA) : générer une image de référence,
+   `${CLAUDE_SKILL_DIR}/references/image-ia.md`) : générer une image de référence,
    la montrer à l'utilisateur, puis modéliser depuis cette image.
 
 Si la taille manque, la déduire de l'échelle Roblox
@@ -345,45 +353,6 @@ réelle, correction, règle à appliquer pour l'éviter la prochaine fois. Forma
 des entrées existantes à suivre. Sans ça, la correction ne profite qu'à ce
 modèle-ci ; avec ça, elle profite à tous les suivants.
 
-## Génération d'image de référence par IA (optionnel)
-
-Le skill peut générer lui-même l'image de référence depuis un prompt texte, via
-une API d'images **compatible OpenAI** (`POST {baseUrl}/images/generations`) :
-OpenAI (`gpt-image-1`, `dall-e-3`) ou tout fournisseur compatible (Together,
-xAI, fal…) en changeant `baseUrl`.
-
-**Configuration** : copier `config.example.json` vers `config.json` (même
-dossier que ce SKILL.md) et renseigner :
-
-```json
-{ "imageGen": { "baseUrl": "https://api.openai.com/v1",
-                "apiKey": "sk-…", "model": "gpt-image-1", "size": "1024x1024" } }
-```
-
-`config.json` contient un secret : ne jamais le committer, ne jamais afficher
-la clé en clair dans une réponse.
-
-**Usage** :
-
-```powershell
-node "${CLAUDE_PLUGIN_ROOT}/skills/hat3d/scripts/genimage.mjs" hat3d/<slug> "<prompt>" [--name reference.png] [--size 1024x1024]
-```
-
-→ sauvegarde `hat3d/<slug>/reference.png`, à lire et valider avec
-l'utilisateur avant de modéliser (c'est ensuite une image source normale,
-à référencer dans `source_image`).
-
-Conseils de prompt pour une référence modélisable : **un seul objet, vue de
-trois quarts ou de profil, fond neutre uni**, style simple et lisible.
-
-Logique de décision :
-- L'utilisateur demande explicitement la génération IA → l'utiliser (erreur
-  claire s'il manque `config.json`).
-- Texte seul et `config.json` présent → proposer les deux options (génération
-  ou modélisation directe) ; en cas de doute, modélisation directe.
-- Échec API (clé invalide, quota, réseau) → le signaler et retomber sur la
-  modélisation directe depuis le texte.
-
 ## Format de sortie
 
 Ce que tu rends à l'utilisateur après une génération, en plus des trois
@@ -425,7 +394,35 @@ d'exécuter build.lua dans Studio.>
 Nommer les parts de façon lisible sert directement ici : l'utilisateur peut
 cliquer une pièce dans la préview et te la désigner par son nom.
 
-## Rappels
+## Exemple
+
+Entrée :
+```
+Fais-moi un coffre en bois pour mon manoir, je te donne une image après
+```
+
+Sortie (extrait) :
+```markdown
+## Coffre en bois
+Mode détaillé, 94 parts. Caisse à douves légèrement galbées, ferrures en
+Metal, couvercle animé sur charnière arrière.
+
+## Fichiers
+hat3d/coffre-bois/{model.json, preview.html, build.lua}
+
+## Ce que j'ai vérifié
+Schéma valide, pivot au sol, 0 défaut géométrique après la passe de finition.
+Le rendu, c'est toi qui juges — ouvre preview.html.
+
+## Ensuite
+Dis-moi ce qui ne va pas sur la maquette, je regénère depuis model.json.
+```
+
+Deux exemples complets et validés sont dans
+`${CLAUDE_SKILL_DIR}/examples/` : `treasure-chest` pour le pipeline nominal,
+`coffre-fort` pour le cas de symétrie traité dans la fiche de finition.
+
+## Pièges
 
 - Répondre en français, noms de parts lisibles (français ou anglais, cohérents).
 - Le viewer est autonome (Three.js inliné) : aucun serveur, aucun réseau requis.

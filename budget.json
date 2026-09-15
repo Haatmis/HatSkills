@@ -1,7 +1,7 @@
 {
   "_pourquoi": "Le plafond de chaque skill, en tokens estimés. Chaque ligne d'un SKILL.md est rechargée à CHAQUE déclenchement : un skill qui grossit à chaque passage se dilue et rend de moins bons résultats. validate.py échoue au dépassement. Relever un plafond est permis — mais ça se voit dans le diff, et ça doit se justifier dans le CHANGELOG. C'est tout l'intérêt.",
   "_mesure": "approximation à ~3,6 caractères par token ; stable, donc comparable",
-  "total_descriptions": 1900,
+  "total_descriptions": 1950,
   "_total_descriptions": "Le seul coût payé à chaque tour, même quand aucun skill ne se déclenche. Ne pas le relever sans une campagne d'évals qui montre que le routage y gagne.",
   "skills": {
     "atelier": {
@@ -25,7 +25,7 @@
       "corps": 2772
     },
     "hat3d": {
-      "description": 246,
+      "description": 275,
       "corps": 6140
     },
     "help": {
@@ -33,7 +33,7 @@
       "corps": 739
     },
     "vfx": {
-      "description": 258,
+      "description": 290,
       "corps": 3275
     },
     "anim": {
@@ -41,5 +41,5 @@
       "corps": 2130
     }
   },
-  "_derniere_hausse": "0.15.0 — code +15, feature +30 (repayés par un doublon retiré, pas de hausse), vfx +14 pour l'échelle de modes. Et total_descriptions 1750 → 1900 pour le neuvième skill, `anim` : 221 tokens permanents. C'est une addition délibérée, pas une dérive — le seul cas où ce plafond monte. Le rendre plus haut « au cas où » annulerait son intérêt."
+  "_derniere_hausse": "0.16.0 — +55 tokens PERMANENTS pour deux exclusions vers `anim` : vfx et hat3d ne le nommaient pas. C'est un pari, pas une mesure. Les deux paires sont fondées sur une phrase réellement prononcée par l'utilisateur (« quand on frappe il ne se passe rien », « anime la porte » vs « anime le perso »), mais aucune campagne d'évals n'a encore montré que l'exclusion change le routage. La campagne doit le vérifier : si le routage est bon sans, ces 55 tokens sont à reprendre. Les treize autres asymétries restent en l'état, délibérément — voir la doctrine dans CLAUDE.md. hat3d corps : PAS relevé. La restructuration et l'exemple ajouté ont été payés par la section « image IA » descendue en fiche, qui coûtait 441 tokens à chaque modèle y compris sans clé d'API."
 }

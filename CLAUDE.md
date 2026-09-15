@@ -25,6 +25,43 @@ La méthode est dans `docs/`. En résumé :
 - Section `Apprendre de la session` obligatoire : sans elle, le skill ne
   remonte rien à `/roblox:atelier`.
 
+## La doctrine d'exclusion — et ses limites
+
+Une `description` dit quand déclencher **et quand ne pas**. C'est la partie
+« quand ne pas » qui empêche deux skills de se disputer une demande.
+
+Mais une exclusion n'est pas gratuite : elle est payée **à chaque tour**, même
+quand aucun skill ne part. Et elle a un effet pervers mesurable — nommer son
+voisin, c'est importer son vocabulaire, donc **se rapprocher** de lui aux yeux
+du détecteur de recouvrement.
+
+### Quand une exclusion se justifie
+
+Une seule condition, et elle est empirique : **une phrase réellement prononcée
+par l'utilisateur pourrait raisonnablement partir chez les deux.**
+
+« Quand on frappe, il ne se passe rien » peut aller chez `vfx` comme chez
+`anim`. Ça, c'est une exclusion fondée. « Écris un RemoteEvent » ne risque pas
+de partir chez `atelier` : l'exclusion serait du rituel.
+
+### La symétrie n'est pas une règle
+
+On a longtemps tenu que l'exclusion devait aller **dans les deux sens**. C'est
+probablement faux, et ça n'a jamais été mesuré :
+
+- Le modèle voit **toutes** les descriptions en même temps quand il route. Il
+  ne lit pas A, décide, puis lit B. Si A dit « pas moi, plutôt B »,
+  l'information est déjà là — que B le dise aussi n'ajoute rien de nouveau.
+- La confusion est souvent **à sens unique**. Celui qui risque de prendre le
+  travail de l'autre doit le dire ; l'inverse n'a pas de raison d'exister.
+- Rendre symétriques les quinze asymétries actuelles coûterait quelques
+  centaines de tokens permanents pour un bénéfice que personne n'a constaté.
+
+Donc : **on ajoute une exclusion quand on a vu l'ambiguïté, pas pour équilibrer
+un tableau.** Les asymétries restantes sont assumées jusqu'à ce qu'une campagne
+d'évals montre qu'elles coûtent un mauvais routage — c'est elle qui tranche,
+pas le raisonnement.
+
 ## Avant de committer
 
 ```bash

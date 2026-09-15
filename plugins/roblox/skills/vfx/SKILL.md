@@ -13,8 +13,9 @@ description: >
   feature confie une étape VFX — même si la demande est formulée comme du
   code. N'utilise pas ce skill pour la
   logique de jeu qui déclenche l'effet (voir code), pour un rendu qui ne
-  marche pas alors qu'il devrait (voir debug), ni pour modéliser une
-  géométrie ou un mesh.
+  marche pas alors qu'il devrait (voir debug), pour le mouvement d'un
+  personnage — un coup sans poids manque d'anticipation, pas de particules
+  (voir anim) — ni pour modéliser une géométrie ou un mesh.
 ---
 
 # Effets visuels Roblox
