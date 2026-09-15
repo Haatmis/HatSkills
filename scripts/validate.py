@@ -130,6 +130,22 @@ def check(path, report):
             warn("la description ne dit pas quand NE PAS s'en servir — "
                  "source n°1 de chevauchement entre skills")
 
+    # `python3` n'existe pas sur une machine Windows par défaut : c'est un alias
+    # vers le Microsoft Store, qui ouvre une boutique et n'exécute rien. Le skill
+    # ne voit pas d'erreur, l'utilisateur non plus — la commande est simplement
+    # sans effet. Ça a muté la capture du journal pendant toute sa première vie.
+    # Un skill qui appelle python3 doit donc dire quoi faire à la place, et son
+    # allowed-tools doit permettre de le faire.
+    if "python3" in body:
+        if "`py`" not in body:
+            err("appelle `python3` sans donner le repli `py` — sous Windows "
+                "python3 est un alias Microsoft Store : la commande n'exécute "
+                "rien, en silence")
+        outils = fm.get("allowed-tools", "")
+        if "python3" in outils and "py " not in outils.replace("python3 ", ""):
+            err("allowed-tools autorise `python3` mais pas `py` : sous Windows "
+                "le repli est interdit avant d'être tenté")
+
     nlines = len(body.strip().splitlines())
     if nlines > BODY_LINE_CAP:
         warn(f"corps de {nlines} lignes (> {BODY_LINE_CAP}) : "

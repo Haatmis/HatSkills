@@ -5,7 +5,7 @@ description: >
   comment se déroule une feature, et quoi faire quand ça rate. La page est
   générée depuis GUIDE.md à chaque appel, donc jamais périmée.
 disable-model-invocation: true
-allowed-tools: Bash(python3 *) Bash(start *) Bash(open *) Bash(xdg-open *) Read
+allowed-tools: Bash(python3 *) Bash(py *) Bash(start *) Bash(open *) Bash(xdg-open *) Read
 ---
 
 # Guide du plugin
@@ -34,6 +34,10 @@ que tu improviserais. Ouvre-la, dis-lui où elle est, et arrête-toi là.
    ```bash
    python3 "${CLAUDE_PLUGIN_ROOT}/scripts/build_help.py" "${CLAUDE_PLUGIN_ROOT}/GUIDE.md"
    ```
+
+   Sur Windows, `python3` est un alias vers le Microsoft Store : la commande
+   ouvre une boutique et n'écrit aucune page. Si tu ne vois pas de chemin en
+   sortie, relance la même ligne avec `py` au lieu de `python3`.
 
 2. **Ouvre-la**, avec la commande de la plateforme :
 
