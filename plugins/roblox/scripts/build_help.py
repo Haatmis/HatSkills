@@ -170,20 +170,29 @@ def main():
         return 1
     md = src.read_text(encoding="utf-8")
 
+    # Le titre part dans l'onglet du navigateur : le markdown inline n'y a rien
+    # à faire, un onglet qui affiche des backticks a l'air cassé.
     titre = next((l[2:] for l in md.split("\n") if l.startswith("# ")), "Aide")
-    version = (re.search(r"[Vv]ersion \*\*([\d.]+)\*\*", md) or [None, "?"])[1]
+    titre = re.sub(r"[`*]", "", titre).strip()
+    version = (re.search(r"[Vv]ersion \*\*([\d.]+)\*\*", md) or [None, ""])[1]
+    if version:
+        titre = f"{titre} · {version}"
+
     corps, toc = convertir(md)
     nav = ("<nav class='toc'><div class='toc-t'>Sommaire</div>"
            + "".join(f"<a href='#{a_}'>{html.escape(t)}</a>" for a_, t in toc)
            + "</nav>")
-    corps = corps.replace("</h1>", "</h1>", 1)
+    # Le sommaire s'insère ici, pas par un script à l'ouverture. Une page
+    # d'aide dont la navigation dépend du JS perd son sommaire dès qu'on la
+    # relit autrement que dans un navigateur complet — et c'est exactement ce
+    # qu'on fait quand l'ouverture a échoué et qu'il ne reste que le fichier.
+    corps = corps.replace("</h1>", "</h1>" + nav, 1) if "</h1>" in corps \
+        else nav + corps
 
     page = (f"<!doctype html><html lang=fr><head><meta charset=utf-8>"
             f"<meta name=viewport content='width=device-width,initial-scale=1'>"
             f"<title>{html.escape(titre)}</title><style>{CSS}</style></head>"
-            f"<body><div class=wrap>{corps}</div>"
-            f"<script>document.querySelector('h1')?.insertAdjacentHTML("
-            f"'afterend', {nav!r});</script></body></html>")
+            f"<body><div class=wrap>{corps}</div></body></html>")
 
     out = Path(a.out) if a.out else Path(tempfile.gettempdir()) / "roblox-aide.html"
     out.write_text(page, encoding="utf-8")
