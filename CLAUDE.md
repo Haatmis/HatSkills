@@ -28,6 +28,7 @@ La méthode est dans `docs/`. En résumé :
 ## Avant de committer
 
 ```bash
+python3 scripts/test_scripts.py    # les scripts eux-mêmes
 python3 scripts/validate.py        # 0 erreur, et chaque alerte réglée ou assumée
 python3 scripts/check_version.py   # version bumpée si le plugin a changé
 ```
@@ -49,7 +50,11 @@ plus tard, quand plus personne ne s'en souvient.
 ## Ce qu'on ne fait pas
 
 - Ajouter une règle à un skill sans en retirer une autre quand il grossit :
-  chaque ligne est rechargée à **chaque** déclenchement.
+  chaque ligne est rechargée à **chaque** déclenchement. Cette règle n'est plus
+  tenue à l'honneur — elle a été enfreinte deux fois par celui qui l'avait
+  écrite. `budget.json` fixe un plafond par skill et `validate.py` échoue au
+  dépassement. Relever un plafond reste permis : ça se voit dans le diff, et ça
+  se justifie dans le `CHANGELOG`. C'est tout l'intérêt.
 - Promouvoir une leçon vue une seule fois. Un incident n'est pas une règle.
 - Corriger un problème de déclenchement dans le corps d'un skill. Si le skill
   ne s'est pas déclenché, son corps n'a jamais été lu.

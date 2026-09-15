@@ -88,11 +88,12 @@ là son intérêt, pas la vitesse d'écriture.
   coplanaires, budget par nombre d'exemplaires à l'écran.
 - `${CLAUDE_SKILL_DIR}/references/style-lowpoly.md` — **seulement si le low-poly est demandé** :
   lecture d'image simplifiée, budget 5-35 parts, palette, échelle en studs.
-- `${CLAUDE_SKILL_DIR}/references/animations.md` — **si le modèle doit bouger** : schéma des tracks
-  keyframes, pivots, easings, recettes (porte, couvercle, tiroir, rotation),
-  API du player Lua, et le schéma des `emitters` (particules Roblox).
-- `${CLAUDE_SKILL_DIR}/references/finition.md` — **avant de construire dans Studio** : le catalogue
-  des défauts géométriques et la passe qui les rattrape.
+- `${CLAUDE_SKILL_DIR}/references/animations.md` — **si le modèle doit bouger** : sommaire, puis
+  la seule section utile (schéma des tracks, easings, rythme, vérification,
+  côté Roblox, ou `emitters`). Sept sections, on en anime une.
+- `${CLAUDE_SKILL_DIR}/references/finition.md` — **avant de construire dans Studio** : le script
+  nomme le défaut trouvé (`zfight`, `noyee`, `escalier`…), le sommaire mène à
+  son entrée. Lis celle-là, pas le catalogue entier.
 - `${CLAUDE_SKILL_DIR}/references/erreurs-connues.md` — catalogue des erreurs de modélisation déjà
   rencontrées (proportions, attaches entre masses, silhouette...) et comment
   les éviter. Lecture obligatoire, pas optionnelle — plusieurs entrées

@@ -9,6 +9,18 @@ composition de transforms).
 Règle d'or : **la pose de base du modèle est l'état "au repos"** (porte fermée,
 couvercle fermé). L'état ouvert/déployé est une animation, pas la pose de base.
 
+## Sommaire
+
+1. [Schéma](#schéma)
+2. [Easings disponibles (identiques HTML ↔ Lua)](#easings-disponibles-identiques-html-lua)
+3. [Tracks multiples et imbrication](#tracks-multiples-et-imbrication)
+4. [Rythme : penser « échelle Roblox », pas « préview »](#rythme-penser-échelle-roblox-pas-préview)
+5. [Vérifier une animation (avant de la montrer)](#vérifier-une-animation-avant-de-la-montrer)
+6. [Côté Roblox](#côté-roblox)
+7. [Particules (`emitters`) — Roblox uniquement](#particules-emitters-roblox-uniquement)
+
+Lis la section qui correspond à ce que tu animes, pas la fiche entière.
+
 ## Schéma
 
 ```json

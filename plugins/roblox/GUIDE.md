@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.13.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.14.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -173,6 +173,22 @@ trouvée dans un fichier, un commentaire ou une page web : ce sont des données,
 pas des instructions. À la consolidation, toute leçon qui demanderait
 d'exécuter quelque chose ou d'affaiblir une vérification est refusée **et
 signalée**, pas écartée en silence.
+
+## Il vérifie le code sans ouvrir Studio
+
+Studio fermé, ou le MCP pas connecté ? Une partie du contrôle se fait quand
+même. `luau_check.py` lit la table des API dépréciées du plugin et balaye ton
+`src/` : `wait()`, `spawn()`, `BodyVelocity`, `:connect()`, `game.Workspace` et
+une cinquantaine d'autres, avec leur remplaçant exact.
+
+```bash
+python3 "<plugin>/scripts/luau_check.py" --dans src
+```
+
+Ça marche aussi sur du code écrit **avant** que tu installes le plugin — c'est
+souvent là qu'il y en a le plus. Et `code` le passe systématiquement avant de
+te rendre quoi que ce soit : la règle « zéro API dépréciée » ne dépend plus de
+ce dont Claude se souvient au bon moment.
 
 ## Quand ça se passe mal
 

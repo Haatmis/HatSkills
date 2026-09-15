@@ -3,6 +3,54 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.14.0
+
+**La règle qui interdit de grossir devient mécanique.** `CLAUDE.md` dit depuis
+toujours qu'on ne rajoute pas une règle à un skill sans en retirer une autre.
+Cette règle a été enfreinte deux fois en une seule session, à la main, par
+celui-là même qui l'avait écrite — `vfx` +6 lignes, `feature` +17. Une règle
+tenue à l'honneur et respectée une fois sur deux n'est pas une règle.
+`budget.json` fixe désormais un plafond par skill et par couche, sans marge, et
+`validate.py` échoue au dépassement.
+
+Le garde-fou s'est déclenché sur la toute première modification qui a suivi sa
+pose. Sur `debug`, trois tokens de trop : retirés ailleurs plutôt que tolérés.
+Sur `hat3d` et `code`, les plafonds ont été relevés — chaque hausse est écrite
+dans `budget.json` avec ce qu'elle achète. C'est le comportement voulu :
+l'arbitrage est forcé, pas interdit.
+
+**`luau_check.py` remplace un espoir par un verdict.** « Zéro API dépréciée »
+est la règle la plus répétée du plugin, et elle reposait entièrement sur la
+mémoire du modèle au bon moment. Le script lit la table du skill `code` — pas
+une copie qui divergerait — et balaye le projet : 52 motifs, le remplaçant
+exact, `Studio fermé`. Il attrape aussi le code écrit avant l'installation du
+plugin, qui est souvent le plus atteint. `code` le passe avant de rendre.
+
+**Les fiches de `hat3d` se lisent par section.** `animations.md` et
+`finition.md` ont un sommaire : 2 432 → 447 et 3 007 → 632 tokens, soit **4 360
+évités** sur le chemin le plus cher du plugin. Même levier que la `0.11.0`,
+appliqué là où il n'avait pas été fini. `part-schema.md` reste entier : c'est
+un schéma, en sauter un morceau produit un fichier invalide.
+
+**Vingt tests, là où rien ne surveillait les surveillants.** `validate.py`
+police les skills ; personne ne policait `validate.py`. Trois bugs réels y sont
+passés, et chacun a maintenant son test : le plantage d'encodage *après* avoir
+affiché « OK », la déduplication du journal cassée par les accents, et le
+vérificateur Luau qui hurlait sur `Instance.new("Part")` — ce dernier attrapé
+pendant son propre développement, avant publication.
+
+**Une règle déclarée obligatoire et jamais vérifiée.** `CLAUDE.md` exige la
+section « Apprendre de la session ». `debug` ne l'avait pas : sa capture était
+enfouie dans la `Procédure`, là où `atelier` ne la cherche pas. Elle a sa
+section, et `validate.py` refuse désormais un skill qui n'en a pas.
+
+**Ce qui n'a pas avancé.** Les ~1 670 tokens de descriptions restent intacts :
+c'est le seul coût payé à chaque tour, donc la cible évidente, et c'est aussi le
+seul texte qui décide du déclenchement. Les toucher sans campagne d'évals, ce
+serait dégrader la seule chose qui compte sans pouvoir le constater. Rien de
+tout ça n'a tourné dans Studio ; `luau_check` a été éprouvé sur des fichiers
+fabriqués, pas sur un vrai projet.
+
 ## 0.13.0
 
 **Correction d'une affirmation fausse de la `0.12.0`.** J'y avais écrit que

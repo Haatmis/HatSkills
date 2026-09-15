@@ -16,6 +16,22 @@ node .claude/skills/hat3d/scripts/finition.mjs hat3d/<famille>/<slug>
 node .claude/skills/hat3d/scripts/finition.mjs hat3d/<famille>/<slug> --fix
 ```
 
+## Sommaire
+
+- [`zfight` — deux faces confondues · **grave**](#zfight-deux-faces-confondues-grave)
+- [`noyee` — une part enfermée dans une autre · **grave**](#noyee-une-part-enfermée-dans-une-autre-grave)
+- [`depassement` — un bout qui ressort dans le vide · **moyen**](#depassement-un-bout-qui-ressort-dans-le-vide-moyen)
+- [`escalier` — marche ouverte · **moyen**](#escalier-marche-ouverte-moyen)
+- [`orpheline` — une part qui vole · **grave**](#orpheline-une-part-qui-vole-grave)
+- [`micro` — dimension sous 0.05 · **grave**](#micro-dimension-sous-0-05-grave)
+- [Les trois contrôles sur demande](#les-trois-contrôles-sur-demande)
+
+- [`--fix` et les modèles générés](#fix-et-les-modèles-générés)
+- [Une correction peut en révéler une autre — mais le compte doit DESCENDRE](#une-correction-peut-en-révéler-une-autre-mais-le-compte-doit-descendre)
+- [Ce que le script ne voit pas](#ce-que-le-script-ne-voit-pas)
+
+Le script nomme le défaut qu'il a trouvé. Lis l'entrée de ce défaut-là.
+
 ## Le catalogue
 
 ### `zfight` — deux faces confondues · **grave**

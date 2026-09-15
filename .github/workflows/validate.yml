@@ -16,7 +16,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Frontmatter, descriptions, renvois, recouvrements
+      - name: Tests des scripts
+        run: python3 scripts/test_scripts.py
+      - name: Frontmatter, descriptions, renvois, recouvrements, budget
         run: python3 scripts/validate.py
       - name: Version bumpée si le plugin a changé
         run: python3 scripts/check_version.py origin/main

@@ -288,7 +288,8 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 - [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
 - [ ] Exécuté dans Studio via le MCP, Output lu et propre — ou absence du MCP
       signalée explicitement.
-- [ ] Aucune API de la table des dépréciées.
+- [ ] `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/luau_check.py" --dans src`
+      passé — il lit la table des dépréciées et balaye, Studio fermé.
 - [ ] `--!strict` sur les ModuleScripts, `--!nonstrict` sur les scripts.
 - [ ] Aucune dépendance externe introduite.
 - [ ] Chaque Remote valide type, bornes et droit d'agir côté serveur.

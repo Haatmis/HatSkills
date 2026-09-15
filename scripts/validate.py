@@ -83,7 +83,7 @@ def words(text):
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def check(path, report):
+def check(path, report, mesures):
     err = lambda m: report.append(("ERREUR", path, m))
     warn = lambda m: report.append(("ALERTE", path, m))
 
@@ -152,6 +152,16 @@ def check(path, report):
              "déplace le détail dans references/")
 
     low_body = body.lower()
+
+    # `CLAUDE.md` déclare cette section obligatoire depuis toujours. Rien ne la
+    # vérifiait, et `debug` ne l'avait pas : sa capture était enfouie dans la
+    # Procédure, là où `atelier` ne la cherche pas. Une règle déclarée et jamais
+    # vérifiée est une intention, pas une règle.
+    manuel_ = str(fm.get("disable-model-invocation", "")).lower() == "true"
+    if not manuel_ and "## apprendre de la session" not in low_body:
+        err("pas de section « Apprendre de la session » : le skill ne remontera "
+            "rien à /roblox:atelier")
+
     if "## format" not in low_body and "format de sortie" not in low_body:
         warn("pas de section « Format de sortie » : principale cause de dérive")
     if "exemple" not in low_body and "example" not in low_body:
@@ -197,6 +207,8 @@ def check(path, report):
         ):
             warn(f"{ref.name} fait {len(rl)} lignes sans table des matières")
 
+    mesures[folder] = {"description": tokens(combined), "corps": tokens(body),
+                       "chemin": path}
     return (folder, words(combined)) if desc else None
 
 
@@ -309,6 +321,61 @@ def comptes_annonces(report):
                                f"({motif.split(' ', 1)[1]})"))
 
 
+BUDGET = ROOT / "budget.json"
+
+
+def tokens(texte):
+    """Estimation, volontairement grossière : ~3,6 caractères par token en
+    français. Ce chiffre ne sert pas à facturer, il sert à comparer un skill à
+    lui-même d'une version à l'autre. Une approximation stable détecte une
+    dérive aussi bien qu'une mesure exacte."""
+    return round(len(texte) / 3.6)
+
+
+def budget_tenu(mesures, report):
+    """Le plafond est le plafond : pas de marge.
+
+    `CLAUDE.md` dit qu'on ne rajoute pas une règle à un skill sans en retirer
+    une autre. Cette règle a été enfreinte deux fois en une seule session, à la
+    main, par celui-là même qui l'avait écrite. Une règle tenue à l'honneur et
+    respectée une fois sur deux n'est pas une règle. Le dépassement échoue donc
+    la vérification, et relever un plafond demande d'éditer ce fichier — une
+    ligne de plus dans le diff, que quelqu'un verra.
+    """
+    import json
+    if not BUDGET.exists():
+        return
+    try:
+        plafonds = json.loads(BUDGET.read_text(encoding="utf-8")).get("skills", {})
+    except json.JSONDecodeError:
+        report.append(("ERREUR", BUDGET, "JSON illisible"))
+        return
+
+    total_desc = sum(m["description"] for m in mesures.values())
+    for nom, m in sorted(mesures.items()):
+        p = plafonds.get(nom)
+        if p is None:
+            report.append(("ALERTE", BUDGET,
+                           f"le skill « {nom} » n'a pas de budget : "
+                           f"ajoute {{\"description\": {m['description']}, "
+                           f"\"corps\": {m['corps']}}}"))
+            continue
+        for couche in ("description", "corps"):
+            if m[couche] > p.get(couche, 10**9):
+                report.append(("ERREUR", m["chemin"],
+                               f"{couche} à {m[couche]} tokens, plafond "
+                               f"{p[couche]} — retire avant d'ajouter, ou "
+                               "relève le plafond dans budget.json en le disant"))
+
+    import json as _j
+    global_ = _j.loads(BUDGET.read_text(encoding="utf-8")).get("total_descriptions")
+    if global_ and total_desc > global_:
+        report.append(("ERREUR", BUDGET,
+                       f"{total_desc} tokens de descriptions au total, plafond "
+                       f"{global_} — c'est le seul coût payé à chaque tour, "
+                       "même quand aucun skill ne part"))
+
+
 def guide_a_jour(report):
     """Le guide annonce une version et un nombre de skills. Les deux dérivent.
 
@@ -353,15 +420,17 @@ def main():
         print("Aucun SKILL.md trouvé. Rien à valider.")
         return 0
 
-    report, descs = [], []
+    report, descs, mesures = [], [], {}
     evals_documentes(report)
     guide_a_jour(report)
     comptes_annonces(report)
     routage_mesure(report)
     for f in files:
-        got = check(f, report)
+        got = check(f, report, mesures)
         if got:
             descs.append((got[0], got[1], f))
+
+    budget_tenu(mesures, report)
 
     # Chevauchement : similarité de Jaccard entre vocabulaires de déclenchement.
     for i in range(len(descs)):
