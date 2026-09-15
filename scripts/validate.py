@@ -216,6 +216,42 @@ def evals_documentes(report):
                                "protocole manuel"))
 
 
+NOMBRES = {"un": 1, "deux": 2, "trois": 3, "quatre": 4, "cinq": 5, "six": 6,
+           "sept": 7, "huit": 8, "neuf": 9, "dix": 10, "onze": 11, "douze": 12,
+           "treize": 13, "quatorze": 14, "quinze": 15, "seize": 16, "vingt": 20}
+
+
+def _nombre(mot):
+    return int(mot) if mot.isdigit() else NOMBRES.get(mot.lower())
+
+
+def comptes_annonces(report):
+    """Le README racine annonce des nombres d'évals. Ils vieillissent seuls.
+
+    Il annonçait sept évals pour onze, et quatre cas de frontière pour cinq —
+    les deux chiffres dataient d'avant la moitié de la suite. Un README qui
+    sous-annonce ce qui est mesuré fait croire à une couverture plus faible
+    qu'elle n'est, et personne ne relit un chiffre en passant.
+    """
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return
+    texte = readme.read_text(encoding="utf-8")
+    cas = sorted(d for d in (ROOT / "plugins/roblox/evals").glob("*") if d.is_dir())
+    reels = {
+        r"([\wéè]+) évals": len(cas),
+        r"([\wéè]+) cas de frontière": sum(
+            1 for d in cas if list((d / "graders").glob("pas-*.md"))),
+    }
+    for motif, reel in reels.items():
+        for mot in set(re.findall(motif, texte)):
+            n = _nombre(mot)
+            if n is not None and n != reel:
+                report.append(("ERREUR", readme,
+                               f"annonce « {mot} » là où il y en a {reel} "
+                               f"({motif.split(' ', 1)[1]})"))
+
+
 def guide_a_jour(report):
     """Le guide annonce une version et un nombre de skills. Les deux dérivent.
 
@@ -263,6 +299,7 @@ def main():
     report, descs = [], []
     evals_documentes(report)
     guide_a_jour(report)
+    comptes_annonces(report)
     for f in files:
         got = check(f, report)
         if got:

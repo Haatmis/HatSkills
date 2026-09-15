@@ -174,14 +174,14 @@ qui peut *sortir*, et pourquoi une leçon vue une seule fois n'entre pas.
 
 Le validateur détecte les collisions **probables** entre descriptions, par
 recouvrement de vocabulaire. Il ne dit pas ce qui se passe vraiment. Pour ça,
-une suite de sept évals de routage mesure **quel skill se déclenche** sur une
+une suite de onze évals de routage mesure **quel skill se déclenche** sur une
 phrase réelle, et surtout lesquels ne doivent pas :
 
 ```bash
-cd plugins/roblox && claude plugin eval .
+cd plugins/roblox && claude plugin eval . --ablation none
 ```
 
-Les quatre cas de frontière sont les plus informatifs. Un skill qui ne se
+Les cinq cas de frontière sont les plus informatifs. Un skill qui ne se
 déclenche jamais est un problème visible ; un skill qui prend le terrain d'un
 autre ne se voit pas, et rend un résultat plausible mais du mauvais métier.
 
