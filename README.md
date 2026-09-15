@@ -81,6 +81,7 @@ morts, et signale deux skills dont les descriptions se recouvrent trop.
 | `help` | Ouvre le guide dans le navigateur, généré depuis `GUIDE.md` |
 | `code` | Écrit un morceau de code Luau vanilla délimité, et le vérifie dans Studio via le MCP avant de le rendre |
 | `debug` | Diagnostique un comportement anormal, reproduit le bug dans Studio pour le prouver, puis corrige la cause racine |
+| `anim` | Construit une animation de personnage en `KeyframeSequence`, à publier en deux clics, puis la câble via l'`Animator` |
 | `atelier` | Crée un skill après interview, ou consolide le journal dans les skills existants |
 
 Conventions communes portées par `code` : vanilla strict (aucune lib externe),
@@ -153,7 +154,7 @@ distingue une vraie règle d'un incident isolé.
 
 Le protocole complet vit dans
 [`plugins/roblox/references/journal.md`](plugins/roblox/references/journal.md) ;
-chaque skill en porte une version compacte. Les huit skills sont câblés —
+chaque skill en porte une version compacte. Les neuf skills sont câblés —
 sauf le mode « consolider » d'`atelier`, qui vide le journal
 plutôt que de le remplir.
 
@@ -177,14 +178,14 @@ qui peut *sortir*, et pourquoi une leçon vue une seule fois n'entre pas.
 
 Le validateur détecte les collisions **probables** entre descriptions, par
 recouvrement de vocabulaire. Il ne dit pas ce qui se passe vraiment. Pour ça,
-une suite de onze évals de routage mesure **quel skill se déclenche** sur une
+une suite de douze évals de routage mesure **quel skill se déclenche** sur une
 phrase réelle, et surtout lesquels ne doivent pas :
 
 ```bash
 cd plugins/roblox && claude plugin eval . --ablation none
 ```
 
-Les cinq cas de frontière sont les plus informatifs. Un skill qui ne se
+Les six cas de frontière sont les plus informatifs. Un skill qui ne se
 déclenche jamais est un problème visible ; un skill qui prend le terrain d'un
 autre ne se voit pas, et rend un résultat plausible mais du mauvais métier.
 

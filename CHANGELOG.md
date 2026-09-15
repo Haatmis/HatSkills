@@ -3,6 +3,60 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.15.0
+
+Trois emprunts à l'étude des skills Roblox concurrents et de la doc officielle,
+et un quatrième refusé faute de pouvoir en constater les dégâts.
+
+**Un neuvième skill : `anim`.** C'était le trou le plus visible du plugin —
+aucune occurrence d'anticipation, de pose clé ou de breakdown nulle part. Il
+construit un `KeyframeSequence` que l'utilisateur publie en deux clics, ce qui
+résout au passage le problème de propriété de la `0.13.0` : l'animation naît
+sous le bon compte. Il **lit le rig au lieu de le supposer** — la doc officielle
+donne la hiérarchie des parts mais pas les noms des `Motor6D`, et un `Pose` mal
+nommé est ignoré en silence, sans la moindre erreur.
+
+La règle qui compte le plus est celle de l'anticipation : un coup sans petit
+mouvement inverse n'a pas de poids. C'est probablement une partie de ce qui
+manquait au système de combat, avant même les particules.
+
+**L'échelle de modes.** « Vérifié dans Studio » était binaire : vérifié, ou un
+aveu que le MCP manquait. Or l'absence de Studio n'empêche que les contrôles qui
+demandent une exécution. Trois modes — plein, réduit, hors-ligne — et le compte
+rendu dit lequel. Ça ferme les deux mensonges symétriques : annoncer « vérifié »
+quand rien n'a tourné, et « non vérifié » quand `luau_check` est passé.
+`references/modes.md`. `debug` n'a pas été touché : sa règle « un diagnostic non
+reproduit est une hypothèse » disait déjà mieux la même chose.
+
+**Une checklist de publication.** Les contrôles des skills s'arrêtent à « ce
+bout de travail est correct ». Quand des gens jouent déjà, il y a autre chose —
+et une seule chose irréversible, la sauvegarde. Cinq sections lisibles
+séparément, `references/publication.md`.
+
+**Ce qui a été vérifié et n'a pas tenu.** Deux « règles pro » reviennent partout
+sur les blogs VFX Roblox : superposer trois à cinq emitters par effet, et
+bloquer le mouvement avec une texture blanche avant de s'occuper des textures.
+Le tutoriel d'explosion officiel de Roblox utilise **un seul** emitter, le
+cursus artiste officiel n'aborde pas la superposition, et son ordre de travail
+est couleur → texture → taille → vitesse, l'inverse. Aucune des deux n'entre
+dans `vfx`. Le seul détail concret trouvé côté superposition — régler `ZOffset`
+pour ordonner feu et fumée — y était déjà.
+
+**Ce qui n'a pas avancé.** `hat3d` devait passer en routeur : c'est le plus gros
+skill, 6 136 tokens, et son `## Workflow` en fait 3 435 à lui seul, soit 56 %.
+Mesure faite, c'est une procédure séquentielle — cadrer, modéliser, vérifier,
+valider, finir, construire. La découper contredirait la raison même pour
+laquelle `style-detaille.md` a sa dispense en `0.11.0`, et je ne peux pas juger
+un modèle 3D pour constater la dégradation. Reporté, pas abandonné : la décision
+revient à quelqu'un qui peut regarder le rendu.
+
+Le budget a servi quatre fois dans cette version. Deux fois il a forcé une
+compression (les renvois de modes, écrits à 89 tokens, livrés à 53), une fois il
+a fait retirer un doublon réel dans `feature` — un piège qui redisait le
+`Contexte figé` à un chiffre près — et une fois il a fallu relever
+`total_descriptions` pour le neuvième skill. Aucune de ces quatre fois n'était
+prévue en commençant.
+
 ## 0.14.0
 
 **La règle qui interdit de grossir devient mécanique.** `CLAUDE.md` dit depuis

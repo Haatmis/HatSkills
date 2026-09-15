@@ -181,7 +181,10 @@ ligne, avant tout le reste. Sinon, commence directement.>
 ## Plan
 | # | Étape | Skill | Vérifié |
 |---|---|---|---|
-| 1 | … | code | ✅ |
+| 1 | … | code | ✅ plein |
+
+Colonne « Vérifié » : le mode, jamais un ✅ nu —
+`${CLAUDE_PLUGIN_ROOT}/references/modes.md`.
 
 ## Ce qui tourne maintenant
 <Ce que le joueur peut faire, concrètement, en 3 lignes.>
@@ -236,12 +239,9 @@ attendant.
   reprendre toute la logique une fois qu'on réalise que le client décidait.
 - **Passer un skill sans contexte.** Il réinventera ce que l'étape précédente
   vient de produire, avec d'autres noms.
-- **Tout vérifier à la fin.** Une erreur d'étape 1 trouvée à l'étape 8
-  contamine tout ce qui est entre les deux.
-- **Bloquer sur un asset absent.** Le système doit tourner sans. Un son muet
+- **Bloquer sur un asset absent, ou le laisser lever une erreur.** Le système
+  doit tourner sans : un ID à `0` se teste, il ne se charge pas. Un son muet
   n'empêche pas de tester des dégâts.
-- **Laisser un placeholder lever une erreur.** Un ID à `0` se teste, il ne se
-  charge pas.
 - **Dériver au-delà de la spec.** Ce qui n'y est pas n'est pas à faire. Une
   bonne idée en cours de route se propose, elle ne s'implémente pas en douce.
 
@@ -277,6 +277,8 @@ relance avec `py` : c'est un alias, pas un interpréteur.
 - [ ] Vérification d'ensemble faite à deux joueurs.
 - [ ] Aucun placeholder ne peut lever une erreur.
 - [ ] `Config/Assets.luau` à jour, chaque entrée disant comment l'obtenir.
+- [ ] Jeu déjà en ligne ? Renvoie vers
+      `${CLAUDE_PLUGIN_ROOT}/references/publication.md`, § 1 d'abord.
 - [ ] Écarts avec la spec signalés, ou conformité affirmée.
 - [ ] Leçon enregistrée au journal si tu as été corrigé, si Studio a révélé
       une erreur de ta part, ou si un contexte a dû t'être re-précisé.

@@ -157,9 +157,10 @@ ligne, avant tout le reste. Sinon, commence directement.>
 ## Côté
 <Client ou serveur, et pourquoi en une ligne.>
 
-## Vérifié dans Studio
-<L'instance créée, ses propriétés relues, l'Output, et le nettoyage constaté.
-Dis explicitement : « le rendu visuel, je ne peux pas le juger ».>
+## Vérifié
+<Le mode (`${CLAUDE_PLUGIN_ROOT}/references/modes.md`), puis l'instance créée,
+ses propriétés relues, l'Output, le nettoyage constaté. Et toujours : « le
+rendu visuel, je ne peux pas le juger ».>
 
 ## À regarder
 1. <Point précis à observer, ex. « l'impact doit se lire même à 30 studs ».>

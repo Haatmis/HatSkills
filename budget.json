@@ -1,7 +1,7 @@
 {
   "_pourquoi": "Le plafond de chaque skill, en tokens estimés. Chaque ligne d'un SKILL.md est rechargée à CHAQUE déclenchement : un skill qui grossit à chaque passage se dilue et rend de moins bons résultats. validate.py échoue au dépassement. Relever un plafond est permis — mais ça se voit dans le diff, et ça doit se justifier dans le CHANGELOG. C'est tout l'intérêt.",
   "_mesure": "approximation à ~3,6 caractères par token ; stable, donc comparable",
-  "total_descriptions": 1750,
+  "total_descriptions": 1900,
   "_total_descriptions": "Le seul coût payé à chaque tour, même quand aucun skill ne se déclenche. Ne pas le relever sans une campagne d'évals qui montre que le routage y gagne.",
   "skills": {
     "atelier": {
@@ -10,7 +10,7 @@
     },
     "code": {
       "description": 248,
-      "corps": 3960
+      "corps": 3975
     },
     "debug": {
       "description": 208,
@@ -18,7 +18,7 @@
     },
     "feature": {
       "description": 214,
-      "corps": 3430
+      "corps": 3460
     },
     "game-design": {
       "description": 236,
@@ -34,8 +34,12 @@
     },
     "vfx": {
       "description": 258,
-      "corps": 3261
+      "corps": 3275
+    },
+    "anim": {
+      "description": 225,
+      "corps": 2130
     }
   },
-  "_derniere_hausse": "0.14.0 — deux hausses assumées, chacune achetant plus qu'elle ne coûte. hat3d 6119 → 6140 (+21) : animations.md et finition.md deviennent lisibles par section, 4360 tokens évités sur le chemin le plus cher du plugin. code 3929 → 3960 (+31) : la ligne « aucune API dépréciée » devient une commande qui vérifie au lieu d'une règle qu'on espère. debug n'a PAS été relevé : les 3 tokens de trop ont été retirés ailleurs."
+  "_derniere_hausse": "0.15.0 — code +15, feature +30 (repayés par un doublon retiré, pas de hausse), vfx +14 pour l'échelle de modes. Et total_descriptions 1750 → 1900 pour le neuvième skill, `anim` : 221 tokens permanents. C'est une addition délibérée, pas une dérive — le seul cas où ce plafond monte. Le rendre plus haut « au cas où » annulerait son intérêt."
 }

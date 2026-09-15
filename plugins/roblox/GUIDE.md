@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.14.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.15.0** · 9 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -23,7 +23,7 @@ Après chaque mise à jour du repo :
 en tête de ce guide contre celui du `/plugin` : s'ils diffèrent, tu n'as pas
 les dernières corrections.
 
-## Les 8 skills
+## Les 9 skills
 
 Tu n'as normalement **rien à taper** : ils se déclenchent seuls sur ce que tu
 écris. La colonne du milieu montre le genre de phrase qui les appelle.
@@ -36,6 +36,7 @@ Tu n'as normalement **rien à taper** : ils se déclenchent seuls sur ce que tu
 | `debug` | « ça marche pas », « le shop déconne » | Le bug reproduit dans Studio, la cause racine, le correctif minimal |
 | `vfx` | « des particules quand on tape » | Un preset réutilisable dans `src/shared/VFX/`, cohérent avec ta charte |
 | `hat3d` | « fais-moi un coffre en 3D » | Un `model.json`, une préview HTML à valider, un `build.lua` pour Studio |
+| `anim` | « une animation de coup », « le perso reste droit quand il frappe » | Un `KeyframeSequence` à publier en deux clics, et le câblage qui va avec |
 | `atelier` | « fais-en un skill », « consolide le journal » | Un nouveau skill après interview, ou les leçons promues dans les skills existants |
 | `help` | `/roblox:help` | Cette page, dans ton navigateur |
 
@@ -189,6 +190,35 @@ python3 "<plugin>/scripts/luau_check.py" --dans src
 souvent là qu'il y en a le plus. Et `code` le passe systématiquement avant de
 te rendre quoi que ce soit : la règle « zéro API dépréciée » ne dépend plus de
 ce dont Claude se souvient au bon moment.
+
+## Il sait dire ce qu'il a vraiment vérifié
+
+Avant, c'était binaire : « vérifié dans Studio », ou un aveu que le MCP
+manquait. Depuis la `0.15.0`, il annonce un **mode** :
+
+- **plein** — Studio ouvert, le code a tourné, l'Output est lu ;
+- **réduit** — pas de Studio, mais `luau_check` est passé et les IDs d'assets
+  sont vérifiés auprès de Roblox ;
+- **hors-ligne** — rien n'a tourné, relecture seule.
+
+Ça évite les deux mensonges symétriques : annoncer « vérifié » quand rien n'a
+été exécuté, et annoncer « non vérifié » quand la moitié des contrôles sont
+passés.
+
+## Avant de publier une mise à jour
+
+Les contrôles des skills s'arrêtent à « ce bout de travail est correct ». Quand
+des gens jouent déjà à ton jeu, il y a autre chose à regarder — et une seule
+chose vraiment irréversible : **les sauvegardes**.
+
+La liste est dans `references/publication.md` du plugin, en cinq sections :
+perte de données, exploits, ce qui casse pour les autres et pas pour toi,
+performance, retour arrière. Lis la section qui correspond à ce que ta mise à
+jour touche.
+
+Si tu ne devais retenir qu'une ligne : **teste la migration de sauvegarde sur
+un vieux compte, pas sur un compte neuf.** Un compte neuf ne révèle jamais un
+bug de migration.
 
 ## Quand ça se passe mal
 

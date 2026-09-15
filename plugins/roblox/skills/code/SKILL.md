@@ -168,8 +168,9 @@ dans l'usage. C'est une table de consultation, pas une lecture.
 5. **Vérifie dans Studio via le MCP — toujours, avant de rendre.** Exécute le
    code ou le module et lis l'Output. Une erreur, un avertissement, un nom
    d'API qui n'existe pas : tu corriges et tu relances.
-   Si le MCP n'est pas disponible, dis-le explicitement en une ligne au lieu
-   de faire comme si la vérification avait eu lieu.
+   Sans MCP, annonce le mode réduit ou hors-ligne
+   (`${CLAUDE_PLUGIN_ROOT}/references/modes.md`) : il change ce que tu
+   affirmes, jamais ce que tu écris.
 6. **Relis en adversaire** : qu'est-ce qu'un exploiteur peut envoyer dans ce
    Remote ? Que se passe-t-il si le joueur part au milieu ? Si l'instance
    n'existe pas encore ? Si deux appels arrivent en même temps ?
@@ -286,8 +287,8 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 ## Avant de rendre
 
 - [ ] Demande reformulée en une ligne si elle admettait plusieurs lectures.
-- [ ] Exécuté dans Studio via le MCP, Output lu et propre — ou absence du MCP
-      signalée explicitement.
+- [ ] Exécuté dans Studio via le MCP, Output lu et propre — ou mode réduit /
+      hors-ligne annoncé, avec ce qui n'a pas pu être contrôlé.
 - [ ] `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/luau_check.py" --dans src`
       passé — il lit la table des dépréciées et balaye, Studio fermé.
 - [ ] `--!strict` sur les ModuleScripts, `--!nonstrict` sur les scripts.
