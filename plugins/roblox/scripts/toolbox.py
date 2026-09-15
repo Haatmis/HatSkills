@@ -10,8 +10,12 @@ que personne ne sait expliquer. Ce script existe pour qu'aucun identifiant
     toolbox.py chercher --type modele --query "caisse en bois"
     toolbox.py verifier --ids 140277245983305,9046286664
 
-Types : son, modele, mesh, image. Les animations ne sont pas exposées par
-l'API de la Toolbox — elles restent à publier à la main.
+Types : son, modele, mesh, image, animation.
+
+Une animation trouvée ici ne peut PAS servir de placeholder : Roblox lie une
+animation à son créateur, et une animation qui ne t'appartient pas ne se
+charge pas dans ton jeu publié. La recherche sert à vérifier une animation que
+tu as déjà, pas à en emprunter une.
 
 Par défaut, seuls les assets gratuits et disponibles sortent, et les modèles
 contenant des scripts sont écartés : un modèle scripté de la Toolbox est le
@@ -39,6 +43,10 @@ if hasattr(sys.stdout, "reconfigure"):
 
 RECHERCHE = "https://apis.roblox.com/toolbox-service/v1/marketplace/{type_id}"
 DETAILS = "https://apis.roblox.com/toolbox-service/v1/items/details"
+# La route ci-dessus refuse les animations (404). Celle-ci répond pour tout,
+# avec moins de champs — mais elle porte le créateur, qui est ce qui décide
+# qu'une animation se chargera ou non.
+ECONOMIE = "https://economy.roblox.com/v2/assets/{id}/details"
 
 # Vérifiés un par un contre l'API : ce sont les seuls types qui répondent.
 TYPES = {
@@ -46,7 +54,14 @@ TYPES = {
     "modele": 10,
     "image": 13,
     "mesh": 40,
+    "animation": 24,
 }
+
+# Roblox refuse de charger une animation dont le créateur n'est pas le
+# propriétaire du jeu. Elle peut marcher dans Studio chez son auteur et échouer
+# pour tous les joueurs une fois publié — le défaut le plus pénible à
+# diagnostiquer, parce qu'il ne se voit pas là où on teste.
+LIEE_AU_CREATEUR = {24}
 
 # Les types où un script peut se cacher. Un son n'en contient pas.
 SCRIPTABLES = {10, 40}
@@ -61,34 +76,79 @@ def appel(url, params):
         return json.loads(r.read().decode("utf-8"))
 
 
+def _normalise_toolbox(item):
+    a = item["asset"]
+    argent = item.get("fiatProduct") or {}
+    c = item.get("creator") or {}
+    return {
+        "id": a["id"], "nom": a.get("name", "?"), "type_id": a.get("typeId"),
+        "duree": a.get("duration"), "scripts": a.get("hasScripts"),
+        "createur": c.get("name", "?"), "createur_id": c.get("id"),
+        "verifie": bool(c.get("isVerifiedCreator")),
+        "gratuit": argent.get("isFree", True),
+        "dispo": argent.get("purchasable", True),
+    }
+
+
+def _normalise_economie(d):
+    c = d.get("Creator") or {}
+    prix = d.get("PriceInRobux")
+    return {
+        "id": d.get("AssetId"), "nom": d.get("Name", "?"),
+        "type_id": d.get("AssetTypeId"), "duree": None,
+        "scripts": None,  # inconnu par cette route : ne pas prétendre le contraire
+        "createur": c.get("Name", "?"), "createur_id": c.get("CreatorTargetId"),
+        "verifie": bool(c.get("HasVerifiedBadge")),
+        "gratuit": bool(d.get("IsPublicDomain")) or prix in (None, 0),
+        "dispo": True,
+    }
+
+
 def details(ids):
-    """Les détails de plusieurs assets. Un id absent du retour n'existe plus."""
+    """Détails normalisés. Un id absent du retour n'existe plus.
+
+    Deux sources : la route Toolbox, riche (durée, présence de scripts) mais
+    muette sur les animations, puis la route économie pour ce qu'elle a laissé
+    tomber. Se contenter de la première faisait conclure qu'une animation
+    n'existe pas, alors qu'elle n'était simplement pas servie là.
+    """
     if not ids:
         return []
-    return appel(DETAILS, {"assetIds": ",".join(str(i) for i in ids)}).get("data", [])
+    trouves = {}
+    try:
+        for item in appel(DETAILS, {"assetIds": ",".join(str(i) for i in ids)}).get("data", []):
+            n = _normalise_toolbox(item)
+            trouves[n["id"]] = n
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError):
+        pass  # le repli couvre tout : ce n'est pas une panne
+
+    for i in ids:
+        if i in trouves:
+            continue
+        try:
+            trouves[i] = _normalise_economie(appel(ECONOMIE.format(id=i), {}))
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError):
+            pass  # vraiment introuvable : l'appelant le signalera
+    return [trouves[i] for i in ids if i in trouves]
 
 
-def utilisable(item, avec_scripts):
+def utilisable(a, avec_scripts):
     """(ok, raison du rejet). La raison sert à expliquer une liste vide."""
-    a = item.get("asset", {})
-    argent = item.get("fiatProduct") or {}
-    if argent and not argent.get("isFree", True):
+    if not a.get("gratuit", True):
         return False, "payant"
-    if argent and not argent.get("purchasable", True):
+    if not a.get("dispo", True):
         return False, "non disponible"
-    if a.get("typeId") in SCRIPTABLES and a.get("hasScripts") and not avec_scripts:
+    if a.get("type_id") in SCRIPTABLES and a.get("scripts") and not avec_scripts:
         return False, "contient des scripts"
     return True, ""
 
 
-def ligne(item):
-    a = item["asset"]
-    createur = (item.get("creator") or {}).get("name", "?")
-    verifie = "✔" if (item.get("creator") or {}).get("isVerifiedCreator") else " "
-    duree = f"{a['duration']:>4} s" if a.get("duration") else "      "
-    scripts = "  ⚠ scripts" if a.get("hasScripts") else ""
-    return (f"  {a['id']:<16}{duree}  {a['name'][:38]:<38} "
-            f"{createur[:18]:<18}{verifie}{scripts}")
+def ligne(a):
+    verifie = "✔" if a.get("verifie") else " "
+    duree = f"{a['duree']:>4} s" if a.get("duree") else "      "
+    scripts = "  ⚠ scripts" if a.get("scripts") else ""
+    return (f"  {a['id']:<16}{duree}  {a['nom'][:38]:<38} "
+            f"{a['createur'][:18]:<18}{verifie}{scripts}")
 
 
 def cmd_chercher(args):
@@ -131,6 +191,12 @@ def cmd_chercher(args):
     if rejets:
         detail = ", ".join(f"{n} {r}" for r, n in sorted(rejets.items()))
         print(f"\n({detail} — écarté(s))")
+    if TYPES[args.type] in LIEE_AU_CREATEUR:
+        print("\n⚠ Une animation est liée à son créateur. Aucun de ces "
+              "identifiants ne se chargera\n  dans un jeu qui ne t'appartient "
+              "pas — n'en écris aucun dans Config/Assets.luau.\n  Cette "
+              "recherche sert à vérifier une animation que tu as déjà.")
+        return 0
     print("\nCopie l'identifiant dans Config/Assets.luau en notant sa provenance.")
     return 0
 
@@ -138,28 +204,31 @@ def cmd_chercher(args):
 def cmd_verifier(args):
     demandes = [int(x) for x in args.ids.replace(" ", "").split(",") if x]
     try:
-        trouves = details(demandes)
+        vus = {a["id"]: a for a in details(demandes)}
     except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as e:
-        print(f"ERREUR : la Toolbox n'a pas répondu ({e}).", file=sys.stderr)
+        print(f"ERREUR : Roblox n'a pas répondu ({e}).", file=sys.stderr)
         return 1
 
-    vus = {}
-    for item in trouves:
-        vus[item["asset"]["id"]] = item
-
+    attendu = (args.proprietaire or "").strip().lower()
     perdus = 0
     for i in demandes:
-        item = vus.get(i)
-        if not item:
+        a = vus.get(i)
+        if not a:
             # Un asset de la Toolbox peut être modéré ou retiré après coup.
             # L'identifiant reste valide en apparence et ne charge plus rien.
             print(f"  {i:<16} INTROUVABLE — retiré ou modéré, à remplacer")
             perdus += 1
             continue
-        ok, raison = utilisable(item, args.avec_scripts)
+        ok, raison = utilisable(a, args.avec_scripts)
         etat = "ok" if ok else f"REJET : {raison}"
+        # Le piège des animations : celle-ci existe, elle est gratuite, et elle
+        # ne se chargera jamais dans le jeu de quelqu'un d'autre.
+        if ok and attendu and a["type_id"] in LIEE_AU_CREATEUR \
+                and a["createur"].strip().lower() != attendu:
+            etat = f"NE CHARGERA PAS : appartient à {a['createur']}"
+            ok = False
         perdus += 0 if ok else 1
-        print(f"  {i:<16} {etat:<24} « {item['asset']['name'][:34]} »")
+        print(f"  {i:<16} {etat:<40} « {a['nom'][:32]} »")
 
     print(f"\n{len(demandes) - perdus}/{len(demandes)} utilisable(s).")
     return 1 if perdus else 0
@@ -180,6 +249,8 @@ def main():
 
     v = sub.add_parser("verifier", help="un identifiant existe-t-il encore ?")
     v.add_argument("--ids", required=True, help="ex. 140277245983305,9046286664")
+    v.add_argument("--proprietaire", help="nom du compte ou groupe qui possède "
+                   "le jeu : signale une animation qui ne se chargera pas")
     v.add_argument("--avec-scripts", action="store_true")
     v.set_defaults(func=cmd_verifier)
 

@@ -125,7 +125,7 @@ L'exception : la physique des pièces dont le client a la propriété
 | Cause | Comment la départager |
 |---|---|
 | Chargée sur le `Humanoid` au lieu de l'`Animator` | API dépréciée : voir la table des dépréciées |
-| L'animation n'appartient pas au compte ou au groupe propriétaire du jeu | Erreur de permission dans l'Output |
+| L'animation n'appartient pas au compte ou au groupe propriétaire du jeu | `toolbox.py verifier --ids <id> --proprietaire "<compte du jeu>"` tranche sans Studio. Symptôme typique : ça marche chez toi et pour personne d'autre |
 | `AnimationPriority` trop basse : l'animation par défaut passe devant | Monter en `Action` |
 | `AnimationTrack` rechargée à chaque appel : la précédente tourne encore | Charger une fois, garder la track |
 | `Animator` pas encore créé au moment du chargement | `humanoid:WaitForChild("Animator")` |

@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.12.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.13.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -204,8 +204,18 @@ Trois garanties :
   dans la liste « À toi de fournir » en fin de réponse. Un placeholder trop
   crédible se fait oublier et part en production.
 
-Les **animations** restent à toi : la Toolbox ne les expose pas. Elles
-continuent de valoir `0` jusqu'à ce que tu publies la tienne.
+Les **animations** font exception, pour une raison plus embêtante : la Toolbox
+en contient, mais Roblox lie une animation à son créateur. Celle de quelqu'un
+d'autre ne se chargera pas dans ton jeu publié — et elle peut très bien marcher
+dans Studio avant d'échouer pour tous les joueurs une fois en ligne. Elles
+valent donc `0` jusqu'à ce que tu publies la tienne, sous le compte ou le
+groupe qui possède le jeu.
+
+Si une animation te fait ce coup-là, la cause se tranche sans ouvrir Studio :
+
+```bash
+python3 "<plugin>/scripts/toolbox.py" verifier --ids <id> --proprietaire "<ton compte>"
+```
 
 ## Ce que le plugin ne fait pas
 

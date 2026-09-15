@@ -91,8 +91,19 @@ rien. En reprise de feature, repasse les identifiants déjà en place à
 
 **Un emprunt se signale.** Chaque ligne prise dans la Toolbox porte sa
 provenance en commentaire et réapparaît dans « À toi de fournir » — sinon
-l'approximation se fait oublier et part en production. Les animations restent
-à `0` : la Toolbox ne les expose pas.
+l'approximation se fait oublier et part en production.
+
+**Les animations ne s'empruntent pas.** La Toolbox en contient, et le script
+sait les chercher — mais Roblox lie une animation à son créateur : celle d'un
+autre ne se charge pas dans ton jeu publié. Elle peut même marcher dans Studio
+et échouer pour tous les joueurs une fois en ligne, ce qui en fait un défaut
+très pénible à diagnostiquer. Une animation reste donc à `0`, à publier sous
+le compte ou le groupe qui possède le jeu. Quand l'utilisateur en fournit une,
+contrôle-la avant de la câbler :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/toolbox.py" verifier --ids <id> --proprietaire "<compte ou groupe du jeu>"
+```
 
 **Les identifiants d'assets vivent dans un seul fichier :**
 `src/shared/Config/Assets.luau`. C'est le point de rendez-vous — l'utilisateur
@@ -104,7 +115,7 @@ y colle ses IDs et te redemande de reprendre.
 return {
     Combat = {
         -- Animation R15. Éditeur d'animation → publier → copier l'ID.
-        -- La Toolbox n'expose pas les animations : celle-ci reste à toi.
+        -- À publier sous le propriétaire du jeu : sinon elle ne charge pas.
         SwingAnimation = 0,
         -- Toolbox « sword slash and impact » par silence8552, 2 s.
         -- Provisoire : remplace-le quand tu auras le tien.
@@ -213,7 +224,8 @@ d'impact → le son.
 Chaque étape est vérifiée avant la suivante. À la fin, le système tourne :
 on tape, les dégâts s'appliquent, le retour visuel est là, et le son d'impact
 vient de la Toolbox. Reste une ligne à `0` dans `Assets.luau` — l'animation,
-que la Toolbox n'expose pas — et le code la saute proprement en attendant.
+qui doit appartenir au propriétaire du jeu — et le code la saute proprement en
+attendant.
 
 ## Pièges
 

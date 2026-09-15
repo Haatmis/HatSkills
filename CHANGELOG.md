@@ -3,6 +3,39 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.13.0
+
+**Correction d'une affirmation fausse de la `0.12.0`.** J'y avais écrit que
+l'API de la Toolbox n'expose pas les animations, en me réclamant d'une
+vérification. La vérification était mauvaise : j'avais interrogé la catégorie
+animation avec le mot-clé « door ». Avec « punch », « idle » ou « run », elle
+répond — 188 résultats pour « idle ». Le type 24 est cherchable comme les
+autres, et `toolbox.py` le propose maintenant.
+
+**La vraie raison de ne pas emprunter une animation est plus embêtante.**
+Roblox lie une animation à son créateur : celle d'un autre compte ne se charge
+pas dans un jeu publié. Elle peut marcher dans Studio chez son propriétaire et
+échouer pour tous les joueurs une fois en ligne — un défaut qui ne se voit pas
+là où on teste. Les animations restent donc à `0`, mais parce que la propriété
+l'interdit, pas parce que l'API serait muette.
+
+`toolbox.py verifier --proprietaire "<compte du jeu>"` tranche ce cas sans
+ouvrir Studio, et la fiche des symptômes de `debug` renvoie dessus. Ce plugin
+connaissait déjà la règle de propriété — elle est dans `symptomes-frequents.md`
+depuis longtemps. C'est `feature` qui la contredisait : la connaissance était
+là, la cohérence entre skills ne l'était pas.
+
+La route de détails de la Toolbox refuse les animations (404) ; le script
+retombe sur l'API économie, qui répond pour tout et porte le créateur. Se
+contenter de la première route était la deuxième moitié de mon erreur.
+
+**Ce qui n'a pas avancé.** Trois faux négatifs cette session, tous du même
+genre : une recherche mal formulée prise pour un fait établi. Les deux premiers
+étaient sans conséquence, celui-ci a été publié dans le guide et dans le
+changelog avant d'être attrapé — par l'utilisateur, pas par moi. Aucun
+garde-fou ne peut vérifier une affirmation sur le monde extérieur ; seule la
+discipline de tester la négation le peut.
+
 ## 0.12.0
 
 **Le plugin emprunte à la Toolbox au lieu de livrer muet.** Jusqu'ici, tout
