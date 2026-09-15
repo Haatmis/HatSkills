@@ -87,6 +87,10 @@ Déplacer le personnage d'un autre joueur suppose donc un choix explicite —
 contrainte depuis le serveur, ou transfert d'autorité assumé. Le faire par
 `CFrame` depuis le client de quelqu'un d'autre ne marche simplement pas.
 
+Corollaire pour les tests : pour rapprocher un joueur d'un objet, déplace le
+personnage, jamais l'objet. Le serveur voit l'objet là où il l'a laissé, et
+refuse sur le contrôle de distance.
+
 **Régime prototype ou production.** Demande-le si ce n'est pas clair, ou
 déduis-le. En prototype, signale les manques de sécurité sans bloquer. Dès que
 le jeu est publié, tout ce qui touche à l'économie, aux données joueur ou aux
@@ -162,8 +166,7 @@ est, avec le remplaçant exact et ce qui change dans l'usage.
 4. **Écris**, en respectant le contexte figé ci-dessus.
 5. **Vérifie dans Studio via le MCP — toujours, avant de rendre.** Exécute le
    code ou le module et lis l'Output. Une erreur, un avertissement, un nom
-   d'API qui n'existe pas : tu corriges et tu relances. Ne rends jamais du
-   code non exécuté en disant qu'il devrait marcher.
+   d'API qui n'existe pas : tu corriges et tu relances.
    Si le MCP n'est pas disponible, dis-le explicitement en une ligne au lieu
    de faire comme si la vérification avait eu lieu.
 6. **Relis en adversaire** : qu'est-ce qu'un exploiteur peut envoyer dans ce
@@ -274,6 +277,10 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
   dernière sauvegarde de tous les joueurs encore connectés.
 - **Poser `.Parent` avant les propriétés.** L'instance est répliquée puis
   modifiée : coût réseau inutile et clignotement visible.
+- **Détruire sans regarder ce qu'on détruit.** Deux pièges dans le même geste :
+  le conteneur temporaire qu'on nettoie peut *être* l'objet qu'on vient d'en
+  extraire, et une instance créée par Rojo ne se recrée pas — le plugin garde
+  son id, il faut reconnecter à la main.
 
 ## Avant de rendre
 

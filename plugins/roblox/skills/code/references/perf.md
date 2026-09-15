@@ -111,6 +111,16 @@ le plus rentable qui existe, et il est gratuit.
 `CanCollide`, `CanTouch` et `CanQuery` à `false` sur ce qui n'en a pas besoin
 retirent trois calculs par pièce et par frame.
 
+### L'audio
+
+Un `Instance.new("Sound")` créé au moment de jouer démarre avec un retard fixe
+— mesuré à 0,36 s, identique sur deux fichiers de durées différentes, donc
+imputable au chargement et non au contenu. Ça s'entend comme un fichier mal
+découpé, et on cherche le défaut dans l'export.
+
+`ContentProvider:PreloadAsync` au démarrage, et une instance `Sound` réutilisée
+plutôt qu'une par déclenchement.
+
 ### Les DataStore
 
 Les quotas sont par joueur et par minute. Sauvegarder à chaque changement les

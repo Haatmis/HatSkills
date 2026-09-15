@@ -3,6 +3,17 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.8.1
+
+Réconcilie deux versions écrites en parallèle : la `0.8.0` (durcissement du
+journal) sur la branche, et la `0.7.1` (consolidation « regarder avant de
+détruire ») poussée sur `main` depuis une autre session. Les deux touchaient
+`code` et `vfx`, mais à des endroits différents — git les a fusionnées seul,
+seuls le numéro de version et le journal des versions demandaient un arbitrage.
+
+Aucun contenu perdu des deux côtés. C'est le premier cas où deux sessions ont
+travaillé le même plugin en même temps, et ça a tenu.
+
 ## 0.8.0
 
 **Le journal se durcit contre l'injection indirecte.** Personne d'extérieur
@@ -33,6 +44,29 @@ se fondre dans le lot.
 **`.journal/` existe enfin.** La capacité de partage était construite depuis la
 0.2.0 mais n'avait jamais été activée : ni dossier, ni variable posée. Le
 dossier est là, avec le mode d'emploi.
+## 0.7.1
+
+**Consolidation du journal : regarder avant de détruire.** Cinq leçons remontées
+d'une session de bout en bout sur un jeu réel, dont trois erreurs que la
+vérification Studio a révélées et qui ont chacune coûté un aller-retour.
+
+- `vfx` ajoute aux pièges le `NumberRange` dont une seule borne est mise à
+  l'échelle : `NumberRange.new(26, 40 * i)` lève dès que `i` passe sous 0,65,
+  donc un effet qui marche en rareté haute plante en rareté basse.
+- `code` fusionne en un seul piège deux façons de se tromper sur `:Destroy()` —
+  le conteneur temporaire qui *est* l'objet qu'on vient d'en extraire, et
+  l'instance gérée par Rojo qui ne se recrée pas sans reconnexion manuelle.
+- `code` tire de sa règle de propriété réseau le corollaire pour les tests :
+  rapprocher un joueur d'un objet se fait en déplaçant le personnage, jamais
+  l'objet, sinon le serveur le voit rester où il était et refuse sur la
+  distance.
+- `code/references/perf.md` gagne une section **audio** : un `Instance.new`
+  de `Sound` démarre avec 0,36 s de retard fixe, ce qui s'entend comme un
+  fichier mal découpé et envoie chercher le défaut dans l'export.
+
+Deux retraits pour compenser : la puce `:Emit(n)` de `vfx`, déjà dite deux fois
+ailleurs dont une avec le pourquoi, et la redite « ne rends jamais du code non
+exécuté » dans l'étape 5 de `code`, que les pièges portent mieux.
 
 ## 0.7.0
 

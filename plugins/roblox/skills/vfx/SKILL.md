@@ -192,9 +192,11 @@ corriger sans repasser par moi.
 - **Prétendre juger le rendu.** Tu ne le vois pas. Dis-le, et donne les
   boutons.
 - **Inventer un ID de texture.** Effet invisible, cause introuvable.
-- **`Enabled = true` puis `false` pour une salve.** Utilise `:Emit(n)`.
 - **Détruire l'emitter trop tôt.** Les particules vivantes disparaissent d'un
   coup.
+- **Ne scaler qu'une borne d'un `NumberRange`.** `NumberRange.new(26, 40 * i)`
+  lève dès que `i` descend sous 0,65 : le maximum passe sous le minimum fixe.
+  Les deux bornes varient ensemble, ou aucune.
 - **Ne jamais détruire l'Attachment.** Chaque effet laisse un déchet ; au bout
   d'une partie, le personnage en traîne des centaines.
 - **Empiler de grosses particules translucides.** C'est la surface
