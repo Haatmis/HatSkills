@@ -173,6 +173,22 @@ def check(path, report):
         if not any((base / rel).exists() for base in bases):
             err(f"renvoi vers un fichier absent : {ref}")
 
+    # Une référence longue assortie d'un sommaire est faite pour être lue par
+    # morceaux. Un corps qui dit « lis-le » sans parler du sommaire fait charger
+    # la page entière à chaque déclenchement — sur vfx, ça coûtait plus cher que
+    # le skill lui-même pour un contenu utilisé au cinquième. La divulgation
+    # progressive s'arrête au niveau où on cesse de l'écrire.
+    for ref in (path.parent / "references").glob("*.md"):
+        tete = "\n".join(ref.read_text(encoding="utf-8").splitlines()[:40]).lower()
+        # Une référence peut déclarer qu'elle se lit dans l'ordre : une procédure
+        # découpée en morceaux rend un plus mauvais résultat, et l'économie ne
+        # vaut jamais ça. La dispense est locale et porte sa raison.
+        if "## sommaire" not in tete or "lecture: intégrale" in tete:
+            continue
+        if ref.name in body and "sommaire" not in low_body:
+            warn(f"{ref.name} a un sommaire, mais le corps le fait lire en "
+                 "entier : dis de lire le sommaire puis la section utile")
+
     for ref in (path.parent / "references").glob("*.md"):
         rl = ref.read_text(encoding="utf-8").splitlines()
         if len(rl) > REF_TOC_LINES and not any(

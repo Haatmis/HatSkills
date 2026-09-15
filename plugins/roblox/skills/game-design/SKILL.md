@@ -38,7 +38,8 @@ adapté ». Avance un chiffre jouable et dis d'où il sort : le temps pour tuer
 visé, la comparaison à un standard du genre, la contrainte technique.
 Corriger un chiffre est facile ; partir d'une page blanche ne l'est pas.
 `${CLAUDE_SKILL_DIR}/references/reperes-roblox.md` donne les valeurs par défaut de la plateforme et
-les fourchettes usuelles — lis-le avant de chiffrer quoi que ce soit.
+les fourchettes usuelles — lis son **sommaire**, puis la section du genre
+concerné, avant de chiffrer quoi que ce soit.
 
 **Contredis quand tu vois un problème.** Si l'idée a un défaut — elle casse
 l'équilibre, elle crée une boucle de farm, elle rend une autre feature

@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.10.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.11.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -60,6 +60,21 @@ pour ça qu'il ne se déclenche pas, et c'est normal.
 Entre les deux, tu peux le sentir à une chose : **si tu sais déjà exactement
 quel fichier va changer et comment, tu n'as pas besoin d'un skill.** Si tu
 devrais d'abord en discuter avec quelqu'un, tu es au bon endroit.
+
+## Ce que ça te coûte
+
+Un skill n'est pas gratuit : son contenu est rechargé à chaque déclenchement,
+et tu le paies en tokens. Trois niveaux, du moins cher au plus cher :
+
+- **Les descriptions** (~1700 tokens) sont là en permanence. C'est le prix
+  d'entrée pour que le bon skill parte tout seul.
+- **Le corps d'un skill** (~3000 tokens) n'arrive que quand il se déclenche.
+- **Les fiches de référence** ne se chargent que par la section utile — depuis
+  la `0.11.0`. Avant, une demande de VFX chargeait la boîte à outils entière,
+  soit plus cher que le skill lui-même pour un contenu utilisé au cinquième.
+
+Si une demande te paraît trop simple pour mériter tout ça, elle l'est
+probablement : voir la section précédente.
 
 ## Le parcours d'une feature
 

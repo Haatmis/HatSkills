@@ -112,7 +112,9 @@ petites. Vise la lisibilité, pas la quantité.
 `${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
 propriétés qui comptent vraiment, des recettes de base, les pièges de
 performance, et le détail des pastilles de dégâts — `BillboardGui`, tween de
-montée, distance d'affichage. Lis-le avant de choisir ton instance.
+montée, distance d'affichage. Lis son **sommaire**, puis la seule section
+qui correspond à ton effet — la page entière coûte plus cher que ce skill,
+pour un contenu dont tu utilises un cinquième.
 
 ## Procédure
 

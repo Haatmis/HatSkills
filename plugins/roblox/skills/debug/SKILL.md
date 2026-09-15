@@ -70,8 +70,9 @@ problème.
   désactivés, ou latence réelle.
 
 `${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md` relie chaque symptôme Roblox courant à ses
-causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
-évite d'explorer au hasard.
+causes habituelles. À l'étape 4, avant de former une hypothèse, lis son
+**sommaire** puis la section du symptôme observé : ça évite d'explorer au
+hasard sans charger les symptômes que tu n'as pas.
 
 ## Procédure
 
@@ -99,7 +100,7 @@ causes habituelles. Lis-le à l'étape 4, avant de former une hypothèse : il
 
 4. **Forme une hypothèse, et la plus petite expérience qui la démolirait.**
    Une hypothèse qu'aucune observation ne peut contredire n'est pas une
-   hypothèse. Consulte `${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md` à ce moment-là.
+   hypothèse. Sommaire de `${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md`, puis la section du symptôme.
 
 5. **Reproduis dans Studio via le MCP.** Tu dois *voir* le bug avant d'y
    toucher. S'il ne se reproduit pas, ton modèle du problème est faux : reviens

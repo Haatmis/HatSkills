@@ -11,6 +11,12 @@ Ce n'est pas « le même travail en plus long » que le low-poly. Ce sont deux
 méthodes différentes, et confondre les deux donne le pire des cas : un modèle
 lourd qui lit quand même comme un tas de rectangles.
 
+<!-- lecture: intégrale -->
+<!-- Ce fichier n'est pas une table de consultation : c'est la procédure du
+     mode par défaut, lue dans l'ordre — lire l'image, inventorier les formes,
+     choisir les primitives, éviter les pièges, tenir le budget. En sauter une
+     étape dégrade le modèle. Le sommaire sert à s'y retrouver, pas à trier. -->
+
 ## Sommaire
 
 - [Lire l'image en formes — le Block en dernier](#lire-limage-en-formes-le-block-en-dernier)

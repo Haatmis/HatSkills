@@ -3,6 +3,34 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.11.0
+
+**Les références se lisent par section, plus en entier.** Cinq skills
+imposaient la lecture intégrale d'une fiche pour en utiliser une ligne. Sur
+`vfx`, la boîte à outils coûtait 3143 tokens à chaque déclenchement — plus cher
+que le skill lui-même — pour un contenu utilisé au cinquième. Chaque fiche
+concernée a déjà un sommaire ; le corps dit maintenant de lire le sommaire puis
+la section utile.
+
+Mesuré fiche par fiche : 11 522 tokens avant, 1 986 après, soit **9 536 tokens
+évités** sur une passe complète. Par déclenchement : 2 634 sur `vfx`, 2 166 sur
+`debug`, 1 237 sur `game-design`, jusqu'à 3 499 sur `code` quand les deux
+fiches étaient sollicitées.
+
+`validate.py` refuse désormais qu'une fiche à sommaire soit lue en entier. Une
+fiche peut s'en dispenser en le déclarant — `style-detaille.md` de `hat3d` le
+fait, parce que ce n'est pas une table de consultation mais la procédure du
+mode par défaut, lue dans l'ordre. La découper rendrait un plus mauvais modèle,
+et l'économie ne vaut jamais ça.
+
+**Ce qui n'a pas été touché, délibérément.** Les ~1700 tokens de descriptions
+sont le seul coût permanent, donc la cible évidente. Ce sont aussi le seul
+texte qui décide du déclenchement, et le routage n'est toujours pas mesuré :
+les raccourcir reviendrait à dégrader la seule chose qui compte, sans moyen de
+s'en apercevoir. Ça attend une campagne d'évals. Dédupliquer les paragraphes
+communs entre skills ne rapporterait rien non plus — un seul corps est chargé
+à la fois.
+
 ## 0.10.0
 
 **Quatre emprunts à la méthodologie de `codegraph`**, un index de code local
