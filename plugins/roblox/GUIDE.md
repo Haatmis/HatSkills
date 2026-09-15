@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.11.0** · 8 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.12.0** · 8 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie
@@ -108,7 +108,7 @@ print », il fait le travail sans commentaire.
 
 | Fichier | À quoi il sert |
 |---|---|
-| `src/shared/Config/Assets.luau` | Les IDs d'animations, de sons, de meshes. Un `0` = à fournir. Le code saute proprement ce qui manque, donc **le jeu tourne sans** |
+| `src/shared/Config/Assets.luau` | Les IDs d'animations, de sons, de meshes. Un vrai ID pris dans la Toolbox = provisoire, sa provenance est en commentaire. Un `0` = à fournir par toi. Le code saute proprement ce qui manque, donc **le jeu tourne sans** |
 | `src/shared/VFX/Style.luau` | Ta charte visuelle : palette, durées, densité. Tous les effets en dérivent — tu changes le style du jeu entier ici |
 | `docs/design/*.md` | Les specs. `code` les lit avant d'écrire, `debug` avant de diagnostiquer — un comportement conforme à la spec n'est pas un bug |
 
@@ -184,6 +184,28 @@ signalée**, pas écartée en silence.
 | Un effet est moche | Normal : Claude ne voit pas le rendu. Il te donne les réglages à tourner |
 | Une commande du plugin n'affiche rien, ou ouvre le Microsoft Store | Tu es sous Windows : `python3` y est un alias. Claude relance avec `py` — dis-le-lui s'il ne le fait pas |
 | Tu n'as pas les dernières corrections | `/plugin update roblox@hatskills` |
+
+## Il emprunte à la Toolbox plutôt que de te laisser dans le silence
+
+Depuis la `0.12.0`, quand une feature a besoin d'un son, d'une image, d'un
+modèle ou d'un mesh, Claude va en chercher un **vrai** dans la Toolbox Roblox
+au lieu de poser `0` et d'attendre. Ton système sonne dès la première
+exécution, et tu testes pour de bon au lieu de deviner.
+
+Trois garanties :
+
+- **Aucun identifiant inventé.** Chaque ID vient d'une réponse de Roblox,
+  jamais de la mémoire de Claude. Un `rbxassetid://` inventé a l'air juste et
+  ne charge rien — c'est le défaut le plus difficile à voir.
+- **Aucun modèle scripté.** Un modèle de la Toolbox qui contient des scripts
+  est écarté d'office : c'est le vecteur de backdoor le plus courant sur
+  Roblox. Il faut le demander explicitement pour en avoir un.
+- **L'emprunt est toujours signalé** — en commentaire dans `Assets.luau`, et
+  dans la liste « À toi de fournir » en fin de réponse. Un placeholder trop
+  crédible se fait oublier et part en production.
+
+Les **animations** restent à toi : la Toolbox ne les expose pas. Elles
+continuent de valoir `0` jusqu'à ce que tu publies la tienne.
 
 ## Ce que le plugin ne fait pas
 

@@ -49,11 +49,18 @@ fichier, et dis à l'utilisateur qu'il pourra le retoucher une fois pour tout
 le jeu.
 
 **N'invente jamais un identifiant d'asset.** Un `rbxassetid://` inventé donne
-un effet invisible, et personne ne comprend pourquoi. Deux options seulement :
-laisser `Texture` vide (la texture par défaut, qui fait un travail honnête), ou
-décrire ce qu'il faut chercher dans la bibliothèque — « une texture de fumée
-douce, carrée, fond transparent » — et poser l'entrée à `0` dans
-`src/shared/VFX/Assets.luau`. L'effet doit tourner sans.
+un effet invisible, et personne ne comprend pourquoi. Il n'y a qu'une source
+autorisée — une réponse de Roblox :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/toolbox.py" chercher --type image --query "soft smoke"
+```
+
+Requête **en anglais**, l'index l'est ; sous Windows, `py` si `python3` ouvre
+la boutique. Note la provenance en commentaire dans `src/shared/VFX/Assets.luau`
+et signale l'emprunt en fin de réponse. Si le script ne rend rien d'utilisable,
+laisse `Texture` vide — la texture par défaut fait un travail honnête. L'effet
+doit tourner sans.
 
 **Décorer et informer sont deux métiers.** Un effet qui décore peut être
 discret, atmosphérique, stylisé — il enrichit. Un effet qui **informe** doit

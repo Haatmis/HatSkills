@@ -3,6 +3,44 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.12.0
+
+**Le plugin emprunte à la Toolbox au lieu de livrer muet.** Jusqu'ici, tout
+asset que Claude ne peut pas publier valait `0` : le système tournait, mais
+sans un son. Un système muet se teste mal — on ne sait pas si le son ne se
+déclenche pas ou s'il n'existe pas encore. `feature` et `vfx` vont maintenant
+chercher un vrai asset pour les sons, images, modèles et meshes.
+
+`scripts/toolbox.py` interroge l'API Toolbox de Roblox : `chercher` rend des
+candidats réels avec nom, durée et créateur, `verifier` dit si un identifiant
+existe encore — un asset de la Toolbox peut être modéré après coup, et son ID
+reste valide en apparence sans plus rien charger.
+
+Deux filtres par défaut. **Gratuit et disponible**, sinon l'ID ne sert à rien.
+Et **aucun modèle contenant des scripts** : c'est le vecteur de backdoor le
+plus courant sur Roblox, et sur la première recherche d'essai — « door » — les
+deux premiers modèles en contenaient. Il faut `--avec-scripts` pour en obtenir,
+explicitement.
+
+La règle qui compte plus que le reste : **aucun identifiant n'est écrit s'il ne
+vient pas d'une réponse de Roblox.** Un `rbxassetid://` tiré de la mémoire a
+l'air juste, passe la relecture et ne charge rien. `vfx` portait déjà cette
+interdiction sans offrir d'alternative ; elle en a une.
+
+Chaque emprunt se signale — provenance en commentaire dans `Assets.luau`, et
+ligne dédiée dans « À toi de fournir », avec l'état *emprunté* distingué de
+*manquant*. Un placeholder trop crédible se fait oublier et part en production ;
+c'est le défaut symétrique de l'effet trop discret de la `0.9.0`.
+
+Les **animations** ne sont pas concernées : l'API de la Toolbox ne les expose
+pas — vérifié, pas supposé. Elles restent à `0` et à publier à la main.
+
+**Ce qui n'a pas avancé.** Le corps de `feature` grossit de dix-sept lignes ;
+`vfx` en rend deux, sa procédure de repli étant devenue inutile. Le solde reste
+négatif et s'ajoute à la dette de la `0.9.0`. Le routage n'est toujours pas
+mesuré, et aucun de ces chemins n'a été essayé dans Studio — seulement contre
+l'API, d'ici.
+
 ## 0.11.0
 
 **Les références se lisent par section, plus en entier.** Cinq skills

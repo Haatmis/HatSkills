@@ -118,7 +118,10 @@ système qui tourne + src/shared/Config/Assets.luau
 
 **Le point de rendez-vous des assets.** Claude ne peut pas publier une
 animation ni créer un son : ces identifiants viennent de toi. Plutôt que de
-bloquer, `feature` livre un système complet où chaque ID manquant vaut `0`
+bloquer, `feature` va chercher un vrai asset dans la Toolbox quand c'est un
+son, une image, un modèle ou un mesh — vérifié auprès de Roblox, jamais
+inventé, jamais scripté, et signalé comme emprunt. Ce qui reste introuvable,
+les animations en tête, vaut `0`
 dans `src/shared/Config/Assets.luau` — le code teste cette valeur et saute le
 son ou l'animation au lieu de planter. Tu remplis le fichier quand tu veux, tu
 demandes à reprendre, et seuls les branchements concernés sont revérifiés.

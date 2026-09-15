@@ -70,6 +70,30 @@ vaut `0` dans la configuration, et le code teste cette valeur : il saute le son
 ou l'animation au lieu de lever une erreur. Le système doit tourner de bout en
 bout sans un seul asset.
 
+**Mais `0` est le dernier recours, pas le premier.** Un système livré muet se
+teste mal : on ne sait pas si le son ne se déclenche pas ou s'il n'existe pas
+encore. Pour un son, un modèle, une image ou un mesh, prends un vrai asset de
+la Toolbox :
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/toolbox.py" chercher --type son --query "sword impact"
+```
+
+Le script interroge Roblox et ne rend que des assets gratuits, disponibles, et
+sans script pour les modèles — un modèle scripté de la Toolbox est le vecteur
+de backdoor le plus courant. La requête se formule **en anglais** : l'index
+l'est. Sur Windows, si `python3` ouvre le Microsoft Store, relance avec `py`.
+
+**N'écris jamais un identifiant qui ne vient pas d'une réponse du script.** Un
+`rbxassetid://` de mémoire a l'air juste, passe la relecture, et ne charge
+rien. En reprise de feature, repasse les identifiants déjà en place à
+`toolbox.py verifier` : un asset de la Toolbox peut avoir été modéré depuis.
+
+**Un emprunt se signale.** Chaque ligne prise dans la Toolbox porte sa
+provenance en commentaire et réapparaît dans « À toi de fournir » — sinon
+l'approximation se fait oublier et part en production. Les animations restent
+à `0` : la Toolbox ne les expose pas.
+
 **Les identifiants d'assets vivent dans un seul fichier :**
 `src/shared/Config/Assets.luau`. C'est le point de rendez-vous — l'utilisateur
 y colle ses IDs et te redemande de reprendre.
@@ -80,9 +104,11 @@ y colle ses IDs et te redemande de reprendre.
 return {
     Combat = {
         -- Animation R15. Éditeur d'animation → publier → copier l'ID.
+        -- La Toolbox n'expose pas les animations : celle-ci reste à toi.
         SwingAnimation = 0,
-        -- Son d'impact. Bibliothèque Roblox ou upload.
-        HitSound = 0,
+        -- Toolbox « sword slash and impact » par silence8552, 2 s.
+        -- Provisoire : remplace-le quand tu auras le tien.
+        HitSound = 140277245983305,
     },
 }
 ```
@@ -162,9 +188,10 @@ ligne, avant tout le reste. Sinon, commence directement.>
 <Ce qu'un exploiteur tenterait, et ce qui l'en empêche.>
 
 ## À toi de fournir
-| Asset | Où le coller | Comment l'obtenir |
-|---|---|---|
-| Animation de coup | `Config/Assets.luau` → `Combat.SwingAnimation` | Éditeur d'animation → publier → copier l'ID |
+| Asset | État | Où le coller | Comment l'obtenir |
+|---|---|---|---|
+| Animation de coup | **manquant**, à `0` | `Config/Assets.luau` → `Combat.SwingAnimation` | Éditeur d'animation → publier → copier l'ID |
+| Son d'impact | **emprunté** à la Toolbox | `Config/Assets.luau` → `Combat.HitSound` | Marche déjà — à remplacer si tu veux le tien |
 
 Dis-moi quand c'est rempli et je reprends.
 
@@ -184,9 +211,9 @@ entrée client → l'animation, avec le rig détecté à l'étape 2 → les VFX
 d'impact → le son.
 
 Chaque étape est vérifiée avant la suivante. À la fin, le système tourne :
-on tape, les dégâts s'appliquent, le retour visuel est là. Restent deux lignes
-dans `Assets.luau` à `0` — l'animation et le son — et le code les saute
-proprement en attendant.
+on tape, les dégâts s'appliquent, le retour visuel est là, et le son d'impact
+vient de la Toolbox. Reste une ligne à `0` dans `Assets.luau` — l'animation,
+que la Toolbox n'expose pas — et le code la saute proprement en attendant.
 
 ## Pièges
 
