@@ -98,7 +98,7 @@ propre de la description, sinon le test ne mesure que sa propre tautologie.
 
 ## Mesurer sans la commande
 
-Le harnais automatise la mesure ; il ne la conditionne pas. Les dix prompts se
+Le harnais automatise la mesure ; il ne la conditionne pas. Les onze prompts se
 jouent à la main en un quart d'heure, et le résultat est même **plus
 représentatif** — l'éval tourne dans un bac à sable qui exclut `CLAUDE.md`, la
 mémoire et les autres plugins, alors que ton usage réel les a tous.
@@ -119,7 +119,8 @@ noter, passer au suivant. Ne corrige rien en cours de route.
 | 7 | J'ai rempli les IDs dans Config/Assets.luau, tu peux reprendre | `feature` | — |
 | 8 | J'en ai marre de retaper les mêmes consignes pour mes messages de commit, transforme ça en skill | `atelier` | — |
 | 9 | J'ai une dizaine de leçons en attente dans le journal, applique-les aux skills | `atelier` | — |
-| 10 | Explique-moi la différence entre git merge et git rebase | **aucun** | tous |
+| 10 | On ne voit pas les dégâts qu'on inflige, ajoute une pastille avec le chiffre qui monte et disparaît | `vfx` | `code` |
+| 11 | Explique-moi la différence entre git merge et git rebase | **aucun** | tous |
 
 Les prompts sont ceux des `prompt.md` : si tu les reformules, tu mesures autre
 chose. Note pour chaque ligne le skill réellement déclenché, même quand c'est

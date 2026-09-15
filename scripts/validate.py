@@ -192,10 +192,28 @@ def evals_documentes(report):
     """
     for readme in ROOT.glob("plugins/*/evals/README.md"):
         texte = readme.read_text(encoding="utf-8")
+        # Le README porte aussi le protocole manuel, qui est la seule façon de
+        # mesurer tant que `claude plugin eval` est en accès anticipé. Sa table
+        # avait déjà pris un cas de retard, en silence : un protocole qui
+        # annonce couvrir la suite et en oublie un tiers ne mesure pas ce qu'on
+        # croit. Le prompt doit y figurer tel quel — reformulé, il teste autre
+        # chose que le cas.
+        aplati = " ".join(texte.split())
         for cas in sorted(d for d in readme.parent.iterdir() if d.is_dir()):
             if f"`{cas.name}`" not in texte:
                 report.append(("ERREUR", readme,
                                f"le cas d'éval « {cas.name} » n'est documenté nulle part"))
+            prompt = cas / "prompt.md"
+            if not prompt.exists():
+                report.append(("ERREUR", cas, "cas d'éval sans prompt.md"))
+                continue
+            brut = prompt.read_text(encoding="utf-8")
+            corps = re.split(r"^---\s*$", brut, maxsplit=2, flags=re.M)[-1]
+            phrase = " ".join(corps.split())
+            if phrase and phrase not in aplati:
+                report.append(("ERREUR", readme,
+                               f"le prompt du cas « {cas.name} » ne figure pas dans le "
+                               "protocole manuel"))
 
 
 def guide_a_jour(report):
