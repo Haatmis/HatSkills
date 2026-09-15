@@ -23,6 +23,7 @@ import os
 import re
 import socket
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -88,11 +89,35 @@ def ecrire(p, entrees):
 
 
 def cle(texte):
-    """Normalise une leçon pour reconnaître les redites."""
-    return re.sub(r"[^a-z0-9]+", " ", texte.lower()).strip()
+    """Normalise une leçon pour reconnaître les redites.
+
+    Les accents tombent avant le filtrage. Sans ça, « déplace » devenait
+    « d place » et « deplace » restait « deplace » : deux écritures de la même
+    leçon ne se reconnaissaient pas. Dans un journal tenu en français, c'est le
+    cas courant — et c'est le compteur d'occurrences qui décide de ce qui monte
+    dans un skill, donc une leçon récurrente restait à ×1 et n'y montait jamais.
+    """
+    plat = unicodedata.normalize("NFD", texte.lower())
+    plat = "".join(c for c in plat if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", " ", plat).strip()
+
+
+def skills_connus():
+    """Les skills réellement présents à côté de ce script. Vide si introuvable."""
+    d = Path(__file__).resolve().parent.parent / "skills"
+    return {s.parent.name for s in d.glob("*/SKILL.md")} if d.is_dir() else set()
 
 
 def cmd_add(args):
+    # Une faute de frappe dans --skill produit une leçon orpheline : elle est
+    # bien enregistrée, comptée dans le seuil, et /roblox:atelier ne saura
+    # jamais dans quel skill la promouvoir. Rien ne le signalait.
+    connus = skills_connus()
+    if connus and args.skill not in connus:
+        print(f"ERREUR : skill inconnu « {args.skill} ». "
+              f"Attendu : {', '.join(sorted(connus))}.", file=sys.stderr)
+        return 1
+
     p = chemin(args)
     entrees = lire(p)
     k = cle(args.lesson)
