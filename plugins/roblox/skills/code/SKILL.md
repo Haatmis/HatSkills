@@ -75,6 +75,11 @@ Ce qui découle de cette règle, à appliquer sans y penser :
 - Un `RemoteFunction` appelé du serveur vers le client peut ne jamais
   répondre : préfère un `RemoteEvent` dans ce sens.
 - Les données sensibles ne sont pas dans `ReplicatedStorage`.
+- La validation porte aussi sur ce qui est **physiquement là**, pas seulement
+  sur une distance : une position dans la portée peut ne désigner aucune
+  surface, ou désigner un joueur qui va partir en laissant la trace en l'air.
+  Et un contrôle ajouté pour en doubler un autre doit refaire **la même
+  géométrie** que lui, sinon il refuse ce que l'autre acceptait.
 
 **La propriété réseau est une délégation d'autorité.** Par défaut, Roblox
 confie la simulation d'une pièce non ancrée au client le plus proche, et le
@@ -159,8 +164,11 @@ dans l'usage. C'est une table de consultation, pas une lecture.
    MCP/Studio : tu crées les instances via le MCP et tu donnes les chemins.
 2. **Lis avant d'écrire.** En projet Rojo, parcours `src/` pour relever les
    modules existants, le style en place et ce qui est déjà résolu. N'introduis
-   pas un deuxième système là où il y en a déjà un. En mode MCP, inspecte
-   l'arbre du jeu.
+   pas un deuxième système là où il y en a déjà un, et **ouvre les modules
+   voisins du dossier** où tu poses le tien : un module qui se démarre seul
+   (`task.defer` dans son init) peut reprendre la caméra ou l'entrée sans lever
+   la moindre erreur — symptôme : « il ne se passe rien ». En mode MCP,
+   inspecte l'arbre du jeu.
 
    **Et regarde `docs/design/` s'il existe** : une spec y décrit peut-être déjà
    les règles et les chiffres de ce que tu vas écrire. Du code qui contredit
@@ -174,6 +182,11 @@ dans l'usage. C'est une table de consultation, pas une lecture.
 5. **Vérifie dans Studio via le MCP — toujours, avant de rendre.** Exécute le
    code ou le module et lis l'Output. Une erreur, un avertissement, un nom
    d'API qui n'existe pas : tu corriges et tu relances.
+   **Prouve d'abord que ton diff est arrivé dans la place** : un `script_grep`
+   sur un marqueur unique. Rojo ne synchronise qu'en mode Edit, ne recrée pas
+   toujours un fichier nouveau, garde son id sur ce qu'il a créé — une instance
+   supprimée se reconnecte à la main — et peut se déconnecter sans rien dire.
+   La vérification valide alors l'ancien code, avec un résultat plausible.
    Sans MCP, annonce le mode réduit ou hors-ligne
    (`${CLAUDE_PLUGIN_ROOT}/references/modes.md`) : il change ce que tu
    affirmes, jamais ce que tu écris.
@@ -272,17 +285,36 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 - **Faire confiance aux arguments d'un Remote.** Le type, les bornes *et* le
   droit d'agir. Vérifier le type seul ne protège de rien : un exploiteur
   envoie des nombres parfaitement valides.
-- **`:SetAsync()` pour sauvegarder un joueur.** Deux serveurs, une session
-  fantôme, et la progression saute. `:UpdateAsync()` lit puis écrit dans la
-  même opération.
-- **Oublier `game:BindToClose()`.** Sans lui, l'arrêt d'un serveur perd la
-  dernière sauvegarde de tous les joueurs encore connectés.
 - **Poser `.Parent` avant les propriétés.** L'instance est répliquée puis
   modifiée : coût réseau inutile et clignotement visible.
-- **Détruire sans regarder ce qu'on détruit.** Deux pièges dans le même geste :
-  le conteneur temporaire qu'on nettoie peut *être* l'objet qu'on vient d'en
-  extraire, et une instance créée par Rojo ne se recrée pas — le plugin garde
-  son id, il faut reconnecter à la main.
+- **Détruire sans regarder ce qu'on détruit.** Le conteneur temporaire qu'on
+  nettoie peut *être* l'objet qu'on vient d'en extraire.
+- **« Il ne se passe rien » au démarrage client.** Deux causes, toujours les
+  mêmes. La réplication livre un modèle et son tag **avant ses enfants** :
+  attends-les (`WaitForChild`) et place le garde d'idempotence **après**
+  l'attente, sinon la première tentative sort à vide et interdit les suivantes.
+  Et un `Start()` qui cède (`PreloadAsync`, `WaitForChild`) gèle en silence
+  tous ceux appelés après lui : chaque sous-système part dans son propre
+  `task.spawn`.
+- **Régler la physique à vue.** Trois choses qui ne se devinent pas : la
+  vitesse lue dans un handler `Touched` est celle d'**après** résolution de la
+  collision, déjà retombée — échantillonne image par image ; une zone de
+  détection plus mince que la distance parcourue par pas de physique
+  (vitesse/60 studs) est traversée sans rien déclencher ; une impulsion estimée
+  à l'œil est absorbée par le contact au sol, donc invisible. Mesure d'abord.
+- **Croire une écriture sur parole.** Certaines propriétés échouent en silence
+  (`MeshPart.CollisionFidelity` ne se change pas par script), et en mode Edit
+  rien ne simule : un `C0` de Weld modifié ne bouge aucune part. Relis la
+  propriété après l'avoir écrite, et contrôle une pose en posant le `CFrame` à
+  la main.
+- **Un traitement différé qui suppose que rien n'a bougé.** Une remise en état
+  programmée pour « plus tard » revérifie son hypothèse au moment où elle
+  s'exécute : un retour au groupe de collision prévu au relâchement
+  s'appliquait pendant une nouvelle prise et rendait l'objet solide sous son
+  porteur.
+- **`Vector3.zero` en repli d'une direction nulle.** Ça passe la relecture et
+  produit un comportement dégénéré — objet propulsé droit en l'air, qui
+  retombe et re-déclenche. Tire une direction au hasard.
 
 ## Avant de rendre
 

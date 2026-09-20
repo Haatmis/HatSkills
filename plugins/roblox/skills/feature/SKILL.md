@@ -39,6 +39,11 @@ un « quoi » reste **implicite** ; le travail dépasse **un fichier**. Sinon ne
 reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu coûte
 la session entière ; une ligne coûte une ligne.
 
+**Une note de playtest se traduit avant d'être codée.** Elle arrive dictée, en
+vrac, et chaque élément nommé appartient à un système précis : va vérifier
+lequel avant d'écrire une ligne. Un mot mal entendu envoie corriger un système
+qui n'avait rien demandé — et il faut ensuite défaire la correction.
+
 **Appelle explicitement les autres skills.** N'écris pas de VFX toi-même en
 espérant t'en sortir : invoque le skill du domaine. L'appel explicite est
 fiable, le déclenchement automatique ne l'est pas.
@@ -64,6 +69,9 @@ le bon ordre.
 Une erreur d'étape 1 trouvée à l'étape 1 coûte une correction ; trouvée à
 l'étape 6, il faut d'abord démêler ce qui vient de quoi. Si une étape ne
 passe pas, corrige-la — au besoin via `/roblox:debug` — avant d'avancer.
+Et **ce que le joueur voit se vérifie chez le client** : une pose réelle, un
+attribut local, une mesure en jeu. Un serveur cent pour cent vert a déjà laissé
+passer trois bugs d'affichage d'affilée.
 
 **Un placeholder ne doit jamais faire planter.** Un identifiant d'asset absent
 vaut `0` dans la configuration, et le code teste cette valeur : il saute le son
