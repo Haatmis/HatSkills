@@ -3,6 +3,50 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.17.0
+
+**Vingt leçons vidées du journal.** Deux mois de sessions sur un même jeu, et
+le journal qui déborde. Le tri a été plus instructif que le contenu : huit des
+vingt entrées décrivaient **le même symptôme sous trois angles**. « La poubelle
+n'a ni couvercle ni roues », « Bin.Start ne tourne jamais », « l'écran titre ne
+s'ouvre pas » — trois bugs, trois causes, un seul symptôme : *il ne se passe
+rien au démarrage client*. Elles sont désormais un piège unique dans `code`, et
+c'est ce regroupement, pas les règles prises une à une, qui les rendra
+trouvables. Même chose pour trois leçons de physique devenues « régler la
+physique à vue » : la vitesse lue dans `Touched` est post-collision, une zone
+plus mince que vitesse/60 est traversée, une impulsion estimée à l'œil est
+absorbée par le sol. Toutes disent *mesure d'abord*.
+
+**Le serveur valide la surface, pas seulement la distance.** Deux incidents
+distincts — une tache posée sur un joueur qui part et la laisse suspendue, un
+coup de balai accepté en plein vide — pour la même cause : une position dans
+la portée ne prouve pas qu'il y ait quelque chose là. Avec son corollaire, payé
+cher le jour même : un contrôle ajouté pour en doubler un autre doit refaire
+**la même géométrie** que lui, sinon il refuse ce que l'autre acceptait.
+
+**Deux doublons retirés, pas compressés.** Les pièges `:SetAsync()` et
+`game:BindToClose()` de `code` étaient déjà énoncés, avec leur raison, dans la
+section `Exemple` du même fichier. Et `debug` renvoyait deux fois à
+`symptomes-frequents.md` : une fois dans le `Contexte figé`, une fois à l'étape
+4 — seule la seconde arrive au moment où c'est actionnable. Le piège « demander
+à l'utilisateur où est le code » redisait l'étape 2. Trois retraits qui ne
+coûtent rien.
+
+**Trois plafonds relevés, et c'est le point à discuter.** `code` 3975 → 4615,
+`debug` 2666 → 2830, `feature` 3460 → 3600. Les trois étaient saturés à moins
+de quinze tokens près : vingt leçons ne rentraient pas gratuitement. L'autre
+voie était de raboter des sections qu'aucune leçon n'avait désignées, pour
+faire tenir le total — de la compression cosmétique payée par une perte de
+précision ailleurs. Le choix assumé est de relever, et de le dire ici plutôt
+que de le dissimuler dans un diff de reformulation. À surveiller : `code` est
+maintenant le deuxième skill le plus lourd après `hat3d`.
+
+**Ce qui n'a pas été promu.** Une leçon sur les simulations Verlet — corriger
+`position` **et** `previous`, sinon chaque contact injecte de l'énergie. Juste,
+vérifiée, et écartée : une occurrence, dans un système d'un seul jeu. La mettre
+dans `code` la ferait charger à chaque `print` demandé. Elle reste en
+commentaire là où elle s'applique.
+
 ## 0.16.0
 
 **`hat3d` rentre dans la famille.** Il était le seul skill à ne venir de la

@@ -431,6 +431,9 @@ Deux exemples complets et validés sont dans
   du projet s'il en a. Pour câbler un modèle une fois construit à du gameplay
   — RemoteEvent, appel d'animation depuis un script — passer la main à
   `/roblox:code`.
+- Un modèle assemblé depuis un FBX importé : remettre `PivotOffset` à zéro sur
+  chaque part **avant** tout `GetPivot`/`PivotTo`. Les offsets laissés par
+  l'import faussent le calage, et le modèle s'enfonce sous le sol.
 - Formes de base uniquement (pas de MeshPart, pas d'union) : c'est le choix de
   ce pipeline. Quand il devient le mauvais choix, voir § Un troisième mode — en
   gardant à l'esprit que `hat3d-blender` n'est pas fourni ici.

@@ -62,11 +62,6 @@ qui a réglé quoi.
 ailleurs. Corriger une occurrence sur cinq donne l'illusion d'avoir résolu le
 problème.
 
-`${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md` relie chaque symptôme Roblox courant à ses
-causes habituelles. À l'étape 4, avant de former une hypothèse, lis son
-**sommaire** puis la section du symptôme observé : ça évite d'explorer au
-hasard sans charger les symptômes que tu n'as pas.
-
 ## Procédure
 
 1. **Établis attendu vs observé.** Quatre questions maximum, seulement celles
@@ -96,7 +91,10 @@ hasard sans charger les symptômes que tu n'as pas.
    hypothèse. Sommaire de `${CLAUDE_SKILL_DIR}/references/symptomes-frequents.md`, puis la section du symptôme.
 
 5. **Reproduis dans Studio via le MCP.** Tu dois *voir* le bug avant d'y
-   toucher. S'il ne se reproduit pas, ton modèle du problème est faux : reviens
+   toucher. Et avant de juger un correctif, prouve qu'il est **arrivé** dans la
+   place — un `script_grep` sur un marqueur unique du diff : Rojo ne
+   synchronise qu'en mode Edit et peut se déconnecter sans rien dire, auquel
+   cas tu valides l'ancien code avec un résultat plausible. S'il ne se reproduit pas, ton modèle du problème est faux : reviens
    à l'étape 1, ne corrige rien. Si le MCP est indisponible, dis-le
    explicitement et présente ton diagnostic comme une hypothèse non vérifiée —
    jamais comme un fait.
@@ -182,15 +180,22 @@ Le shop déconne, les joueurs achètent sans payer
   pas tout l'observé, continue.
 - **Refactoriser en passant.** Le correctif se noie, et la prochaine
   régression sera impossible à attribuer.
-- **Demander à l'utilisateur où est le code.** Tu as le repo ou le MCP :
-  cherche d'abord.
 - **Oublier que ça peut être un bug de chargement.** En Roblox, « ça marche au
   deuxième essai » n'est presque jamais aléatoire : c'est un ordre d'exécution.
 - **Faire confiance à son propre harnais.** Un test qui appelle `FireServer`
   directement court-circuite l'état interne du module client — une distance,
   un mode, que seul le vrai clic initialise : les mesures ne valent que pour
-  ce chemin-là. Quand le vrai chemin d'entrée n'est pas pilotable, dis-le au
-  rendu au lieu de conclure.
+  ce chemin-là. Pire, une entrée synthétique peut n'agir sur **rien** : une
+  souris virtuelle ne fait pas tourner une caméra verrouillée en première
+  personne, et la mesure rend alors zéro sans échouer. Vérifie que l'entrée a
+  bougé quelque chose avant de croire le chiffre. Quand le vrai chemin n'est
+  pas pilotable, dis-le au rendu au lieu de conclure. Et un script qui met la
+  caméra en `Scriptable` doit la rendre sur **tous** ses chemins de sortie,
+  échecs compris : sinon c'est le joueur qui reste enfermé dedans.
+- **Ajouter un second mécanisme au lieu de corriger le premier.** Quand une
+  pièce se retrouve au mauvais endroit, c'est presque toujours un déplacement
+  **existant** qui l'y met, pas un garde-fou manquant. Remonte au geste qui la
+  déplace avant d'en écrire un nouveau.
 
 ## Apprendre de la session
 
