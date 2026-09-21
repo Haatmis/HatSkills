@@ -49,19 +49,26 @@ d'écrire quoi que ce soit. Si elle n'existe pas, pose **trois** questions
 fichier, et dis à l'utilisateur qu'il pourra le retoucher une fois pour tout
 le jeu.
 
-**N'invente jamais un identifiant d'asset.** Un `rbxassetid://` inventé donne
-un effet invisible, et personne ne comprend pourquoi. Il n'y a qu'une source
-autorisée — une réponse de Roblox :
+**Pour une texture de particule, `rbxasset://` d'abord.** Ces chemins sont
+livrés dans le client : ils chargent toujours et ne peuvent pas être modérés
+(`textures/particles/smoke_main.dds` pour une bouffée douce). Deux impasses
+coûtent une heure chacune : `toolbox.py chercher --type image` rend des
+identifiants de **Decal**, que `PreloadAsync` accepte et qui ne rendent
+**rien** ; et « pas de texture » n'est pas neutre, le sprite par défaut est
+une étoile radiale qui se lit comme un feu d'artifice. Contrôle donc toute
+texture **côte à côte avec une sonde sans texture** avant de la garder.
+
+Et **n'invente jamais un identifiant** : un `rbxassetid://` de mémoire donne
+un effet invisible dont personne ne trouve la cause. Seule source autorisée,
+une réponse de Roblox :
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/toolbox.py" chercher --type image --query "soft smoke"
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/toolbox.py" chercher --type son --query "metal impact"
 ```
 
 Requête **en anglais**, l'index l'est ; sous Windows, `py` si `python3` ouvre
 la boutique. Note la provenance en commentaire dans `src/shared/VFX/Assets.luau`
-et signale l'emprunt en fin de réponse. Si le script ne rend rien d'utilisable,
-laisse `Texture` vide — la texture par défaut fait un travail honnête. L'effet
-doit tourner sans.
+et signale l'emprunt en fin de réponse.
 
 **Décorer et informer sont deux métiers.** Un effet qui décore peut être
 discret, atmosphérique, stylisé — il enrichit. Un effet qui **informe** doit
@@ -70,19 +77,12 @@ sont pas les mêmes, et confondre les deux produit le défaut le plus courant du
 combat Roblox — on tape, quelque chose scintille, et on ne sait pas si on a
 fait 2 ou 200.
 
-Pour tout ce qui informe :
-
-- **Lisible en un tiers de seconde**, sans le fixer. Contour ou ombre sur le
-  texte, sinon il disparaît sur un fond clair.
-- **Une seule information par élément.** Un nombre dit les dégâts. Pas les
-  dégâts *et* le type *et* le critique.
-- **Ça ne se superpose jamais à soi-même.** Trois coups rapides au même endroit
-  donnent trois pastilles illisibles : décale chacune, un peu au hasard.
-- **Ça part vite.** 0,6 à 1 s. Un retour qui traîne devient du décor, et pollue
-  le suivant.
-- **Le coup encaissé se voit sans regarder la source.** Celui qui prend les
-  coups regarde ailleurs : son retour à lui est au bord de l'écran, pas sur le
-  personnage qui frappe.
+Pour tout ce qui informe, une seule règle tient dans le corps : **une seule
+information par élément** — un nombre dit les dégâts, pas les dégâts *et* le
+type *et* le critique. Le reste — contour, décalage anti-empilement, durée,
+retour au bord de l'écran pour celui qui encaisse — est chiffré dans
+`${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` § 6, avec le tableau de ce
+qui rate le plus souvent. Lis-le avant d'écrire un retour de combat.
 
 **Un preset, pas un effet jetable.** Tout va dans `src/shared/VFX/`, appelable
 par son nom. Un effet écrit en dur dans un système est un effet qu'on ne
@@ -100,9 +100,7 @@ ligne.
 et mal cadré. `Rate` est réservé aux effets continus.
 
 **Détruire un emitter tue ses particules vivantes.** Le nettoyage attend
-`Lifetime.Max` plus une marge, sinon l'effet s'évapore d'un coup au lieu de
-s'éteindre. Un emitter jamais détruit est une fuite : chaque coup d'épée
-laisse un `Attachment` derrière lui.
+`Lifetime.Max` plus une marge — et l'`Attachment` part avec.
 
 **Un effet qu'on ne remarque pas n'existe pas.** Le réglage juste ne se
 trouve pas en visant le milieu : trop discret est indistinguable d'absent, et
@@ -117,12 +115,12 @@ coût dominant n'est pas le nombre de particules mais la surface transparente
 empilée : dix grosses particules translucides coûtent plus cher que cent
 petites. Vise la lisibilité, pas la quantité.
 
-`${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` contient le choix d'instance selon l'effet, les
-propriétés qui comptent vraiment, des recettes de base, les pièges de
-performance, et le détail des pastilles de dégâts — `BillboardGui`, tween de
-montée, distance d'affichage. Lis son **sommaire**, puis la seule section
-qui correspond à ton effet — la page entière coûte plus cher que ce skill,
-pour un contenu dont tu utilises un cinquième.
+`${CLAUDE_SKILL_DIR}/references/boite-a-outils.md` contient le choix d'instance
+selon l'effet, les propriétés qui comptent, des recettes, le détail des
+pastilles de dégâts, et surtout son **§ 8 : le tableau des pièges qui ne lèvent
+aucune erreur** — `Beam` sans ses deux `Attachment`, emitter détruit trop tôt,
+`Explosion` pour du visuel. Lis le sommaire, puis la seule section qui
+correspond à ton effet : la page entière coûte plus cher que ce skill.
 
 ## Procédure
 
@@ -208,22 +206,17 @@ corriger sans repasser par moi.
 
 - **Prétendre juger le rendu.** Tu ne le vois pas. Dis-le, et donne les
   boutons.
-- **Inventer un ID de texture.** Effet invisible, cause introuvable.
-- **Détruire l'emitter trop tôt.** Les particules vivantes disparaissent d'un
-  coup.
+- **Créer un `ParticleEmitter` en mode Edit via le MCP.** Il n'émet **rien**
+  en Play — l'instance est là, `Enabled`, et il ne sort rien. Le même créé à
+  l'exécution pond. Ne pose en Edit que des *données* : tags, marqueurs.
+- **Répartir une géométrie en Scale sur `i/N` quand elle a une hauteur `h`.**
+  Le dernier élément déborde, et dans une `CanvasGroup` il est scié net.
+  Réparti sur `(1 - h)`, son bord tombe pile sur 1,000.
 - **Ne scaler qu'une borne d'un `NumberRange`.** `NumberRange.new(26, 40 * i)`
   lève dès que `i` descend sous 0,65 : le maximum passe sous le minimum fixe.
   Les deux bornes varient ensemble, ou aucune.
-- **Ne jamais détruire l'Attachment.** Chaque effet laisse un déchet ; au bout
-  d'une partie, le personnage en traîne des centaines.
-- **Empiler de grosses particules translucides.** C'est la surface
-  transparente qui coûte, pas le nombre. Le téléphone décroche là.
 - **Poser des couleurs en dur.** Elles dérivent de la charte, sinon le jeu
   devient un patchwork et rien ne se change globalement.
-- **Un `Beam` ou un `Trail` sans ses deux `Attachment`.** Ils ne rendent rien,
-  sans erreur ni avertissement.
-- **`Explosion` pour un effet purement visuel.** Par défaut, elle casse les
-  assemblages et tue les joueurs alentour.
 
 ## Apprendre de la session
 
