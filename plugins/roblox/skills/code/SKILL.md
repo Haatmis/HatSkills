@@ -39,8 +39,8 @@ reformule pas — sur « ajoute un `print` », c'est du bruit. Un malentendu co�
 la session entière ; une ligne coûte une ligne.
 
 **Vanilla strict.** Aucune dépendance externe : ni Knit, ni Fusion, ni Roact,
-ni ProfileService, ni aucun paquet Wally. Tout à la main avec l'API Roblox. Si
-une lib rendrait vraiment service, dis-le en une phrase — ne l'introduis pas.
+ni ProfileService, ni aucun paquet Wally. Si une lib rendrait vraiment service,
+dis-le en une phrase — ne l'introduis pas.
 
 **Langue.** Code, identifiants et commentaires en anglais. Les explications
 autour du code, en français.
@@ -51,85 +51,79 @@ autour du code, en français.
 - `_prefixe` — membres privés d'un module
 - `SCREAMING_SNAKE` — constantes locales de configuration
 
-**Typage.** `--!strict` en tête de tout ModuleScript ; `--!nonstrict` sur les
-Scripts et LocalScripts. Raison : les modules sont les frontières réutilisées
-partout, c'est là que les types rapportent ; les scripts d'entrée manipulent
-beaucoup d'instances dont les types sont mal inférés, et le strict y produit
-surtout du bruit. Type les signatures publiques et les tables de données,
-jamais par `any` implicite.
+**Typage.** `--!strict` sur tout ModuleScript, `--!nonstrict` sur les Scripts
+et LocalScripts : les modules sont les frontières réutilisées, c'est là que les
+types rapportent ; les scripts d'entrée manipulent des instances mal inférées,
+où le strict ne produit que du bruit. Type les signatures publiques et les
+tables de données, jamais par `any` implicite.
 
 **Serveur par défaut.** Toute logique de jeu vit sur le serveur : économie,
-statistiques, inventaire, progression, dégâts, validation. Le client affiche
-et envoie des intentions, rien de plus. Un client est toujours supposé hostile
-— un exploiteur contrôle entièrement ce qui tourne chez lui. Si tu es tenté
-d'y mettre de la logique « parce que c'est plus simple », c'est qu'il manque
-un Remote.
+statistiques, inventaire, progression, dégâts, validation. Le client affiche et
+envoie des intentions, rien de plus — il est supposé hostile. Une logique mise
+chez lui « parce que c'est plus simple » signale un Remote manquant.
 
 Ce qui découle de cette règle, à appliquer sans y penser :
 - Tout `RemoteEvent`/`RemoteFunction` valide ses arguments côté serveur :
-  type, bornes, et **droit de faire l'action** (le joueur possède-t-il
-  vraiment l'objet ? est-il assez près ? le cooldown est-il écoulé ?).
-- Jamais de prix, de quantité ou d'identifiant d'objet envoyé par le client
-  comme source de vérité. Le client envoie *quoi* il veut faire, le serveur
-  décide *si* et *combien*.
+  type, bornes, et **droit de faire l'action** (possède-t-il l'objet ?
+  est-il assez près ? le cooldown est-il écoulé ?). Vérifier le type seul ne
+  protège de rien : un exploiteur envoie des nombres valides. Le client envoie
+  *quoi* il veut faire — jamais un prix ni une quantité ; le serveur décide
+  *si* et *combien*.
 - Un `RemoteFunction` appelé du serveur vers le client peut ne jamais
   répondre : préfère un `RemoteEvent` dans ce sens.
 - Les données sensibles ne sont pas dans `ReplicatedStorage`.
 - La validation porte aussi sur ce qui est **physiquement là**, pas seulement
   sur une distance : une position dans la portée peut ne désigner aucune
-  surface, ou désigner un joueur qui va partir en laissant la trace en l'air.
-  Et un contrôle ajouté pour en doubler un autre doit refaire **la même
-  géométrie** que lui, sinon il refuse ce que l'autre acceptait.
+  surface. Et un contrôle qui en double un autre refait **la même géométrie**,
+  sinon il refuse ce que l'autre acceptait.
 
-**La propriété réseau est une délégation d'autorité.** Par défaut, Roblox
-confie la simulation d'une pièce non ancrée au client le plus proche, et le
-personnage d'un joueur appartient toujours à son propre client.
-`SetNetworkOwner` déplace cette autorité : le mouvement devient fluide chez
-celui qui l'a — et falsifiable par lui. Ne la donne jamais sur ce qui décide
-d'une issue de jeu : dégâts, position d'un objectif, vitesse d'un projectile
-qui touche. Rends-la par `SetNetworkOwnerAuto()` dès que c'est fini. Et ne
-l'appelle pas sur une pièce ancrée : ça lève une erreur.
+**La propriété réseau est une délégation d'autorité.** Roblox confie la
+simulation d'une pièce non ancrée au client le plus proche, et un personnage à
+son propre client. `SetNetworkOwner` déplace cette autorité : le mouvement
+devient fluide chez celui qui l'a — et falsifiable par lui. Ne la donne jamais
+sur ce qui décide d'une issue : dégâts, position d'un objectif, vitesse d'un
+projectile. Rends-la par `SetNetworkOwnerAuto()` dès que c'est fini, et ne
+l'appelle pas sur une pièce ancrée — ça lève une erreur. Corollaire : déplacer
+le personnage d'un autre joueur par `CFrame` depuis son client ne marche pas,
+il faut une contrainte serveur ou un transfert assumé.
 
-Déplacer le personnage d'un autre joueur suppose donc un choix explicite —
-contrainte depuis le serveur, ou transfert d'autorité assumé. Le faire par
-`CFrame` depuis le client de quelqu'un d'autre ne marche simplement pas.
 
-Corollaire pour les tests : pour rapprocher un joueur d'un objet, déplace le
-personnage, jamais l'objet. Le serveur voit l'objet là où il l'a laissé, et
-refuse sur le contrôle de distance.
+**Une expérience à deux places ne nomme jamais sa cible en dur** : la
+destination est celle où l'on n'est pas. Publier les deux places l'une
+par-dessus l'autre est la seule façon de changer la place de départ, et ça
+**échange leurs identifiants** — toute ligne qui nommait la cible devient
+fausse en une étape. Et **refuse explicitement la place courante** : Roblox ne
+rejette pas ce cas, il la recharge, donc un identifiant faux se présente comme
+une animation cassée au lieu d'une erreur.
 
-**Régime prototype ou production.** Demande-le si ce n'est pas clair, ou
-déduis-le. En prototype, signale les manques de sécurité sans bloquer. Dès que
-le jeu est publié, tout ce qui touche à l'économie, aux données joueur ou aux
-Remotes doit être correct avant livraison — pas « à durcir plus tard ».
+**Régime prototype ou production.** Demande-le, ou déduis-le. En prototype,
+signale les manques de sécurité sans bloquer. Jeu publié : économie, données
+joueur et Remotes corrects avant livraison, pas « à durcir plus tard ».
 
-**Les décisions de structure se prennent maintenant.** Il y a deux
-performances : celle qu'on rattrape plus tard avec un profileur, et celle qui
-est dans la *forme* du code. La seconde ne se rattrape pas — elle se réécrit.
-Quatre règles, gratuites à l'écriture, coûteuses à rattraper :
+**Les décisions de structure se prennent maintenant.** Il y a la performance
+qu'un profileur rattrape, et celle qui est dans la *forme* du code : la seconde
+ne se rattrape pas, elle se réécrit. Quatre règles gratuites à l'écriture :
 
 - **Un événement plutôt qu'une boucle.** Un `while true do task.wait() end` qui
   surveille un état devrait être un signal — `Changed`,
-  `GetPropertyChangedSignal`, `Touched`. Une règle qui réagit à un état — une
-  pause, un cooldown, un seuil — se branche sur ce signal aussi, pas sur le
-  seul chemin de code qui a causé l'état : sinon elle rate les autres causes,
-  et ne se teste qu'en rejouant ce chemin en entier.
+  `GetPropertyChangedSignal`, `Touched`. Et une règle qui réagit à cet état se
+  branche sur le **signal**, pas sur le seul chemin de code qui l'a causé :
+  sinon elle rate les autres causes.
 - **Le réseau se compte.** Un Remote par frame et par joueur ne passe pas
   l'échelle. Regroupe, ou n'envoie qu'au changement.
 - **Ce qui est créé en boucle se réutilise.** Projectiles, effets, éléments
   d'interface : une réserve d'objets recyclés, pas un `Instance.new` par tir.
-  Les `Sound` d'abord : créé à la volée, un son démarre ~0,35 s en retard le
-  temps que le moteur récupère l'asset — précharge
-  (`ContentProvider:PreloadAsync`) et réutilise, sinon l'utilisateur croira
-  son fichier audio mal exporté.
+  Les `Sound` d'abord — le retard mesuré et le remède sont dans `perf.md`.
 - **Ce qui n'a pas besoin d'autorité va au client.** Effets, sons, interface,
-  retour immédiat. Le serveur garde ce qui décide.
+  retour immédiat. Le serveur garde ce qui décide. Ce n'est pas qu'une question
+  de goût : **un `TweenService` lancé par le serveur ne se réplique pas** —
+  seule la valeur finale arrive, d'un bloc. Le serveur décide, le client
+  anime, et le déclencheur est un **Remote**, pas un attribut surveillé.
 
-Et l'anti-règle, aussi importante : **ne micro-optimise pas.** Mettre un service
-en variable locale, préférer `ipairs` à `pairs`, dérouler une boucle — ça rend
-le code moins lisible pour un gain que tu n'as pas mesuré. Si la performance
-est vraiment le sujet, `${CLAUDE_SKILL_DIR}/references/perf.md` donne les coûts réels, les seuils
-et comment mesurer : son sommaire, puis la section concernée.
+Et l'anti-règle, aussi importante : **ne micro-optimise pas** sans avoir
+mesuré. `${CLAUDE_SKILL_DIR}/references/perf.md` donne les coûts réels, les
+seuils, comment mesurer, et son § 6 la liste de ce qui ne vaut pas le détour :
+sommaire d'abord, puis la seule section concernée.
 
 **Arborescence** (fixée pour tous les projets) :
 
@@ -152,10 +146,9 @@ Script, `Nom.client.luau` → LocalScript, `init.luau` → le module d'un dossie
 | `Humanoid:LoadAnimation()` | `humanoid.Animator:LoadAnimation()` |
 | `BodyVelocity`, `BodyPosition`, `BodyGyro` | `LinearVelocity`, `AlignPosition`, `AlignOrientation` |
 
-Avant d'écrire du mouvement, de l'animation, du timing, de l'input ou de
-l'accès aux services, ouvre le sommaire de `${CLAUDE_SKILL_DIR}/references/api-obsolete.md` et lis
-la section de l'API concernée : le remplaçant exact y est, avec ce qui change
-dans l'usage. C'est une table de consultation, pas une lecture.
+Avant d'écrire du mouvement, de l'animation, du timing ou de l'input, ouvre le
+sommaire de `${CLAUDE_SKILL_DIR}/references/api-obsolete.md` et lis la section
+concernée : le remplaçant exact y est, avec ce qui change dans l'usage.
 
 ## Procédure
 
@@ -282,9 +275,6 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
 
 ## Pièges
 
-- **Faire confiance aux arguments d'un Remote.** Le type, les bornes *et* le
-  droit d'agir. Vérifier le type seul ne protège de rien : un exploiteur
-  envoie des nombres parfaitement valides.
 - **Poser `.Parent` avant les propriétés.** L'instance est répliquée puis
   modifiée : coût réseau inutile et clignotement visible.
 - **Détruire sans regarder ce qu'on détruit.** Le conteneur temporaire qu'on
@@ -295,7 +285,10 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
   l'attente, sinon la première tentative sort à vide et interdit les suivantes.
   Et un `Start()` qui cède (`PreloadAsync`, `WaitForChild`) gèle en silence
   tous ceux appelés après lui : chaque sous-système part dans son propre
-  `task.spawn`.
+  `task.spawn`. Même maladie pour `CollectionService`, en plus
+  sournois : il publie les tags **progressivement**, donc attends que le compte
+  se *stabilise* — deux relevés identiques — jamais qu'il devienne non nul.
+  Sortir au premier donne un sous-ensemble silencieux : douze sur trente-cinq.
 - **Régler la physique à vue.** Trois choses qui ne se devinent pas : la
   vitesse lue dans un handler `Touched` est celle d'**après** résolution de la
   collision, déjà retombée — échantillonne image par image ; une zone de
@@ -312,6 +305,12 @@ n'existe aucun Remote qui crédite. Le seul Remote va dans l'autre sens
   s'exécute : un retour au groupe de collision prévu au relâchement
   s'appliquait pendant une nouvelle prise et rendait l'objet solide sous son
   porteur.
+- **Vider un verrou anti-répétition sur échec.** `Touched` repart à l'image
+  suivante, et l'erreur se met à défiler. Garde le verrou : l'échec se
+  retentera au prochain cycle, une fois.
+- **Laisser la caméra en `Scriptable`.** Un script qui la prend doit la rendre
+  sur **tous** ses chemins de sortie, échecs compris — sinon c'est le joueur
+  qui reste enfermé dedans.
 - **`Vector3.zero` en repli d'une direction nulle.** Ça passe la relecture et
   produit un comportement dégénéré — objet propulsé droit en l'air, qui
   retombe et re-déclenche. Tire une direction au hasard.

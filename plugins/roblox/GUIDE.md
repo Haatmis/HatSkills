@@ -1,6 +1,6 @@
 # Guide rapide — plugin `roblox`
 
-> Version **0.17.0** · 9 skills · [Journal des versions](CHANGELOG.md)
+> Version **0.18.0** · 9 skills · [Journal des versions](CHANGELOG.md)
 
 Un assistant de développement de jeux Roblox : il cadre, code, debugge,
 modélise et anime, en respectant toujours les mêmes conventions — et il vérifie

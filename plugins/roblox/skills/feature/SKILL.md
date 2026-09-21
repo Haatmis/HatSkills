@@ -44,9 +44,9 @@ vrac, et chaque élément nommé appartient à un système précis : va vérifie
 lequel avant d'écrire une ligne. Un mot mal entendu envoie corriger un système
 qui n'avait rien demandé — et il faut ensuite défaire la correction.
 
-**Appelle explicitement les autres skills.** N'écris pas de VFX toi-même en
-espérant t'en sortir : invoque le skill du domaine. L'appel explicite est
-fiable, le déclenchement automatique ne l'est pas.
+**Appelle explicitement les autres skills.** N'écris pas de VFX toi-même :
+invoque le skill du domaine. L'appel explicite est fiable, le déclenchement
+automatique ne l'est pas.
 
 | Domaine | Skill |
 |---|---|
@@ -73,19 +73,21 @@ Et **ce que le joueur voit se vérifie chez le client** : une pose réelle, un
 attribut local, une mesure en jeu. Un serveur cent pour cent vert a déjà laissé
 passer trois bugs d'affichage d'affilée.
 
-**Un placeholder ne doit jamais faire planter.** Un identifiant d'asset absent
-vaut `0` dans la configuration, et le code teste cette valeur : il saute le son
-ou l'animation au lieu de lever une erreur. Le système doit tourner de bout en
-bout sans un seul asset.
+**Un placeholder ne doit jamais faire planter.** Un identifiant absent vaut
+`0`, et le code teste cette valeur : il saute le son ou l'animation au lieu de
+lever une erreur. Le système tourne de bout en bout sans un seul asset.
 
-**Mais `0` est le dernier recours, pas le premier.** Un système livré muet se
-teste mal : on ne sait pas si le son ne se déclenche pas ou s'il n'existe pas
-encore. Pour un son, un modèle, une image ou un mesh, prends un vrai asset de
-la Toolbox :
+**Mais `0` est le dernier recours.** Un système livré muet se teste mal : on
+ne sait pas si le son ne se déclenche pas ou s'il n'existe pas encore. Prends
+un vrai asset de la Toolbox :
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/toolbox.py" chercher --type son --query "sword impact"
 ```
+
+Fiable pour les **sons**. Pour les **images**, il rend des identifiants de
+Decal que `PreloadAsync` accepte et qui ne rendent rien : préfère un chemin
+`rbxasset://` livré avec le moteur.
 
 Le script interroge Roblox et ne rend que des assets gratuits, disponibles, et
 sans script pour les modèles — un modèle scripté de la Toolbox est le vecteur
@@ -97,9 +99,8 @@ l'est. Sur Windows, si `python3` ouvre le Microsoft Store, relance avec `py`.
 rien. En reprise de feature, repasse les identifiants déjà en place à
 `toolbox.py verifier` : un asset de la Toolbox peut avoir été modéré depuis.
 
-**Un emprunt se signale.** Chaque ligne prise dans la Toolbox porte sa
-provenance en commentaire et réapparaît dans « À toi de fournir » — sinon
-l'approximation se fait oublier et part en production.
+**Un emprunt se signale** : provenance en commentaire, et rappel dans « À toi
+de fournir » — sinon l'approximation se fait oublier et part en production.
 
 **Les animations ne s'empruntent pas.** La Toolbox en contient, et le script
 sait les chercher — mais Roblox lie une animation à son créateur : celle d'un

@@ -184,14 +184,13 @@ Le shop déconne, les joueurs achètent sans payer
   deuxième essai » n'est presque jamais aléatoire : c'est un ordre d'exécution.
 - **Faire confiance à son propre harnais.** Un test qui appelle `FireServer`
   directement court-circuite l'état interne du module client — une distance,
-  un mode, que seul le vrai clic initialise : les mesures ne valent que pour
-  ce chemin-là. Pire, une entrée synthétique peut n'agir sur **rien** : une
-  souris virtuelle ne fait pas tourner une caméra verrouillée en première
-  personne, et la mesure rend alors zéro sans échouer. Vérifie que l'entrée a
-  bougé quelque chose avant de croire le chiffre. Quand le vrai chemin n'est
-  pas pilotable, dis-le au rendu au lieu de conclure. Et un script qui met la
-  caméra en `Scriptable` doit la rendre sur **tous** ses chemins de sortie,
-  échecs compris : sinon c'est le joueur qui reste enfermé dedans.
+  un mode, que seul le vrai clic initialise : la mesure ne vaut que pour ce
+  chemin-là. Et l'instrument lui-même ment sans erreur : pointeur non
+  calibré, viewport qui ne rend pas, sonde qui attend une grandeur figée.
+  Lis `${CLAUDE_PLUGIN_ROOT}/references/modes.md`, § « Le mode plein ment
+  aussi », **avant** la première mesure — pas après le chiffre surprenant.
+  Quand le vrai chemin n'est pas pilotable, dis-le au rendu au lieu de
+  conclure.
 - **Ajouter un second mécanisme au lieu de corriger le premier.** Quand une
   pièce se retrouve au mauvais endroit, c'est presque toujours un déplacement
   **existant** qui l'y met, pas un garde-fou manquant. Remonte au geste qui la

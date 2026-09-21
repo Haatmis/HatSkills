@@ -3,6 +3,49 @@
 Le plugin `roblox`. Une entrée par version publiée — et une version publiée à
 chaque changement, sinon personne ne la reçoit.
 
+## 0.18.0
+
+**Seize leçons, dont sept qui disaient la même chose : l'instrument ment.**
+Une session entière passée à mesurer dans Studio, et la moitié du journal
+décrit non pas des bugs du jeu mais des bugs de la *mesure* — un viewport
+réduit qui met `PreRender` à zéro et gèle `TweenService` pendant que
+`Heartbeat` tourne à 144 ; une sonde qui attend que `Sound.TimePosition`
+avance en mode Edit, où il n'avance jamais, et qui tourne jusqu'au délai du
+MCP ; `Model:GetPivot()` qui rend un `WorldPivot` figé et rapporte « aucun
+mouvement » sur des portes qui bougeaient ; `PlaybackLoudness` indépendant de
+`Volume`.
+
+Ces sept-là ne sont pas entrées dans un skill. Elles forment une nouvelle
+section de `references/modes.md` — « Le mode plein ment aussi : vérifier
+l'instrument » — parce qu'une référence se charge à la demande, quand on va
+mesurer, alors qu'un corps de skill est rechargé à chaque déclenchement. Le
+pavé « Faire confiance à son propre harnais » de `debug` y renvoie désormais
+au lieu de le paraphraser.
+
+**Les neuf autres sont allées dans `code` et `vfx`** : un `TweenService`
+serveur ne se réplique pas ; une expérience à deux places ne nomme jamais sa
+cible en dur et refuse explicitement la place courante ; `CollectionService`
+publie ses tags progressivement, donc on attend que le compte se *stabilise* ;
+un `ParticleEmitter` créé en Edit via le MCP n'émet rien en Play ; et la
+recherche d'images de la Toolbox rend des Decals que `PreloadAsync` accepte et
+qui ne rendent rien — ce que `vfx` recommandait sans réserve.
+
+**Le plus instructif est le tri, encore une fois.** Les trois skills touchés
+ont dépassé leur plafond du premier coup, et chercher de quoi payer a mis au
+jour trois redites franches : cinq des neuf pièges de `vfx` étaient mot pour
+mot dans le § 8 de sa propre fiche de référence ; le détail des pastilles de
+dégâts aussi ; le retard de 0,35 s des `Sound` était déjà chiffré dans
+`perf.md`, et `code` le répétait. Plus une redite interne dans `code`, qui
+posait la validation des Remotes dans son contexte figé puis la reposait dans
+ses pièges.
+
+**Aucun plafond n'a été relevé.** Les corps de `code`, `feature` et `vfx`
+finissent sous leur budget d'origine ; `vfx` y gagne même de la place alors
+qu'il porte deux règles de plus. Une règle de production qui s'était égarée
+dans `debug` — rendre la caméra `Scriptable` sur tous les chemins de sortie —
+est remontée dans `code` au passage, et une règle de mesure qui traînait dans
+`code` est descendue dans `modes.md`.
+
 ## 0.17.0
 
 **Vingt leçons vidées du journal.** Deux mois de sessions sur un même jeu, et
